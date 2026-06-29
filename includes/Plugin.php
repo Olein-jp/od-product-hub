@@ -9,6 +9,7 @@ namespace OD_Product_Hub;
 
 use OD_Product_Hub\Admin\AdminMenu;
 use OD_Product_Hub\API\RestController;
+use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Frontend\Shortcodes;
 use OD_Product_Hub\Webhook\WebhookController;
 
@@ -23,6 +24,7 @@ final class Plugin {
 	}
 
 	public function register(): void {
+		Installer::maybe_upgrade();
 		load_plugin_textdomain( 'od-product-hub', false, dirname( plugin_basename( OD_PRODUCT_HUB_FILE ) ) . '/languages' );
 		( new AdminMenu() )->register();
 		( new RestController() )->register();

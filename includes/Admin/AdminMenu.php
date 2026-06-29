@@ -7,7 +7,16 @@
 
 namespace OD_Product_Hub\Admin;
 
+use OD_Product_Hub\Customer\CustomerRepository;
+use OD_Product_Hub\Database\AbstractRepository;
+use OD_Product_Hub\Database\DatabaseException;
 use OD_Product_Hub\Database\Installer;
+use OD_Product_Hub\Database\UtcDateTime;
+use OD_Product_Hub\License\LicenseRepository;
+use OD_Product_Hub\Log\AdminLogRepository;
+use OD_Product_Hub\Log\WebhookLogRepository;
+use OD_Product_Hub\Product\ProductRepository;
+use OD_Product_Hub\Subscription\SubscriptionRepository;
 
 final class AdminMenu {
 	public function register(): void {
@@ -67,12 +76,11 @@ final class AdminMenu {
 
 	public function dashboard(): void {
 		$this->guard();
-		global $wpdb;
 		$counts = array(
-			'有効ライセンス'    => (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}odph_licenses WHERE status = 'active'" ),
-			'停止ライセンス'    => (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}odph_licenses WHERE status = 'suspended'" ),
-			'支払い失敗'      => (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}odph_subscriptions WHERE payment_failed_at IS NOT NULL" ),
-			'Webhookエラー' => (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}odph_webhook_logs WHERE result = 'error'" ),
+			'有効ライセンス'    => ( new LicenseRepository() )->count_by_status( 'active' ),
+			'停止ライセンス'    => ( new LicenseRepository() )->count_by_status( 'suspended' ),
+			'支払い失敗'      => ( new SubscriptionRepository() )->count_payment_failures(),
+			'Webhookエラー' => ( new WebhookLogRepository() )->count_by_result( 'error' ),
 		);
 		echo '<div class="wrap"><h1>OD Product Hub</h1><p>GPLコードの利用制限ではなく、有効な契約者向けサービスの契約検証基盤です。</p><div class="odph-cards">';
 		foreach ( $counts as $label => $count ) {
@@ -82,8 +90,7 @@ final class AdminMenu {
 
 	public function products(): void {
 		$this->guard();
-		global $wpdb;
-		$products = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}odph_products ORDER BY id DESC" );
+		$products = ( new ProductRepository() )->search( array(), 1, 100 )->items;
 		echo '<div class="wrap"><h1>商品管理</h1><form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_save_product">';
 		wp_nonce_field( 'odph_save_product' );
 		echo '<table class="form-table"><tr><th><label for="name">商品名</label></th><td><input required class="regular-text" id="name" name="name"></td></tr><tr><th><label for="slug">スラッグ</label></th><td><input required pattern="[A-Za-z0-9_-]+" id="slug" name="slug"></td></tr><tr><th><label for="stripe_product_id">Stripe Product ID</label></th><td><input required pattern="prod_.+" id="stripe_product_id" name="stripe_product_id"></td></tr><tr><th><label for="stripe_price_id">Stripe Price ID</label></th><td><input required pattern="price_.+" id="stripe_price_id" name="stripe_price_id"></td></tr><tr><th>状態</th><td><select name="status"><option value="active">active</option><option value="inactive">inactive</option></select></td></tr></table><p><button class="button button-primary">商品を追加</button></p></form>';
@@ -102,21 +109,29 @@ final class AdminMenu {
 		$price_id   = sanitize_text_field( wp_unslash( $_POST['stripe_price_id'] ?? '' ) );
 		if ( ! $name || ! preg_match( '/^[a-z0-9_-]+$/', $slug ) || ! str_starts_with( $product_id, 'prod_' ) || ! str_starts_with( $price_id, 'price_' ) ) {
 			wp_die( esc_html__( '入力値が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) ); }
-		global $wpdb;
-		$now = current_time( 'mysql', true );
-		$wpdb->insert(
-			$wpdb->prefix . 'odph_products',
-			array(
-				'name'              => $name,
-				'slug'              => $slug,
-				'description'       => '',
-				'stripe_product_id' => $product_id,
-				'stripe_price_id'   => $price_id,
-				'status'            => in_array( $_POST['status'] ?? '', array( 'active', 'inactive' ), true ) ? $_POST['status'] : 'active',
-				'created_at'        => $now,
-				'updated_at'        => $now,
-			)
-		);
+		try {
+			$id = ( new ProductRepository() )->create(
+				array(
+					'name'              => $name,
+					'slug'              => $slug,
+					'description'       => '',
+					'stripe_product_id' => $product_id,
+					'stripe_price_id'   => $price_id,
+					'status'            => in_array( $_POST['status'] ?? '', array( 'active', 'inactive' ), true ) ? $_POST['status'] : 'active',
+				)
+			);
+			( new AdminLogRepository() )->create(
+				array(
+					'user_id'     => get_current_user_id(),
+					'action'      => 'product_created',
+					'object_type' => 'product',
+					'object_id'   => $id,
+					'details'     => wp_json_encode( array( 'slug' => $slug ) ),
+				)
+			);
+		} catch ( DatabaseException $error ) {
+			wp_die( esc_html( $error->getMessage() ), '', array( 'response' => 500 ) );
+		}
 		wp_safe_redirect( admin_url( 'admin.php?page=odph-products' ) );
 		exit;
 	}
@@ -131,9 +146,8 @@ final class AdminMenu {
 	/** @param string[] $columns */
 	private function table_page( string $title, string $table, array $columns, bool $mask = false ): void {
 		$this->guard();
-		global $wpdb;
-		$table_name = $wpdb->prefix . 'odph_' . $table;
-		$rows       = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT 100', $table_name ) );
+		$repository = $this->repository( $table );
+		$rows       = $repository->search( array(), 1, 100 )->items;
 		echo '<div class="wrap"><h1>' . esc_html( $title ) . '</h1><table class="widefat striped"><thead><tr>';
 		foreach ( $columns as $column ) {
 			echo '<th>' . esc_html( $column ) . '</th>';
@@ -141,9 +155,11 @@ final class AdminMenu {
 		foreach ( $rows as $row ) {
 			echo '<tr>';
 			foreach ( $columns as $column ) {
-				$value = (string) $row->$column;
+				$value = (string) ( $row->$column ?? '' );
 				if ( $mask && 'license_key' === $column ) {
 					$value = \OD_Product_Hub\License\LicenseGenerator::mask( $value );
+				} elseif ( str_ends_with( $column, '_at' ) && '' !== $value ) {
+					$value = (string) UtcDateTime::to_site( $value );
 				} echo '<td>' . esc_html( $value ) . '</td>';
 			} echo '</tr>'; }
 		echo '</tbody></table></div>';
@@ -178,4 +194,14 @@ final class AdminMenu {
 	private function guard(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( '権限がありません。', 'od-product-hub' ), '', array( 'response' => 403 ) ); } }
+
+	private function repository( string $table ): AbstractRepository {
+		return match ( $table ) {
+			'products' => new ProductRepository(),
+			'customers' => new CustomerRepository(),
+			'licenses' => new LicenseRepository(),
+			'webhook_logs' => new WebhookLogRepository(),
+			default => throw new \InvalidArgumentException( 'Unsupported repository.' ),
+		};
+	}
 }

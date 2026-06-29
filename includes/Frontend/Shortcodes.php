@@ -7,6 +7,9 @@
 
 namespace OD_Product_Hub\Frontend;
 
+use OD_Product_Hub\Customer\CustomerRepository;
+use OD_Product_Hub\Database\UtcDateTime;
+use OD_Product_Hub\License\LicenseRepository;
 use OD_Product_Hub\Stripe\CheckoutService;
 
 final class Shortcodes {
@@ -47,25 +50,15 @@ final class Shortcodes {
 	public function account(): string {
 		if ( ! is_user_logged_in() ) {
 			return sprintf( '<p>契約情報を確認するには<a href="%s">ログイン</a>してください。</p>', esc_url( wp_login_url( get_permalink() ) ) ); }
-		global $wpdb;
 		$user_id = get_current_user_id();
-		$rows    = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT l.license_key, l.status AS license_status, l.expires_at, p.name AS product_name,
-			 s.stripe_status, s.current_period_end, s.cancel_at_period_end, c.stripe_customer_id
-			 FROM {$wpdb->prefix}odph_customers c INNER JOIN {$wpdb->prefix}odph_licenses l ON l.customer_id = c.id
-			 INNER JOIN {$wpdb->prefix}odph_products p ON p.id = l.product_id LEFT JOIN {$wpdb->prefix}odph_subscriptions s ON s.id = l.subscription_id
-			 WHERE c.wp_user_id = %d ORDER BY l.id DESC",
-				$user_id
-			)
-		);
+		$rows    = ( new LicenseRepository() )->find_for_user( $user_id );
 		wp_enqueue_style( 'odph-frontend' );
 		wp_enqueue_script( 'odph-frontend' );
 		if ( ! $rows ) {
 			return '<div class="odph-account"><p>契約情報はまだありません。</p></div>'; }
 		$html = '<div class="odph-account"><h2>契約中の商品</h2>';
 		foreach ( $rows as $row ) {
-			$period_end = $row->current_period_end ? $row->current_period_end : '—';
+			$period_end = $row->current_period_end ? UtcDateTime::to_site( $row->current_period_end ) : '—';
 			$html      .= '<article class="odph-contract"><h3>' . esc_html( $row->product_name ) . '</h3><dl><dt>ライセンスキー</dt><dd><code class="odph-key">' . esc_html( $row->license_key ) . '</code> <button type="button" class="odph-copy" data-license="' . esc_attr( $row->license_key ) . '">コピー</button><span class="screen-reader-text odph-copy-status" aria-live="polite"></span></dd><dt>契約検証状態</dt><dd>' . esc_html( $row->license_status ) . '</dd><dt>Stripe状態</dt><dd>' . esc_html( $row->stripe_status ) . '</dd><dt>次回更新・期間終了</dt><dd>' . esc_html( $period_end ) . '</dd><dt>解約予約</dt><dd>' . ( $row->cancel_at_period_end ? 'あり' : 'なし' ) . '</dd></dl></article>';
 		}
 		$html .= '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_portal">' . wp_nonce_field( 'odph_portal', '_wpnonce', true, false ) . '<button class="odph-button">支払い・契約を Stripe で管理</button></form><p><a href="' . esc_url( wp_lostpassword_url() ) . '">パスワードを変更</a> · <a href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">ログアウト</a></p></div>';
@@ -76,8 +69,7 @@ final class Shortcodes {
 		if ( ! is_user_logged_in() ) {
 			auth_redirect(); }
 		check_admin_referer( 'odph_portal' );
-		global $wpdb;
-		$customer = $wpdb->get_row( $wpdb->prepare( "SELECT stripe_customer_id FROM {$wpdb->prefix}odph_customers WHERE wp_user_id = %d LIMIT 1", get_current_user_id() ) );
+		$customer = ( new CustomerRepository() )->find_by_user_id( get_current_user_id() );
 		if ( ! $customer ) {
 			wp_die( 'Customer not found.', '', array( 'response' => 404 ) ); }
 		try {

@@ -9,6 +9,7 @@ namespace OD_Product_Hub\API;
 
 use OD_Product_Hub\License\LicenseGenerator;
 use OD_Product_Hub\License\LicenseRepository;
+use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Product\ProductRepository;
 use OD_Product_Hub\Security\RateLimiter;
 use WP_Error;
@@ -144,7 +145,7 @@ final class RestController {
 				'license'      => array(
 					'key_masked'       => LicenseGenerator::mask( $license->license_key ),
 					'expires_at'       => $license->expires_at,
-					'last_verified_at' => current_time( 'c' ),
+					'last_verified_at' => gmdate( 'c' ),
 				),
 				'subscription' => array(
 					'status'               => $license->stripe_status,
@@ -200,9 +201,7 @@ final class RestController {
 	}
 
 	private function log( WP_REST_Request $request, string $action, string $result, ?string $code, ?object $license ): void {
-		global $wpdb;
-		$wpdb->insert(
-			$wpdb->prefix . 'odph_api_logs',
+		( new ApiLogRepository() )->create(
 			array(
 				'license_id' => $license->id ?? null,
 				'product_id' => $license->product_id ?? null,
@@ -212,7 +211,6 @@ final class RestController {
 				'ip_address' => $this->ip_address(),
 				'user_agent' => sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ),
 				'error_code' => $code,
-				'created_at' => current_time( 'mysql', true ),
 			)
 		);
 	}
