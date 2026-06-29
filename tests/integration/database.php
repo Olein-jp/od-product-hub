@@ -14,6 +14,8 @@ use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Database\Schema;
 use OD_Product_Hub\Database\UtcDateTime;
 use OD_Product_Hub\License\LicenseRepository;
+use OD_Product_Hub\License\LicenseGenerator;
+use OD_Product_Hub\License\LicenseManager;
 use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Log\WebhookLogRepository;
@@ -67,8 +69,8 @@ $customer_id     = $sync_service->upsert_customer( 'cus_integration', 1, 'integr
 $subscription    = (object) array(
 	'id'                   => 'sub_integration',
 	'status'               => 'active',
-	'current_period_start' => 1767225600,
-	'current_period_end'   => 1769904000,
+	'current_period_start' => time() - DAY_IN_SECONDS,
+	'current_period_end'   => time() + ( 30 * DAY_IN_SECONDS ),
 	'cancel_at_period_end' => false,
 );
 $subscription_id = $sync_service->upsert_subscription( $customer_id, $product_id, $subscription );
@@ -78,7 +80,7 @@ $license_id      = $license_repository->create(
 		'customer_id'      => $customer_id,
 		'subscription_id'  => $subscription_id,
 		'license_key'      => 'ODPH-ABCD-EFGH-JKLM-NPQR',
-		'license_key_hash' => hash( 'sha256', 'integration-license' ),
+		'license_key_hash' => LicenseGenerator::hash( 'ODPH-ABCD-EFGH-JKLM-NPQR' ),
 		'status'           => 'active',
 		'issued_at'        => UtcDateTime::now(),
 	)
@@ -160,40 +162,142 @@ wp_set_current_user( 1 );
 odph_test_assert( current_user_can( 'manage_options' ), 'Administrators must retain customer management access' );
 wp_delete_user( (int) $subscriber_id );
 
-// A migration from the previous version must preserve existing data.
-update_option( 'odph_schema_version', '1.0.0', false );
-Installer::migrate();
-odph_test_assert( null !== $product_repository->find( $product_id ), 'Incremental migration must preserve existing rows' );
-odph_test_assert( Schema::VERSION === get_option( 'odph_schema_version' ), 'Incremental migration must update the schema version' );
+$license_manager = new LicenseManager();
+odph_test_assert( 1 === $license_repository->search_admin( LicenseGenerator::hash( 'ODPH-ABCD-EFGH-JKLM-NPQR' ), 'suspended' )->total, 'License search must use the key hash and status filter' );
+odph_test_assert( 1 === count( $api_repository->find_for_license( $license_id ) ), 'License detail must include its authentication logs' );
+$nonce = wp_create_nonce( 'odph_license_suspend_' . $license_id );
+odph_test_assert( 1 === wp_verify_nonce( $nonce, 'odph_license_suspend_' . $license_id ), 'License operation nonce must verify only for its action and object' );
+odph_test_assert( false === wp_verify_nonce( $nonce, 'odph_license_resume_' . $license_id ), 'License operation nonce must not verify for another action' );
 
-update_option( 'timezone_string', 'Asia/Tokyo', false );
-odph_test_assert( '2026-01-01 09:00:00' === UtcDateTime::to_site( '2026-01-01 00:00:00' ), 'UTC values must be converted only for site-time display' );
-
-// Uninstall must preserve data unless explicitly enabled.
-update_option( 'odph_settings', array( 'delete_on_uninstall' => 0 ), false );
-Installer::uninstall();
-odph_test_assert( null !== $product_repository->find( $product_id ), 'Uninstall must preserve data when deletion is disabled' );
-
-foreach ( array_reverse( $repositories ) as list( $repository, $row_id ) ) {
-	odph_test_assert( $repository->delete( $row_id ), 'Repository delete failed for ' . get_class( $repository ) );
-	odph_test_assert( null === $repository->find( $row_id ), 'Deleted row is still readable for ' . get_class( $repository ) );
-}
-$product_repository->create(
-	array(
-		'name'              => 'Uninstall Sentinel',
-		'slug'              => 'uninstall-sentinel',
-		'description'       => '',
-		'stripe_product_id' => 'prod_uninstall',
-		'stripe_price_id'   => 'price_uninstall',
-		'status'            => 'active',
-	)
+$license_manager->resume( $license_id, 1 );
+odph_test_assert( 'active' === $license_repository->find( $license_id )->status, 'A suspended license with an active subscription must resume' );
+$license_manager->suspend( $license_id, 1 );
+odph_test_assert( 'suspended' === $license_repository->find( $license_id )->status, 'Suspension must persist' );
+odph_test_assert(
+	1 === $admin_repository->search(
+		array(
+			'action'    => 'license_suspended',
+			'object_id' => $license_id,
+		),
+		1,
+		10
+	)->total,
+	'Suspension must create an admin log'
 );
 
-update_option( 'odph_settings', array( 'delete_on_uninstall' => 1 ), false );
-Installer::uninstall();
-$products_table = $wpdb->prefix . 'odph_products';
-odph_test_assert( $products_table !== $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $products_table ) ), 'Uninstall must drop data when deletion is enabled' );
+$subscription_repository->update( $subscription_id, array( 'stripe_status' => 'unpaid' ) );
+$resume_log_count        = $admin_repository->search(
+	array(
+		'action'    => 'license_resumed',
+		'object_id' => $license_id,
+	),
+	1,
+	10
+)->total;
+$invalid_resume_rejected = false;
+try {
+	$license_manager->resume( $license_id, 1 );
+} catch ( DomainException $error ) {
+	$invalid_resume_rejected = true;
+}
+odph_test_assert( $invalid_resume_rejected, 'Resume must reject an inactive Stripe subscription' );
+odph_test_assert( 'suspended' === $license_repository->find( $license_id )->status, 'Rejected resume must roll back the license state' );
+odph_test_assert(
+	$resume_log_count === $admin_repository->search(
+		array(
+			'action'    => 'license_resumed',
+			'object_id' => $license_id,
+		),
+		1,
+		10
+	)->total,
+	'Rejected resume must not leave an admin log'
+);
+	$subscription_repository->update( $subscription_id, array( 'stripe_status' => 'active' ) );
 
-// Leave the tests environment usable for subsequent checks.
-Installer::activate();
-WP_CLI::success( 'Database migration, repository, uniqueness, timezone, and uninstall checks passed.' );
+	$other_product_id   = $product_repository->create(
+		array(
+			'name'              => 'Other Integration Product',
+			'slug'              => 'other-integration-product',
+			'description'       => '',
+			'stripe_product_id' => 'prod_other_integration',
+			'stripe_price_id'   => 'price_other_integration',
+			'status'            => 'active',
+		)
+	);
+	$collision_key      = 'ODPH-BCDE-FGHJ-KLMN-PQRS';
+	$collision_id       = $license_repository->create(
+		array(
+			'product_id'       => $other_product_id,
+			'customer_id'      => $customer_id,
+			'subscription_id'  => $subscription_id,
+			'license_key'      => $collision_key,
+			'license_key_hash' => LicenseGenerator::hash( $collision_key ),
+			'status'           => 'active',
+			'issued_at'        => UtcDateTime::now(),
+		)
+	);
+	$collision_rejected = false;
+	try {
+		( new LicenseManager( static fn(): string => $collision_key ) )->reissue( $license_id, 1 );
+	} catch ( DatabaseException $error ) {
+		$collision_rejected = true;
+	}
+	odph_test_assert( $collision_rejected, 'Reissue must stop after bounded duplicate-key retries' );
+	odph_test_assert( 'ODPH-ABCD-EFGH-JKLM-NPQR' === $license_repository->find( $license_id )->license_key, 'Failed reissue must roll back the original key' );
+	$license_repository->delete( $collision_id );
+	$product_repository->delete( $other_product_id );
+
+	$new_key = 'ODPH-CDEF-GHJK-LMNP-QRST';
+	( new LicenseManager( static fn(): string => $new_key ) )->reissue( $license_id, 1 );
+	odph_test_assert( null === $license_repository->find_for_verification( 'ODPH-ABCD-EFGH-JKLM-NPQR', 'integration-product' ), 'Old key must become invalid immediately after reissue' );
+	odph_test_assert( null !== $license_repository->find_for_verification( $new_key, 'integration-product' ), 'Only the reissued key must verify' );
+	odph_test_assert(
+		1 === $admin_repository->search(
+			array(
+				'action'    => 'license_reissued',
+				'object_id' => $license_id,
+			),
+			1,
+			10
+		)->total,
+		'Reissue must create an admin log'
+	);
+
+	// A migration from the previous version must preserve existing data.
+	update_option( 'odph_schema_version', '1.0.0', false );
+	Installer::migrate();
+	odph_test_assert( null !== $product_repository->find( $product_id ), 'Incremental migration must preserve existing rows' );
+	odph_test_assert( Schema::VERSION === get_option( 'odph_schema_version' ), 'Incremental migration must update the schema version' );
+
+	update_option( 'timezone_string', 'Asia/Tokyo', false );
+	odph_test_assert( '2026-01-01 09:00:00' === UtcDateTime::to_site( '2026-01-01 00:00:00' ), 'UTC values must be converted only for site-time display' );
+
+	// Uninstall must preserve data unless explicitly enabled.
+	update_option( 'odph_settings', array( 'delete_on_uninstall' => 0 ), false );
+	Installer::uninstall();
+	odph_test_assert( null !== $product_repository->find( $product_id ), 'Uninstall must preserve data when deletion is disabled' );
+
+	foreach ( array_reverse( $repositories ) as list( $repository, $row_id ) ) {
+		odph_test_assert( $repository->delete( $row_id ), 'Repository delete failed for ' . get_class( $repository ) );
+		odph_test_assert( null === $repository->find( $row_id ), 'Deleted row is still readable for ' . get_class( $repository ) );
+	}
+	$product_repository->create(
+		array(
+			'name'              => 'Uninstall Sentinel',
+			'slug'              => 'uninstall-sentinel',
+			'description'       => '',
+			'stripe_product_id' => 'prod_uninstall',
+			'stripe_price_id'   => 'price_uninstall',
+			'status'            => 'active',
+		)
+	);
+
+	update_option( 'odph_settings', array( 'delete_on_uninstall' => 1 ), false );
+	Installer::uninstall();
+	$products_table = $wpdb->prefix . 'odph_products';
+	odph_test_assert( $products_table !== $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $products_table ) ), 'Uninstall must drop data when deletion is enabled' );
+
+	// Leave the tests environment usable for subsequent checks.
+	Installer::activate();
+	WP_CLI::success( 'Database, customer, license operations, security boundaries, and uninstall checks passed.' );

@@ -33,4 +33,19 @@ final class ApiLogRepository extends AbstractRepository {
 		$this->assert_read( 'find customer api logs' );
 		return is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
 	}
+
+	/** @return list<object> */
+	public function find_for_license( int $license_id, int $limit = 100 ): array {
+		global $wpdb;
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE license_id = %d ORDER BY id DESC LIMIT %d',
+				$this->table(),
+				$license_id,
+				max( 1, min( 100, $limit ) )
+			)
+		);
+		$this->assert_read( 'find license api logs' );
+		return is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
+	}
 }

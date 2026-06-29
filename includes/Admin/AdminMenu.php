@@ -14,6 +14,7 @@ use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Database\UtcDateTime;
 use OD_Product_Hub\License\LicenseRepository;
 use OD_Product_Hub\License\LicenseGenerator;
+use OD_Product_Hub\License\LicenseManager;
 use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Log\WebhookLogRepository;
@@ -28,6 +29,7 @@ final class AdminMenu {
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'admin_post_odph_save_product', array( $this, 'save_product' ) );
 		add_action( 'admin_post_odph_product_status', array( $this, 'change_product_status' ) );
+		add_action( 'admin_post_odph_license_action', array( $this, 'license_action' ) );
 		add_action( 'admin_post_odph_test_stripe', array( $this, 'test_stripe_connection' ) );
 		add_action( 'admin_notices', array( $this, 'configuration_notice' ) );
 		add_filter( 'site_status_tests', array( $this, 'site_health_tests' ) );
@@ -247,7 +249,38 @@ final class AdminMenu {
 	}
 
 	public function licenses(): void {
-		$this->table_page( 'ライセンス管理', 'licenses', array( 'license_key', 'status', 'expires_at', 'last_verified_at', 'created_at' ), true ); }
+		$this->guard();
+		$license_id = absint( $_GET['license_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only detail selection.
+		if ( $license_id ) {
+			$this->license_detail( $license_id );
+			return;
+		}
+		$key     = strtoupper( sanitize_text_field( wp_unslash( $_GET['license_key'] ?? '' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only exact-key search.
+		$status  = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only status filter.
+		$page    = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
+		$hash    = '' === $key ? null : ( LicenseGenerator::is_valid( $key ) ? LicenseGenerator::hash( $key ) : str_repeat( '0', 64 ) );
+		$result  = ( new LicenseRepository() )->search_admin( $hash, $status, $page );
+		$allowed = array( 'active', 'inactive', 'expired', 'cancelled', 'suspended' );
+		echo '<div class="wrap"><h1>ライセンス管理</h1><form method="get"><input type="hidden" name="page" value="odph-licenses"><label class="screen-reader-text" for="license-search">ライセンスキーで検索</label><input id="license-search" class="regular-text" name="license_key" value="' . esc_attr( $key ) . '" placeholder="完全なライセンスキー"> <label for="license-status">状態</label> <select id="license-status" name="status"><option value="">すべて</option>';
+		foreach ( $allowed as $option ) {
+			printf( '<option value="%1$s" %2$s>%1$s</option>', esc_attr( $option ), selected( $status, $option, false ) );
+		}
+		echo '</select> <button class="button">検索</button></form><p>検索はキーのハッシュを用い、平文の部分一致検索は行いません。</p><p>' . esc_html( sprintf( '全 %d 件', $result->total ) ) . '</p>';
+		echo '<table class="widefat striped"><thead><tr><th>商品</th><th>顧客</th><th>ライセンスキー</th><th>状態</th><th>発行日時</th><th>期限</th><th>最終認証</th><th>操作</th></tr></thead><tbody>';
+		foreach ( $result->items as $license ) {
+			$detail_url = add_query_arg(
+				array(
+					'page'       => 'odph-licenses',
+					'license_id' => $license->id,
+				),
+				admin_url( 'admin.php' )
+			);
+			printf( '<tr><td>%1$s</td><td>%2$s</td><td><code>%3$s</code></td><td>%4$s</td><td>%5$s</td><td>%6$s</td><td>%7$s</td><td><a href="%8$s">詳細</a></td></tr>', esc_html( (string) $license->product_name ), esc_html( (string) $license->customer_email ), esc_html( LicenseGenerator::mask( (string) $license->license_key ) ), esc_html( (string) $license->status ), esc_html( $this->site_date( $license->issued_at ) ), esc_html( $this->site_date( $license->expires_at ) ), esc_html( $this->site_date( $license->last_verified_at ) ), esc_url( $detail_url ) );
+		}
+		echo '</tbody></table>';
+		$this->pagination( $result->page, $result->total_pages );
+		echo '</div>';
+	}
 	public function customers(): void {
 		$this->guard();
 		$customer_id = absint( $_GET['customer_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only detail selection.
@@ -269,6 +302,79 @@ final class AdminMenu {
 	}
 	public function logs(): void {
 		$this->table_page( 'Webhookログ', 'webhook_logs', array( 'stripe_event_id', 'event_type', 'result', 'error_message', 'created_at' ) ); }
+
+	private function license_detail( int $license_id ): void {
+		$license = ( new LicenseRepository() )->find_admin_detail( $license_id );
+		if ( ! $license ) {
+			wp_die( esc_html__( 'ライセンスが見つかりません。', 'od-product-hub' ), '', array( 'response' => 404 ) );
+		}
+		$logs = ( new ApiLogRepository() )->find_for_license( $license_id );
+		echo '<div class="wrap"><h1>ライセンス詳細</h1><p><a href="' . esc_url( admin_url( 'admin.php?page=odph-licenses' ) ) . '">← ライセンス一覧へ戻る</a></p>';
+		if ( isset( $_GET['updated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display flag set after a nonce-protected action.
+			echo '<div class="notice notice-success is-dismissible"><p>ライセンス操作が完了しました。</p></div>';
+		}
+		echo '<table class="form-table"><tr><th>商品</th><td>' . esc_html( (string) $license->product_name ) . '（<code>' . esc_html( (string) $license->product_slug ) . '</code>）</td></tr><tr><th>顧客</th><td>' . esc_html( (string) $license->customer_name ) . '<br>' . esc_html( (string) $license->customer_email ) . '</td></tr><tr><th>ライセンスキー</th><td><code>' . esc_html( (string) $license->license_key ) . '</code><p class="description">全文はこの詳細画面でのみ表示されます。</p></td></tr><tr><th>状態</th><td>' . esc_html( (string) $license->status ) . '</td></tr><tr><th>発行日時</th><td>' . esc_html( $this->site_date( $license->issued_at ) ) . '</td></tr><tr><th>期限</th><td>' . esc_html( $this->site_date( $license->expires_at ) ) . '</td></tr><tr><th>最終認証</th><td>' . esc_html( $this->site_date( $license->last_verified_at ) ) . '</td></tr><tr><th>Stripe契約</th><td>';
+		if ( $license->stripe_subscription_id ) {
+			printf( '<a href="https://dashboard.stripe.com/subscriptions/%1$s" target="_blank" rel="noopener noreferrer"><code>%1$s</code></a> — %2$s（期間終了: %3$s）', esc_attr( (string) $license->stripe_subscription_id ), esc_html( (string) $license->stripe_status ), esc_html( $this->site_date( $license->current_period_end ) ) );
+		} else {
+			echo '—';
+		}
+		echo '</td></tr></table><h2>管理操作</h2><div class="odph-license-actions">';
+		if ( 'suspended' === $license->status ) {
+			$this->license_action_form( $license_id, 'resume', 'ライセンスを再開', 'primary' );
+		} else {
+			$this->license_action_form( $license_id, 'suspend', 'ライセンスを停止', 'secondary' );
+		}
+		$this->license_action_form( $license_id, 'reissue', 'キーを再発行', 'secondary' );
+		echo '</div><h2>認証ログ</h2><table class="widefat striped"><thead><tr><th>操作</th><th>結果</th><th>サイトURL</th><th>IPアドレス</th><th>エラーコード</th><th>日時</th></tr></thead><tbody>';
+		foreach ( $logs as $log ) {
+			printf( '<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td><td>%4$s</td><td>%5$s</td><td>%6$s</td></tr>', esc_html( (string) $log->action ), esc_html( (string) $log->result ), esc_html( (string) $log->site_url ), esc_html( (string) $log->ip_address ), esc_html( (string) $log->error_code ), esc_html( $this->site_date( $log->created_at ) ) );
+		}
+		echo '</tbody></table></div>';
+	}
+
+	private function license_action_form( int $license_id, string $operation, string $label, string $class ): void {
+		echo '<form class="odph-inline-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_license_action"><input type="hidden" name="license_id" value="' . esc_attr( (string) $license_id ) . '"><input type="hidden" name="license_operation" value="' . esc_attr( $operation ) . '">';
+		wp_nonce_field( 'odph_license_' . $operation . '_' . $license_id );
+		submit_button( $label, $class, 'submit', false );
+		echo '</form>';
+	}
+
+	public function license_action(): void {
+		$this->guard();
+		$license_id = absint( $_POST['license_id'] ?? 0 );
+		$operation  = sanitize_key( wp_unslash( $_POST['license_operation'] ?? '' ) );
+		if ( ! in_array( $operation, array( 'suspend', 'resume', 'reissue' ), true ) ) {
+			wp_die( esc_html__( 'ライセンス操作が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) );
+		}
+		check_admin_referer( 'odph_license_' . $operation . '_' . $license_id );
+		try {
+			$manager = new LicenseManager();
+			if ( 'suspend' === $operation ) {
+				$manager->suspend( $license_id, get_current_user_id() );
+			} elseif ( 'resume' === $operation ) {
+				$manager->resume( $license_id, get_current_user_id() );
+			} else {
+				$manager->reissue( $license_id, get_current_user_id() );
+			}
+		} catch ( \DomainException | DatabaseException $error ) {
+			wp_die( esc_html( $error->getMessage() ), '', array( 'response' => 409 ) );
+		} catch ( \Throwable $error ) {
+			unset( $error );
+			wp_die( esc_html__( 'ライセンス操作に失敗しました。', 'od-product-hub' ), '', array( 'response' => 500 ) );
+		}
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'       => 'odph-licenses',
+					'license_id' => $license_id,
+					'updated'    => $operation,
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit;
+	}
 
 	private function customers_table(): void {
 		$query  = sanitize_email( wp_unslash( $_GET['s'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filtering.
