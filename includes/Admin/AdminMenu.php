@@ -25,6 +25,7 @@ final class AdminMenu {
 		add_action( 'admin_init', array( $this, 'settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'admin_post_odph_save_product', array( $this, 'save_product' ) );
+		add_action( 'admin_post_odph_product_status', array( $this, 'change_product_status' ) );
 		add_action( 'admin_post_odph_test_stripe', array( $this, 'test_stripe_connection' ) );
 		add_action( 'admin_notices', array( $this, 'configuration_notice' ) );
 		add_filter( 'site_status_tests', array( $this, 'site_health_tests' ) );
@@ -123,40 +124,92 @@ final class AdminMenu {
 
 	public function products(): void {
 		$this->guard();
-		$products = ( new ProductRepository() )->search( array(), 1, 100 )->items;
-		echo '<div class="wrap"><h1>商品管理</h1><form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_save_product">';
+		$query      = sanitize_text_field( wp_unslash( $_GET['s'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filtering.
+		$status     = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filtering.
+		$page       = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
+		$repository = new ProductRepository();
+		$result     = $repository->search_admin( $query, $status, $page );
+		$edit_id    = absint( $_GET['product_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only edit selection.
+		$product    = $edit_id ? $repository->find( $edit_id ) : null;
+		echo '<div class="wrap"><h1>商品管理</h1><form method="get"><input type="hidden" name="page" value="odph-products"><label class="screen-reader-text" for="product-search">商品を検索</label><input id="product-search" name="s" value="' . esc_attr( $query ) . '" placeholder="商品名・スラッグ"><select name="status"><option value="">すべての状態</option><option value="active" ' . selected( $status, 'active', false ) . '>active</option><option value="inactive" ' . selected( $status, 'inactive', false ) . '>inactive</option></select> <button class="button">絞り込む</button></form>';
+		echo '<h2>' . esc_html( $product ? '商品を編集' : '商品を追加' ) . '</h2><form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_save_product"><input type="hidden" name="product_id" value="' . esc_attr( (string) ( $product->id ?? 0 ) ) . '">';
 		wp_nonce_field( 'odph_save_product' );
-		echo '<table class="form-table"><tr><th><label for="name">商品名</label></th><td><input required class="regular-text" id="name" name="name"></td></tr><tr><th><label for="slug">スラッグ</label></th><td><input required pattern="[A-Za-z0-9_-]+" id="slug" name="slug"></td></tr><tr><th><label for="stripe_product_id">Stripe Product ID</label></th><td><input required pattern="prod_.+" id="stripe_product_id" name="stripe_product_id"></td></tr><tr><th><label for="stripe_price_id">Stripe Price ID</label></th><td><input required pattern="price_.+" id="stripe_price_id" name="stripe_price_id"></td></tr><tr><th>状態</th><td><select name="status"><option value="active">active</option><option value="inactive">inactive</option></select></td></tr></table><p><button class="button button-primary">商品を追加</button></p></form>';
-		echo '<table class="widefat striped"><thead><tr><th>商品</th><th>スラッグ</th><th>Product ID</th><th>Price ID</th><th>状態</th></tr></thead><tbody>';
-		foreach ( $products as $p ) {
-			printf( '<tr><td>%s</td><td><code>%s</code></td><td><code>%s</code></td><td><code>%s</code></td><td>%s</td></tr>', esc_html( $p->name ), esc_html( $p->slug ), esc_html( $p->stripe_product_id ), esc_html( $p->stripe_price_id ), esc_html( $p->status ) ); }
-		echo '</tbody></table></div>';
+		printf( '<table class="form-table"><tr><th><label for="name">商品名</label></th><td><input required class="regular-text" id="name" name="name" value="%1$s"></td></tr><tr><th><label for="description">説明</label></th><td><textarea class="large-text" id="description" name="description">%2$s</textarea></td></tr><tr><th><label for="slug">スラッグ</label></th><td><input required pattern="[a-z0-9_-]+" id="slug" name="slug" value="%3$s"></td></tr><tr><th><label for="stripe_product_id">Stripe Product ID</label></th><td><input required pattern="prod_[A-Za-z0-9]+" id="stripe_product_id" name="stripe_product_id" value="%4$s"></td></tr><tr><th><label for="stripe_price_id">Stripe Price ID</label></th><td><input required pattern="price_[A-Za-z0-9]+" id="stripe_price_id" name="stripe_price_id" value="%5$s"></td></tr><tr><th>状態</th><td><select name="status"><option value="active" %6$s>active</option><option value="inactive" %7$s>inactive</option></select></td></tr></table><p><button class="button button-primary">%8$s</button></p></form>', esc_attr( (string) ( $product->name ?? '' ) ), esc_textarea( (string) ( $product->description ?? '' ) ), esc_attr( (string) ( $product->slug ?? '' ) ), esc_attr( (string) ( $product->stripe_product_id ?? '' ) ), esc_attr( (string) ( $product->stripe_price_id ?? '' ) ), selected( (string) ( $product->status ?? 'active' ), 'active', false ), selected( (string) ( $product->status ?? '' ), 'inactive', false ), esc_html( $product ? '更新' : '追加' ) );
+		echo '<table class="widefat striped"><thead><tr><th>商品</th><th>スラッグ</th><th>Product ID</th><th>Price ID</th><th>状態</th><th>操作</th></tr></thead><tbody>';
+		foreach ( $result->items as $p ) {
+			$edit_url   = add_query_arg(
+				array(
+					'page'       => 'odph-products',
+					'product_id' => $p->id,
+				),
+				admin_url( 'admin.php' )
+			);
+			$next       = 'active' === $p->status ? 'inactive' : 'active';
+			$status_url = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action'     => 'odph_product_status',
+						'product_id' => $p->id,
+						'status'     => $next,
+					),
+					admin_url( 'admin-post.php' )
+				),
+				'odph_product_status_' . $p->id
+			);
+			printf( '<tr><td>%s</td><td><code>%s</code></td><td><a href="https://dashboard.stripe.com/products/%s" target="_blank" rel="noopener noreferrer"><code>%s</code><span class="screen-reader-text">（新しいタブで開く）</span></a></td><td><code>%s</code></td><td>%s</td><td><a href="%s">編集</a> | <a href="%s">%s</a></td></tr>', esc_html( $p->name ), esc_html( $p->slug ), esc_attr( $p->stripe_product_id ), esc_html( $p->stripe_product_id ), esc_html( $p->stripe_price_id ), esc_html( $p->status ), esc_url( $edit_url ), esc_url( $status_url ), esc_html( 'active' === $p->status ? '停止' : '再開' ) );
+		}
+		echo '</tbody></table>';
+		echo wp_kses_post(
+			paginate_links(
+				array(
+					'base'    => add_query_arg( 'paged', '%#%' ),
+					'current' => $result->page,
+					'total'   => max( 1, $result->total_pages ),
+				)
+			)
+		);
+		echo '</div>';
 	}
 
 	public function save_product(): void {
 		$this->guard();
 		check_admin_referer( 'odph_save_product' );
-		$name       = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
-		$slug       = sanitize_key( wp_unslash( $_POST['slug'] ?? '' ) );
-		$product_id = sanitize_text_field( wp_unslash( $_POST['stripe_product_id'] ?? '' ) );
-		$price_id   = sanitize_text_field( wp_unslash( $_POST['stripe_price_id'] ?? '' ) );
-		if ( ! $name || ! preg_match( '/^[a-z0-9_-]+$/', $slug ) || ! str_starts_with( $product_id, 'prod_' ) || ! str_starts_with( $price_id, 'price_' ) ) {
+		$name        = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
+		$slug        = sanitize_key( wp_unslash( $_POST['slug'] ?? '' ) );
+		$product_id  = sanitize_text_field( wp_unslash( $_POST['stripe_product_id'] ?? '' ) );
+		$price_id    = sanitize_text_field( wp_unslash( $_POST['stripe_price_id'] ?? '' ) );
+		$description = sanitize_textarea_field( wp_unslash( $_POST['description'] ?? '' ) );
+		$id          = absint( $_POST['product_id'] ?? 0 );
+		if ( ! $name || ! preg_match( '/^[a-z0-9_-]+$/', $slug ) || ! preg_match( '/^prod_[A-Za-z0-9]+$/', $product_id ) || ! preg_match( '/^price_[A-Za-z0-9]+$/', $price_id ) ) {
 			wp_die( esc_html__( '入力値が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) ); }
 		try {
-			$id = ( new ProductRepository() )->create(
-				array(
-					'name'              => $name,
-					'slug'              => $slug,
-					'description'       => '',
-					'stripe_product_id' => $product_id,
-					'stripe_price_id'   => $price_id,
-					'status'            => in_array( $_POST['status'] ?? '', array( 'active', 'inactive' ), true ) ? $_POST['status'] : 'active',
-				)
+			$repository = new ProductRepository();
+			foreach ( array( $repository->find_by_slug( $slug ), $repository->find_by_stripe_product_id( $product_id ), $repository->find_by_price( $price_id ) ) as $duplicate ) {
+				if ( $duplicate && (int) $duplicate->id !== $id ) {
+					wp_die( esc_html__( 'スラッグまたはStripe IDが既に使用されています。', 'od-product-hub' ), '', array( 'response' => 409 ) );
+				}
+			}
+			$data   = array(
+				'name'              => $name,
+				'slug'              => $slug,
+				'description'       => $description,
+				'stripe_product_id' => $product_id,
+				'stripe_price_id'   => $price_id,
+				'status'            => in_array( $_POST['status'] ?? '', array( 'active', 'inactive' ), true ) ? $_POST['status'] : 'active',
 			);
+			$action = $id ? 'product_updated' : 'product_created';
+			if ( $id ) {
+				if ( ! $repository->find( $id ) ) {
+					wp_die( esc_html__( '商品が見つかりません。', 'od-product-hub' ), '', array( 'response' => 404 ) );
+				}
+				$repository->update( $id, $data );
+			} else {
+				$id = $repository->create( $data );
+			}
 			( new AdminLogRepository() )->create(
 				array(
 					'user_id'     => get_current_user_id(),
-					'action'      => 'product_created',
+					'action'      => $action,
 					'object_type' => 'product',
 					'object_id'   => $id,
 					'details'     => wp_json_encode( array( 'slug' => $slug ) ),
@@ -165,6 +218,28 @@ final class AdminMenu {
 		} catch ( DatabaseException $error ) {
 			wp_die( esc_html( $error->getMessage() ), '', array( 'response' => 500 ) );
 		}
+		wp_safe_redirect( admin_url( 'admin.php?page=odph-products' ) );
+		exit;
+	}
+
+	public function change_product_status(): void {
+		$this->guard();
+		$id     = absint( $_GET['product_id'] ?? 0 );
+		$status = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) );
+		check_admin_referer( 'odph_product_status_' . $id );
+		if ( ! in_array( $status, array( 'active', 'inactive' ), true ) || ! ( new ProductRepository() )->find( $id ) ) {
+			wp_die( esc_html__( '商品または状態が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) );
+		}
+		( new ProductRepository() )->update( $id, array( 'status' => $status ) );
+		( new AdminLogRepository() )->create(
+			array(
+				'user_id'     => get_current_user_id(),
+				'action'      => 'product_' . $status,
+				'object_type' => 'product',
+				'object_id'   => $id,
+				'details'     => '{}',
+			)
+		);
 		wp_safe_redirect( admin_url( 'admin.php?page=odph-products' ) );
 		exit;
 	}
