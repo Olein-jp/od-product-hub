@@ -12,6 +12,7 @@ use OD_Product_Hub\API\RestController;
 use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Frontend\Shortcodes;
 use OD_Product_Hub\Webhook\WebhookController;
+use OD_Product_Hub\Webhook\WebhookNotificationSubscriber;
 
 final class Plugin {
 	private static ?self $instance = null;
@@ -29,6 +30,7 @@ final class Plugin {
 		( new AdminMenu() )->register();
 		( new RestController() )->register();
 		( new WebhookController() )->register();
+		( new WebhookNotificationSubscriber() )->register();
 		( new Shortcodes() )->register();
 	}
 

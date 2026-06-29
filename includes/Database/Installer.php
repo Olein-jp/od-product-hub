@@ -57,6 +57,7 @@ final class Installer {
 		return array(
 			'1.0.0' => array( self::class, 'create_initial_schema' ),
 			'1.1.0' => array( self::class, 'reconcile_repository_schema' ),
+			'1.2.0' => array( self::class, 'reconcile_repository_schema' ),
 		);
 	}
 

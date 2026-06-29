@@ -60,6 +60,28 @@ final class LicenseRepository extends AbstractRepository {
 		return 0 < $result;
 	}
 
+	public function set_status_preserving_suspended( int $subscription_id, string $status ): bool {
+		global $wpdb;
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE %i SET status = CASE WHEN status = 'suspended' THEN status ELSE %s END, updated_at = %s WHERE subscription_id = %d",
+				$this->table(),
+				$status,
+				\OD_Product_Hub\Database\UtcDateTime::now(),
+				$subscription_id
+			)
+		); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Atomic conditional update preserves administrator suspension.
+		if ( false === $result ) {
+			throw DatabaseException::from_last_error( 'update protected license status' );
+		}
+		return 0 < $result;
+	}
+
+	public function sync_subscription_state( int $subscription_id, string $status, ?string $expires_at ): bool {
+		$this->update_by_subscription( $subscription_id, array( 'expires_at' => $expires_at ) );
+		return $this->set_status_preserving_suspended( $subscription_id, $status );
+	}
+
 	/** @return list<object> */
 	public function find_for_user( int $user_id ): array {
 		global $wpdb;

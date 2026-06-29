@@ -8,7 +8,7 @@
 namespace OD_Product_Hub\Database;
 
 final class Schema {
-	public const VERSION = '1.1.0';
+	public const VERSION = '1.2.0';
 
 	/** @return list<string> */
 	public static function table_suffixes(): array {
@@ -96,6 +96,8 @@ final class Schema {
 				payload longtext NOT NULL,
 				result varchar(20) NOT NULL,
 				error_message text NULL,
+				duplicate_count bigint unsigned NOT NULL DEFAULT 0,
+				last_received_at datetime NULL,
 				created_at datetime NOT NULL,
 				PRIMARY KEY  (id),
 				UNIQUE KEY stripe_event_id (stripe_event_id),
