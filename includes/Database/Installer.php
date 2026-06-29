@@ -82,15 +82,18 @@ final class Installer {
 	/** @return array<string, mixed> */
 	public static function defaults(): array {
 		return array(
-			'portal_enabled'      => 1,
-			'success_url'         => '',
-			'cancel_url'          => '',
-			'account_page_id'     => 0,
-			'email_from_name'     => get_bloginfo( 'name' ),
-			'email_from_address'  => get_option( 'admin_email' ),
-			'log_retention_days'  => 365,
-			'api_rate_limit'      => 60,
-			'delete_on_uninstall' => 0,
+			'stripe_secret_key'      => '',
+			'stripe_publishable_key' => '',
+			'stripe_webhook_secret'  => '',
+			'portal_enabled'         => 1,
+			'success_url'            => '',
+			'cancel_url'             => '',
+			'account_page_id'        => 0,
+			'email_from_name'        => get_bloginfo( 'name' ),
+			'email_from_address'     => get_option( 'admin_email' ),
+			'log_retention_days'     => 365,
+			'api_rate_limit'         => 60,
+			'delete_on_uninstall'    => 0,
 		);
 	}
 }
