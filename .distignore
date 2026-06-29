@@ -1,0 +1,10 @@
+/.git
+/.github
+/.wp-env.json
+/node_modules
+/tests
+/.env*
+/phpcs.xml.dist
+/phpstan.neon.dist
+/phpunit.xml.dist
+/package*.json
