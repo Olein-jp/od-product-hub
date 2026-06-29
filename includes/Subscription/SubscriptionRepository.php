@@ -8,6 +8,7 @@
 namespace OD_Product_Hub\Subscription;
 
 use OD_Product_Hub\Database\AbstractRepository;
+use OD_Product_Hub\Database\RepositoryPage;
 
 final class SubscriptionRepository extends AbstractRepository {
 	protected function table_suffix(): string {
@@ -41,5 +42,51 @@ final class SubscriptionRepository extends AbstractRepository {
 		$count = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE payment_failed_at IS NOT NULL', $this->table() ) );
 		$this->assert_read( 'count payment failures' );
 		return $count;
+	}
+
+	public function search_admin( string $status, int $page = 1, int $per_page = 20 ): RepositoryPage {
+		global $wpdb;
+		$allowed = array( 'active', 'trialing', 'past_due', 'unpaid', 'canceled', 'incomplete', 'incomplete_expired', 'paused' );
+		$status  = in_array( $status, $allowed, true ) ? $status : '';
+		$page    = max( 1, $page );
+		$where   = '';
+		$values  = array(
+			$this->table(),
+			$wpdb->prefix . 'odph_customers',
+			$wpdb->prefix . 'odph_products',
+		);
+		if ( '' !== $status ) {
+			$where    = ' WHERE s.stripe_status = %s';
+			$values[] = $status;
+		}
+		$count_values = array( $this->table() );
+		if ( '' !== $status ) {
+			$count_values[] = $status;
+		}
+		$total = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i s' . $where, ...$count_values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- The condition is fixed and dynamic values are prepared.
+		$this->assert_read( 'count subscriptions' );
+		$sql  = 'SELECT s.*, c.email AS customer_email, c.name AS customer_name, p.name AS product_name
+			FROM %i s INNER JOIN %i c ON c.id = s.customer_id INNER JOIN %i p ON p.id = s.product_id' . $where . '
+			ORDER BY s.id DESC LIMIT %d OFFSET %d';
+		$rows = $wpdb->get_results( $wpdb->prepare( $sql, ...array_merge( $values, array( $per_page, ( $page - 1 ) * $per_page ) ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- SQL fragments are fixed and values are prepared.
+		$this->assert_read( 'search subscriptions' );
+		$items = is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
+		return new RepositoryPage( $items, $total, $page, $per_page, (int) ceil( $total / $per_page ) );
+	}
+
+	/** @return list<object> */
+	public function find_for_customer( int $customer_id, int $limit = 100 ): array {
+		global $wpdb;
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT s.*, p.name AS product_name FROM %i s INNER JOIN %i p ON p.id = s.product_id WHERE s.customer_id = %d ORDER BY s.id DESC LIMIT %d',
+				$this->table(),
+				$wpdb->prefix . 'odph_products',
+				$customer_id,
+				max( 1, min( 100, $limit ) )
+			)
+		);
+		$this->assert_read( 'find customer subscriptions' );
+		return is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
 	}
 }

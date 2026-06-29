@@ -8,6 +8,7 @@
  */
 
 use OD_Product_Hub\Customer\CustomerRepository;
+use OD_Product_Hub\Customer\CustomerSyncService;
 use OD_Product_Hub\Database\DatabaseException;
 use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Database\Schema;
@@ -61,23 +62,16 @@ $product_id      = $product_repository->create(
 		'status'            => 'active',
 	)
 );
-$customer_id     = $customer_repository->create(
-	array(
-		'wp_user_id'         => 1,
-		'stripe_customer_id' => 'cus_integration',
-		'email'              => 'integration@example.test',
-		'name'               => 'Integration Customer',
-	)
+$sync_service    = new CustomerSyncService();
+$customer_id     = $sync_service->upsert_customer( 'cus_integration', 1, 'integration@example.test', 'Integration Customer' );
+$subscription    = (object) array(
+	'id'                   => 'sub_integration',
+	'status'               => 'active',
+	'current_period_start' => 1767225600,
+	'current_period_end'   => 1769904000,
+	'cancel_at_period_end' => false,
 );
-$subscription_id = $subscription_repository->create(
-	array(
-		'customer_id'            => $customer_id,
-		'product_id'             => $product_id,
-		'stripe_subscription_id' => 'sub_integration',
-		'stripe_status'          => 'active',
-		'cancel_at_period_end'   => 0,
-	)
-);
+$subscription_id = $sync_service->upsert_subscription( $customer_id, $product_id, $subscription );
 $license_id      = $license_repository->create(
 	array(
 		'product_id'       => $product_id,
@@ -145,6 +139,26 @@ try {
 	$duplicate_rejected = true;
 }
 odph_test_assert( $duplicate_rejected, 'Unique constraints must be surfaced as a safe DatabaseException' );
+odph_test_assert( 1 === $customer_repository->search_admin( 'integration@', 1, 20 )->total, 'Customer email search must find the synchronized customer' );
+odph_test_assert( 1 === $subscription_repository->search_admin( 'trialing', 1, 20 )->total, 'Subscription status filtering must use synchronized state' );
+odph_test_assert( 1 === count( $subscription_repository->find_for_customer( $customer_id ) ), 'Customer detail must include subscriptions' );
+odph_test_assert( 1 === count( $license_repository->find_for_customer( $customer_id ) ), 'Customer detail must include licenses' );
+odph_test_assert( 1 === count( $api_repository->find_for_customer( $customer_id ) ), 'Customer detail must include API logs through owned licenses' );
+
+$subscriber_id = wp_insert_user(
+	array(
+		'user_login' => 'odph-customer-boundary',
+		'user_email' => 'boundary@example.test',
+		'user_pass'  => wp_generate_password( 24 ),
+		'role'       => 'subscriber',
+	)
+);
+odph_test_assert( ! is_wp_error( $subscriber_id ), 'Subscriber fixture must be created' );
+wp_set_current_user( (int) $subscriber_id );
+odph_test_assert( ! current_user_can( 'manage_options' ), 'Customers must not cross the admin capability boundary' );
+wp_set_current_user( 1 );
+odph_test_assert( current_user_can( 'manage_options' ), 'Administrators must retain customer management access' );
+wp_delete_user( (int) $subscriber_id );
 
 // A migration from the previous version must preserve existing data.
 update_option( 'odph_schema_version', '1.0.0', false );

@@ -8,6 +8,7 @@
 namespace OD_Product_Hub\Webhook;
 
 use OD_Product_Hub\Customer\CustomerRepository;
+use OD_Product_Hub\Customer\CustomerSyncService;
 use OD_Product_Hub\Database\UtcDateTime;
 use OD_Product_Hub\License\LicenseRepository;
 use OD_Product_Hub\Log\WebhookLogRepository;
@@ -102,13 +103,11 @@ final class WebhookController {
 			$user = get_user_by( 'id', $user_id );
 			wp_new_user_notification( $user_id, null, 'user' );
 		}
-		$customer_id = ( new CustomerRepository() )->upsert_by_stripe_id(
+		$customer_id = ( new CustomerSyncService() )->upsert_customer(
 			(string) $session->customer->id,
-			array(
-				'wp_user_id' => (int) $user->ID,
-				'email'      => $email,
-				'name'       => sanitize_text_field( (string) ( $session->customer_details->name ?? '' ) ),
-			)
+			(int) $user->ID,
+			$email,
+			(string) ( $session->customer_details->name ?? '' )
 		);
 		$product     = ( new ProductRepository() )->find_by_price( (string) $session->subscription->items->data[0]->price->id );
 		if ( ! $product ) {
@@ -162,17 +161,7 @@ final class WebhookController {
 	}
 
 	private function upsert_subscription( int $customer_id, int $product_id, object $subscription ): int {
-		return ( new SubscriptionRepository() )->upsert_by_stripe_id(
-			(string) $subscription->id,
-			array(
-				'customer_id'          => $customer_id,
-				'product_id'           => $product_id,
-				'stripe_status'        => sanitize_key( (string) $subscription->status ),
-				'current_period_start' => $this->date( $subscription->current_period_start ?? null ),
-				'current_period_end'   => $this->date( $subscription->current_period_end ?? null ),
-				'cancel_at_period_end' => empty( $subscription->cancel_at_period_end ) ? 0 : 1,
-			)
-		);
+		return ( new CustomerSyncService() )->upsert_subscription( $customer_id, $product_id, $subscription );
 	}
 
 	private function unique_login( string $email ): string {

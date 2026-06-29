@@ -84,6 +84,23 @@ final class LicenseRepository extends AbstractRepository {
 		return $this->search( array( 'status' => $status ), 1, 1 )->total;
 	}
 
+	/** @return list<object> */
+	public function find_for_customer( int $customer_id, int $limit = 100 ): array {
+		global $wpdb;
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT l.id, l.license_key, l.status, l.issued_at, l.expires_at, l.last_verified_at, p.name AS product_name
+				FROM %i l INNER JOIN %i p ON p.id = l.product_id WHERE l.customer_id = %d ORDER BY l.id DESC LIMIT %d',
+				$this->table(),
+				$wpdb->prefix . 'odph_products',
+				$customer_id,
+				max( 1, min( 100, $limit ) )
+			)
+		);
+		$this->assert_read( 'find customer licenses' );
+		return is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
+	}
+
 	public function issue( int $product_id, int $customer_id, int $subscription_id, ?string $expires_at = null ): string {
 		$generator = new LicenseGenerator();
 		for ( $attempt = 0; $attempt < 10; $attempt++ ) {
