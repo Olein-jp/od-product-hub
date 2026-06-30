@@ -9,7 +9,6 @@ namespace OD_Product_Hub\Admin;
 
 use OD_Product_Hub\API\ClientIpResolver;
 use OD_Product_Hub\Customer\CustomerRepository;
-use OD_Product_Hub\Database\AbstractRepository;
 use OD_Product_Hub\Database\DatabaseException;
 use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Database\UtcDateTime;
@@ -19,7 +18,7 @@ use OD_Product_Hub\License\LicenseGenerator;
 use OD_Product_Hub\License\LicenseManager;
 use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Log\ApiLogRepository;
-use OD_Product_Hub\Log\WebhookLogRepository;
+use OD_Product_Hub\Log\LogCleanupService;
 use OD_Product_Hub\Product\ProductRepository;
 use OD_Product_Hub\Subscription\SubscriptionRepository;
 use OD_Product_Hub\Stripe\StripeClientFactory;
@@ -33,6 +32,7 @@ final class AdminMenu {
 		add_action( 'admin_post_odph_product_status', array( $this, 'change_product_status' ) );
 		add_action( 'admin_post_odph_license_action', array( $this, 'license_action' ) );
 		add_action( 'admin_post_odph_test_stripe', array( $this, 'test_stripe_connection' ) );
+		add_action( 'admin_post_odph_cleanup_logs', array( $this, 'cleanup_logs' ) );
 		add_action( 'admin_notices', array( $this, 'configuration_notice' ) );
 		add_filter( 'site_status_tests', array( $this, 'site_health_tests' ) );
 	}
@@ -134,16 +134,7 @@ final class AdminMenu {
 
 	public function dashboard(): void {
 		$this->guard();
-		$counts = array(
-			'有効ライセンス'    => ( new LicenseRepository() )->count_by_status( 'active' ),
-			'停止ライセンス'    => ( new LicenseRepository() )->count_by_status( 'suspended' ),
-			'支払い失敗'      => ( new SubscriptionRepository() )->count_payment_failures(),
-			'Webhookエラー' => ( new WebhookLogRepository() )->count_by_result( 'error' ),
-		);
-		echo '<div class="wrap"><h1>OD Product Hub</h1><p>GPLコードの利用制限ではなく、有効な契約者向けサービスの契約検証基盤です。</p><div class="odph-cards">';
-		foreach ( $counts as $label => $count ) {
-			printf( '<div class="card"><h2>%s</h2><p class="odph-count">%d</p></div>', esc_html( $label ), esc_html( (string) $count ) ); }
-		echo '</div></div>';
+		( new DashboardPage() )->render();
 	}
 
 	public function products(): void {
@@ -325,7 +316,26 @@ final class AdminMenu {
 		echo '</div>';
 	}
 	public function logs(): void {
-		$this->table_page( 'Webhookログ', 'webhook_logs', array( 'stripe_event_id', 'event_type', 'result', 'error_message', 'created_at' ) ); }
+		$this->guard();
+		( new LogsPage() )->render();
+	}
+
+	public function cleanup_logs(): void {
+		$this->guard();
+		check_admin_referer( 'odph_cleanup_logs' );
+		$result = ( new LogCleanupService() )->run();
+		( new AdminLogRepository() )->create(
+			array(
+				'user_id'     => get_current_user_id(),
+				'action'      => 'logs_cleaned',
+				'object_type' => 'logs',
+				'details'     => wp_json_encode( $result ),
+			)
+		);
+		set_transient( 'odph_cleanup_result_' . get_current_user_id(), $result, MINUTE_IN_SECONDS );
+		wp_safe_redirect( admin_url( 'admin.php?page=odph-logs&cleanup=1' ) );
+		exit;
+	}
 
 	private function license_detail( int $license_id ): void {
 		$license = ( new LicenseRepository() )->find_admin_detail( $license_id );
@@ -498,28 +508,6 @@ final class AdminMenu {
 		);
 	}
 
-	/** @param string[] $columns */
-	private function table_page( string $title, string $table, array $columns, bool $mask = false ): void {
-		$this->guard();
-		$repository = $this->repository( $table );
-		$rows       = $repository->search( array(), 1, 100 )->items;
-		echo '<div class="wrap"><h1>' . esc_html( $title ) . '</h1><table class="widefat striped"><thead><tr>';
-		foreach ( $columns as $column ) {
-			echo '<th>' . esc_html( $column ) . '</th>';
-		} echo '</tr></thead><tbody>';
-		foreach ( $rows as $row ) {
-			echo '<tr>';
-			foreach ( $columns as $column ) {
-				$value = (string) ( $row->$column ?? '' );
-				if ( $mask && 'license_key' === $column ) {
-					$value = \OD_Product_Hub\License\LicenseGenerator::mask( $value );
-				} elseif ( str_ends_with( $column, '_at' ) && '' !== $value ) {
-					$value = (string) UtcDateTime::to_site( $value );
-				} echo '<td>' . esc_html( $value ) . '</td>';
-			} echo '</tr>'; }
-		echo '</tbody></table></div>';
-	}
-
 	public function settings_page(): void {
 		$this->guard();
 		$s = get_option( 'odph_settings', Installer::defaults() );
@@ -626,14 +614,4 @@ final class AdminMenu {
 	private function guard(): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( esc_html__( '権限がありません。', 'od-product-hub' ), '', array( 'response' => 403 ) ); } }
-
-	private function repository( string $table ): AbstractRepository {
-		return match ( $table ) {
-			'products' => new ProductRepository(),
-			'customers' => new CustomerRepository(),
-			'licenses' => new LicenseRepository(),
-			'webhook_logs' => new WebhookLogRepository(),
-			default => throw new \InvalidArgumentException( 'Unsupported repository.' ),
-		};
-	}
 }

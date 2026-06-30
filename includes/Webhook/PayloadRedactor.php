@@ -17,8 +17,16 @@ final class PayloadRedactor {
 		'email',
 		'name',
 		'payment_method',
+		'payment_intent',
 		'phone',
+		'receipt_url',
+		'routing_number',
 		'shipping',
+		'source',
+		'bank_account',
+		'account_number',
+		'iban',
+		'tax_id',
 	);
 
 	public function redact_json( string $payload ): string {
@@ -38,7 +46,7 @@ final class PayloadRedactor {
 	private function redact( array $data ): array {
 		foreach ( $data as $key => $value ) {
 			$key_name = strtolower( (string) $key );
-			if ( in_array( $key_name, self::SENSITIVE_KEYS, true ) || str_contains( $key_name, 'secret' ) ) {
+			if ( in_array( $key_name, self::SENSITIVE_KEYS, true ) || str_contains( $key_name, 'secret' ) || str_contains( $key_name, 'payment' ) ) {
 				$data[ $key ] = '[redacted]';
 			} elseif ( is_array( $value ) ) {
 				$data[ $key ] = $this->redact( $value );

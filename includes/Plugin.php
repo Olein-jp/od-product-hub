@@ -11,6 +11,7 @@ use OD_Product_Hub\Admin\AdminMenu;
 use OD_Product_Hub\API\RestController;
 use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Frontend\Shortcodes;
+use OD_Product_Hub\Log\LogCleanupService;
 use OD_Product_Hub\Webhook\WebhookController;
 use OD_Product_Hub\Webhook\WebhookNotificationSubscriber;
 
@@ -32,6 +33,7 @@ final class Plugin {
 		( new WebhookController() )->register();
 		( new WebhookNotificationSubscriber() )->register();
 		( new Shortcodes() )->register();
+		add_action( 'odph_cleanup_logs', array( new LogCleanupService(), 'run_scheduled' ) );
 	}
 
 	public static function deactivate(): void {

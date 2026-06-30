@@ -8,7 +8,7 @@
 namespace OD_Product_Hub\Database;
 
 final class Schema {
-	public const VERSION = '1.4.0';
+	public const VERSION = '1.5.0';
 
 	/** @return list<string> */
 	public static function table_suffixes(): array {
@@ -103,6 +103,7 @@ final class Schema {
 				created_at datetime NOT NULL,
 				PRIMARY KEY  (id),
 				UNIQUE KEY stripe_event_id (stripe_event_id),
+				KEY event_type (event_type),
 				KEY result (result),
 				KEY created_at (created_at)
 			) {$charset};",
@@ -122,6 +123,8 @@ final class Schema {
 				KEY product_id (product_id),
 				KEY action (action),
 				KEY result (result),
+				KEY error_code (error_code),
+				KEY site_url (site_url(191)),
 				KEY created_at (created_at)
 			) {$charset};",
 			'admin_logs'    => "CREATE TABLE {$p}admin_logs (
@@ -135,6 +138,7 @@ final class Schema {
 				PRIMARY KEY  (id),
 				KEY user_id (user_id),
 				KEY action (action),
+				KEY object_type (object_type),
 				KEY created_at (created_at)
 			) {$charset};",
 			'email_logs'    => "CREATE TABLE {$p}email_logs (

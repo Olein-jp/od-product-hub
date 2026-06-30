@@ -44,6 +44,13 @@ final class SubscriptionRepository extends AbstractRepository {
 		return $count;
 	}
 
+	public function count_created_since( string $utc ): int {
+		global $wpdb;
+		$count = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE created_at >= %s', $this->table(), $utc ) );
+		$this->assert_read( 'count recent subscriptions' );
+		return $count;
+	}
+
 	public function search_admin( string $status, int $page = 1, int $per_page = 20 ): RepositoryPage {
 		global $wpdb;
 		$allowed = array( 'active', 'trialing', 'past_due', 'unpaid', 'canceled', 'incomplete', 'incomplete_expired', 'paused' );

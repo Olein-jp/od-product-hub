@@ -18,6 +18,7 @@
     "test:checkout": "wp-env run tests-cli wp eval-file wp-content/plugins/od-product-hub/tests/integration/checkout.php",
     "test:account": "wp-env run tests-cli wp eval-file wp-content/plugins/od-product-hub/tests/integration/account.php",
     "test:api": "wp-env run tests-cli wp eval-file wp-content/plugins/od-product-hub/tests/integration/api.php",
+    "test:operations": "wp-env run tests-cli wp eval-file wp-content/plugins/od-product-hub/tests/integration/operations.php",
     "lint:php": "find . -path ./vendor -prune -o -path ./node_modules -prune -o -name '*.php' -exec php -l {} +",
     "test": "npm run lint:php"
   },
