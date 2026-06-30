@@ -8,11 +8,11 @@
 namespace OD_Product_Hub\Database;
 
 final class Schema {
-	public const VERSION = '1.2.0';
+	public const VERSION = '1.3.0';
 
 	/** @return list<string> */
 	public static function table_suffixes(): array {
-		return array( 'products', 'customers', 'subscriptions', 'licenses', 'webhook_logs', 'api_logs', 'admin_logs' );
+		return array( 'products', 'customers', 'subscriptions', 'licenses', 'webhook_logs', 'api_logs', 'admin_logs', 'email_logs' );
 	}
 
 	/** @return array<string, string> */
@@ -133,6 +133,18 @@ final class Schema {
 				PRIMARY KEY  (id),
 				KEY user_id (user_id),
 				KEY action (action),
+				KEY created_at (created_at)
+			) {$charset};",
+			'email_logs'    => "CREATE TABLE {$p}email_logs (
+				id bigint unsigned NOT NULL AUTO_INCREMENT,
+				email_type varchar(50) NOT NULL,
+				recipient_hash varchar(64) NOT NULL,
+				status varchar(20) NOT NULL,
+				error_code varchar(100) NULL,
+				created_at datetime NOT NULL,
+				PRIMARY KEY  (id),
+				KEY email_type (email_type),
+				KEY status (status),
 				KEY created_at (created_at)
 			) {$charset};",
 		);

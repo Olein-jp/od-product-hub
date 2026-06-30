@@ -23,6 +23,8 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	throw new RuntimeException( 'This integration check must run via WP-CLI.' );
 }
 
+add_filter( 'pre_wp_mail', '__return_true' );
+
 /** @param mixed $actual */
 function odph_webhook_assert( bool $condition, string $message, $actual = null ): void {
 	if ( ! $condition ) {
@@ -203,6 +205,7 @@ $checkout_user = get_user_by( 'email', $checkout_email );
 if ( $checkout_user ) {
 	wp_delete_user( $checkout_user->ID );
 }
+remove_filter( 'pre_wp_mail', '__return_true' );
 update_option( 'odph_settings', array( 'delete_on_uninstall' => 1 ), false );
 Installer::uninstall();
 Installer::activate();

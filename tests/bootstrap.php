@@ -18,3 +18,9 @@ if ( ! function_exists( 'wp_json_encode' ) ) {
 		return json_encode( $value ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- WordPress is intentionally unavailable in pure unit tests.
 	}
 }
+
+if ( ! function_exists( 'wp_strip_all_tags' ) ) {
+	function wp_strip_all_tags( string $value ): string {
+		return strip_tags( $value ); // phpcs:ignore WordPress.WP.AlternativeFunctions.strip_tags_strip_tags -- WordPress is intentionally unavailable in pure unit tests.
+	}
+}
