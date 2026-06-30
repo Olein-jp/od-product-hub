@@ -69,13 +69,25 @@ final class CheckoutService {
 		}
 	}
 
-	public function portal_url( string $customer_id ): string {
-		$settings   = (array) get_option( 'odph_settings', array() );
-		$return_url = get_permalink( (int) ( $settings['account_page_id'] ?? 0 ) );
-		if ( ! preg_match( '/^cus_[A-Za-z0-9]+$/', $customer_id ) || ! $return_url ) {
-			throw new CheckoutException( 'portal_unavailable' );
-		}
+	public function portal_url_for_current_user(): string {
 		try {
+			$settings = (array) get_option( 'odph_settings', array() );
+			if ( empty( $settings['portal_enabled'] ) ) {
+				throw new PortalException( 'portal_disabled' );
+			}
+			$user_id = get_current_user_id();
+			if ( 0 === $user_id ) {
+				throw new PortalException( 'login_required' );
+			}
+			$customer    = ( new CustomerRepository() )->find_by_user_id( $user_id );
+			$customer_id = $customer ? (string) $customer->stripe_customer_id : '';
+			$return_url  = get_permalink( (int) ( $settings['account_page_id'] ?? 0 ) );
+			if ( ! preg_match( '/^cus_[A-Za-z0-9]+$/', $customer_id ) ) {
+				throw new PortalException( 'customer_not_synced' );
+			}
+			if ( ! $return_url ) {
+				throw new PortalException( 'portal_not_configured' );
+			}
 			$session = ( $this->portal_creator )(
 				array(
 					'customer'   => $customer_id,
@@ -87,9 +99,11 @@ final class CheckoutService {
 				throw new \RuntimeException( 'Unexpected Portal URL.' );
 			}
 			return $url;
+		} catch ( PortalException $error ) {
+			throw $error;
 		} catch ( \Throwable $error ) {
 			$this->log_internal_error( 'portal_session_failed', $error );
-			throw new CheckoutException( 'portal_unavailable' );
+			throw new PortalException( 'portal_temporarily_unavailable' );
 		}
 	}
 

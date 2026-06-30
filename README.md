@@ -39,7 +39,7 @@ composer test
 1. 管理画面の「OD Product Hub → 設定」でStripeキー、Webhook Secret、完了/キャンセルURLを設定します。
 2. 商品管理で `prod_...` と recurring `price_...` を登録します。
 3. StripeのWebhook URLに `/wp-json/od-product-hub/v1/stripe/webhook` を登録します。
-4. 購入ページへ `[odph_checkout product="商品スラッグ"]`、マイページへ `[odph_my_account]` を配置します。
+4. 購入ページへ `[odph_checkout product="商品スラッグ"]`、マイページへ `[odph_my_account]` を配置し、設定画面でマイページを指定します。
 
 ローカルWebhook転送例:
 

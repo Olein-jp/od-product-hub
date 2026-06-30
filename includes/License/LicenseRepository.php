@@ -87,10 +87,11 @@ final class LicenseRepository extends AbstractRepository {
 		global $wpdb;
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				'SELECT l.license_key, l.status AS license_status, l.expires_at, p.name AS product_name,
+				'SELECT l.id AS license_id, l.license_key, l.status AS license_status, l.expires_at, p.name AS product_name,
 				 s.stripe_status, s.current_period_end, s.cancel_at_period_end, c.stripe_customer_id
 				 FROM %i c INNER JOIN %i l ON l.customer_id = c.id
-				 INNER JOIN %i p ON p.id = l.product_id LEFT JOIN %i s ON s.id = l.subscription_id
+				 INNER JOIN %i p ON p.id = l.product_id
+				 LEFT JOIN %i s ON s.id = l.subscription_id AND s.customer_id = c.id AND s.product_id = p.id
 				 WHERE c.wp_user_id = %d ORDER BY l.id DESC',
 				$wpdb->prefix . 'odph_customers',
 				$this->table(),
