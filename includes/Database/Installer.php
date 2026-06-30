@@ -96,6 +96,7 @@ final class Installer {
 			'email_from_address'     => get_option( 'admin_email' ),
 			'log_retention_days'     => 365,
 			'api_rate_limit'         => 60,
+			'api_trusted_proxies'    => '',
 			'delete_on_uninstall'    => 0,
 			'email_templates'        => \OD_Product_Hub\Email\Templates::defaults(),
 		);

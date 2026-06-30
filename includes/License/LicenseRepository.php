@@ -27,7 +27,7 @@ final class LicenseRepository extends AbstractRepository {
 				'SELECT l.*, p.name AS product_name, p.slug AS product_slug, p.status AS product_status,
 				 s.stripe_status, s.current_period_end, s.cancel_at_period_end, s.payment_failed_at
 				 FROM %i l INNER JOIN %i p ON p.id = l.product_id
-				 LEFT JOIN %i s ON s.id = l.subscription_id
+				 LEFT JOIN %i s ON s.id = l.subscription_id AND s.customer_id = l.customer_id AND s.product_id = l.product_id
 				 WHERE l.license_key_hash = %s AND p.slug = %s LIMIT 1',
 				$this->table(),
 				$wpdb->prefix . 'odph_products',
@@ -40,8 +40,8 @@ final class LicenseRepository extends AbstractRepository {
 		return is_object( $row ) ? $row : null;
 	}
 
-	public function touch( int $id ): bool {
-		return $this->update( $id, array( 'last_verified_at' => \OD_Product_Hub\Database\UtcDateTime::now() ) );
+	public function touch( int $id, ?string $verified_at = null ): bool {
+		return $this->update( $id, array( 'last_verified_at' => $verified_at ?? \OD_Product_Hub\Database\UtcDateTime::now() ) );
 	}
 
 	public function exists_for_subscription( int $subscription_id ): bool {

@@ -7,6 +7,7 @@
 
 namespace OD_Product_Hub\Admin;
 
+use OD_Product_Hub\API\ClientIpResolver;
 use OD_Product_Hub\Customer\CustomerRepository;
 use OD_Product_Hub\Database\AbstractRepository;
 use OD_Product_Hub\Database\DatabaseException;
@@ -85,6 +86,7 @@ final class AdminMenu {
 		}
 		$current['log_retention_days']  = $this->bounded_integer( 'log_retention_days', $input, $current, 1, 3650 );
 		$current['api_rate_limit']      = $this->bounded_integer( 'api_rate_limit', $input, $current, 1, 1000 );
+		$current['api_trusted_proxies'] = implode( "\n", ClientIpResolver::normalize_trusted_proxies( sanitize_textarea_field( $input['api_trusted_proxies'] ?? '' ) ) );
 		$current['delete_on_uninstall'] = empty( $input['delete_on_uninstall'] ) ? 0 : 1;
 		$defaults                       = Templates::defaults();
 		$current_templates              = is_array( $current['email_templates'] ?? null ) ? $current['email_templates'] : $defaults;
@@ -546,6 +548,7 @@ final class AdminMenu {
 			$secret = str_contains( $key, 'key' ) || str_contains( $key, 'secret' );
 			$value  = $secret ? '' : (string) ( $s[ $key ] ?? '' );
 			printf( '<tr><th><label for="odph_%1$s">%2$s</label></th><td><input class="regular-text" type="%3$s" id="odph_%1$s" name="odph_settings[%1$s]" value="%4$s" placeholder="%5$s"></td></tr>', esc_attr( $key ), esc_html( $label ), $secret ? 'password' : 'text', esc_attr( $value ), esc_attr( $secret && ! empty( $s[ $key ] ) ? '設定済み（変更時のみ入力）末尾 ' . substr( $s[ $key ], -4 ) : '' ) ); }
+		printf( '<tr><th><label for="odph_api_trusted_proxies">信頼するプロキシ</label></th><td><textarea class="large-text code" rows="4" id="odph_api_trusted_proxies" name="odph_settings[api_trusted_proxies]">%s</textarea><p class="description">CIDRまたはIPを1行ずつ指定します。未設定時はX-Forwarded-Forを使用しません。</p></td></tr>', esc_textarea( (string) ( $s['api_trusted_proxies'] ?? '' ) ) );
 		echo '<tr><th>Customer Portal</th><td><label><input type="checkbox" name="odph_settings[portal_enabled]" value="1" ' . checked( ! empty( $s['portal_enabled'] ), true, false ) . '> 有効化</label></td></tr><tr><th>Webhook URL</th><td><code>' . esc_html( rest_url( 'od-product-hub/v1/stripe/webhook' ) ) . '</code></td></tr></table>';
 		echo '<h2>メールテンプレート</h2><p>メールはプレーンテキストで送信されます。使用可能なプレースホルダー以外を含むテンプレートは既定値へ戻ります。</p>';
 		$stored_templates = is_array( $s['email_templates'] ?? null ) ? $s['email_templates'] : Templates::defaults();

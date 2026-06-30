@@ -29,6 +29,7 @@ npm run env:start
 ```bash
 npm test
 npm run test:database
+npm run test:api
 composer lint
 composer phpstan
 composer test
