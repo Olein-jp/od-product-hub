@@ -156,7 +156,7 @@ final class AdminMenu {
 		echo '<div class="wrap"><h1>商品管理</h1><form method="get"><input type="hidden" name="page" value="odph-products"><label class="screen-reader-text" for="product-search">商品を検索</label><input id="product-search" name="s" value="' . esc_attr( $query ) . '" placeholder="商品名・スラッグ"><select name="status"><option value="">すべての状態</option><option value="active" ' . selected( $status, 'active', false ) . '>active</option><option value="inactive" ' . selected( $status, 'inactive', false ) . '>inactive</option></select> <button class="button">絞り込む</button></form>';
 		echo '<h2>' . esc_html( $product ? '商品を編集' : '商品を追加' ) . '</h2><form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_save_product"><input type="hidden" name="product_id" value="' . esc_attr( (string) ( $product->id ?? 0 ) ) . '">';
 		wp_nonce_field( 'odph_save_product' );
-		printf( '<table class="form-table"><tr><th><label for="name">商品名</label></th><td><input required class="regular-text" id="name" name="name" value="%1$s"></td></tr><tr><th><label for="description">説明</label></th><td><textarea class="large-text" id="description" name="description">%2$s</textarea></td></tr><tr><th><label for="slug">スラッグ</label></th><td><input required pattern="[a-z0-9_-]+" id="slug" name="slug" value="%3$s"></td></tr><tr><th><label for="stripe_product_id">Stripe Product ID</label></th><td><input required pattern="prod_[A-Za-z0-9]+" id="stripe_product_id" name="stripe_product_id" value="%4$s"></td></tr><tr><th><label for="stripe_price_id">Stripe Price ID</label></th><td><input required pattern="price_[A-Za-z0-9]+" id="stripe_price_id" name="stripe_price_id" value="%5$s"></td></tr><tr><th>状態</th><td><select name="status"><option value="active" %6$s>active</option><option value="inactive" %7$s>inactive</option></select></td></tr></table><p><button class="button button-primary">%8$s</button></p></form>', esc_attr( (string) ( $product->name ?? '' ) ), esc_textarea( (string) ( $product->description ?? '' ) ), esc_attr( (string) ( $product->slug ?? '' ) ), esc_attr( (string) ( $product->stripe_product_id ?? '' ) ), esc_attr( (string) ( $product->stripe_price_id ?? '' ) ), selected( (string) ( $product->status ?? 'active' ), 'active', false ), selected( (string) ( $product->status ?? '' ), 'inactive', false ), esc_html( $product ? '更新' : '追加' ) );
+		printf( '<table class="form-table"><tr><th><label for="name">商品名</label></th><td><input required class="regular-text" id="name" name="name" value="%1$s"></td></tr><tr><th><label for="description">説明</label></th><td><textarea class="large-text" id="description" name="description">%2$s</textarea></td></tr><tr><th><label for="price_description">価格説明</label></th><td><input class="regular-text" id="price_description" name="price_description" value="%3$s" placeholder="例: 月額1,980円（税込）"></td></tr><tr><th><label for="billing_description">サブスクリプション説明</label></th><td><textarea class="large-text" id="billing_description" name="billing_description" placeholder="例: 解約するまで毎月自動更新されます。">%4$s</textarea></td></tr><tr><th><label for="slug">スラッグ</label></th><td><input required pattern="[a-z0-9_-]+" id="slug" name="slug" value="%5$s"></td></tr><tr><th><label for="stripe_product_id">Stripe Product ID</label></th><td><input required pattern="prod_[A-Za-z0-9]+" id="stripe_product_id" name="stripe_product_id" value="%6$s"></td></tr><tr><th><label for="stripe_price_id">Stripe Price ID</label></th><td><input required pattern="price_[A-Za-z0-9]+" id="stripe_price_id" name="stripe_price_id" value="%7$s"></td></tr><tr><th>状態</th><td><select name="status"><option value="active" %8$s>active</option><option value="inactive" %9$s>inactive</option></select></td></tr></table><p><button class="button button-primary">%10$s</button></p></form>', esc_attr( (string) ( $product->name ?? '' ) ), esc_textarea( (string) ( $product->description ?? '' ) ), esc_attr( (string) ( $product->price_description ?? '' ) ), esc_textarea( (string) ( $product->billing_description ?? '' ) ), esc_attr( (string) ( $product->slug ?? '' ) ), esc_attr( (string) ( $product->stripe_product_id ?? '' ) ), esc_attr( (string) ( $product->stripe_price_id ?? '' ) ), selected( (string) ( $product->status ?? 'active' ), 'active', false ), selected( (string) ( $product->status ?? '' ), 'inactive', false ), esc_html( $product ? '更新' : '追加' ) );
 		echo '<table class="widefat striped"><thead><tr><th>商品</th><th>スラッグ</th><th>Product ID</th><th>Price ID</th><th>状態</th><th>操作</th></tr></thead><tbody>';
 		foreach ( $result->items as $p ) {
 			$edit_url   = add_query_arg(
@@ -196,12 +196,14 @@ final class AdminMenu {
 	public function save_product(): void {
 		$this->guard();
 		check_admin_referer( 'odph_save_product' );
-		$name        = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
-		$slug        = sanitize_key( wp_unslash( $_POST['slug'] ?? '' ) );
-		$product_id  = sanitize_text_field( wp_unslash( $_POST['stripe_product_id'] ?? '' ) );
-		$price_id    = sanitize_text_field( wp_unslash( $_POST['stripe_price_id'] ?? '' ) );
-		$description = sanitize_textarea_field( wp_unslash( $_POST['description'] ?? '' ) );
-		$id          = absint( $_POST['product_id'] ?? 0 );
+		$name                = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
+		$slug                = sanitize_key( wp_unslash( $_POST['slug'] ?? '' ) );
+		$product_id          = sanitize_text_field( wp_unslash( $_POST['stripe_product_id'] ?? '' ) );
+		$price_id            = sanitize_text_field( wp_unslash( $_POST['stripe_price_id'] ?? '' ) );
+		$description         = sanitize_textarea_field( wp_unslash( $_POST['description'] ?? '' ) );
+		$price_description   = sanitize_text_field( wp_unslash( $_POST['price_description'] ?? '' ) );
+		$billing_description = sanitize_textarea_field( wp_unslash( $_POST['billing_description'] ?? '' ) );
+		$id                  = absint( $_POST['product_id'] ?? 0 );
 		if ( ! $name || ! preg_match( '/^[a-z0-9_-]+$/', $slug ) || ! preg_match( '/^prod_[A-Za-z0-9]+$/', $product_id ) || ! preg_match( '/^price_[A-Za-z0-9]+$/', $price_id ) ) {
 			wp_die( esc_html__( '入力値が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) ); }
 		try {
@@ -212,12 +214,14 @@ final class AdminMenu {
 				}
 			}
 			$data   = array(
-				'name'              => $name,
-				'slug'              => $slug,
-				'description'       => $description,
-				'stripe_product_id' => $product_id,
-				'stripe_price_id'   => $price_id,
-				'status'            => in_array( $_POST['status'] ?? '', array( 'active', 'inactive' ), true ) ? $_POST['status'] : 'active',
+				'name'                => $name,
+				'slug'                => $slug,
+				'description'         => $description,
+				'price_description'   => $price_description,
+				'billing_description' => $billing_description,
+				'stripe_product_id'   => $product_id,
+				'stripe_price_id'     => $price_id,
+				'status'              => in_array( $_POST['status'] ?? '', array( 'active', 'inactive' ), true ) ? $_POST['status'] : 'active',
 			);
 			$action = $id ? 'product_updated' : 'product_created';
 			if ( $id ) {

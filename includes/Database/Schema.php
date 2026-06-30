@@ -8,7 +8,7 @@
 namespace OD_Product_Hub\Database;
 
 final class Schema {
-	public const VERSION = '1.3.0';
+	public const VERSION = '1.4.0';
 
 	/** @return list<string> */
 	public static function table_suffixes(): array {
@@ -27,6 +27,8 @@ final class Schema {
 				name varchar(191) NOT NULL,
 				slug varchar(191) NOT NULL,
 				description longtext NULL,
+				price_description varchar(191) NULL,
+				billing_description text NULL,
 				stripe_product_id varchar(191) NOT NULL,
 				stripe_price_id varchar(191) NOT NULL,
 				status varchar(20) NOT NULL DEFAULT 'active',

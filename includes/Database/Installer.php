@@ -59,6 +59,7 @@ final class Installer {
 			'1.1.0' => array( self::class, 'reconcile_repository_schema' ),
 			'1.2.0' => array( self::class, 'reconcile_repository_schema' ),
 			'1.3.0' => array( self::class, 'reconcile_repository_schema' ),
+			'1.4.0' => array( self::class, 'reconcile_repository_schema' ),
 		);
 	}
 

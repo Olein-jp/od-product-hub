@@ -16,7 +16,7 @@ final class ProductRepository extends AbstractRepository {
 	}
 
 	protected function writable_columns(): array {
-		return array( 'name', 'slug', 'description', 'stripe_product_id', 'stripe_price_id', 'status', 'created_at', 'updated_at' );
+		return array( 'name', 'slug', 'description', 'price_description', 'billing_description', 'stripe_product_id', 'stripe_price_id', 'status', 'created_at', 'updated_at' );
 	}
 
 	public function find_by_slug( string $slug ): ?object {
