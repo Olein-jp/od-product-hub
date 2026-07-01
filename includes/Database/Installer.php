@@ -8,18 +8,43 @@
 namespace OD_Product_Hub\Database;
 
 final class Installer {
+	private const LOG_CLEANUP_HOOK          = 'odph_cleanup_logs';
+	private const LOG_CLEANUP_RECURRENCE    = 'daily';
+	private const LOG_CLEANUP_INITIAL_DELAY = HOUR_IN_SECONDS;
+
 	public static function activate(): void {
 		self::migrate();
 		add_option( 'odph_settings', self::defaults(), '', false );
-		if ( ! wp_next_scheduled( 'odph_cleanup_logs' ) ) {
-			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'odph_cleanup_logs' );
-		}
+		self::ensure_scheduled_events();
 	}
 
 	public static function maybe_upgrade(): void {
 		if ( version_compare( (string) get_option( 'odph_schema_version', '0.0.0' ), Schema::VERSION, '<' ) ) {
 			self::migrate();
 		}
+		self::ensure_scheduled_events();
+	}
+
+	public static function ensure_scheduled_events(): void {
+		if ( false !== wp_next_scheduled( self::LOG_CLEANUP_HOOK ) ) {
+			return;
+		}
+
+		$result = wp_schedule_event(
+			time() + self::LOG_CLEANUP_INITIAL_DELAY,
+			self::LOG_CLEANUP_RECURRENCE,
+			self::LOG_CLEANUP_HOOK,
+			array(),
+			true
+		);
+		if ( is_wp_error( $result ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are not HTML output; retain the WP-Cron diagnostic.
+			throw new \RuntimeException( 'Failed to schedule log cleanup: ' . $result->get_error_message() );
+		}
+	}
+
+	public static function deactivate(): void {
+		wp_clear_scheduled_hook( self::LOG_CLEANUP_HOOK );
 	}
 
 	public static function migrate(): void {
@@ -47,7 +72,7 @@ final class Installer {
 				throw DatabaseException::from_last_error( 'uninstall ' . $suffix );
 			}
 		}
-		wp_clear_scheduled_hook( 'odph_cleanup_logs' );
+		self::deactivate();
 		delete_option( 'odph_settings' );
 		delete_option( 'odph_schema_version' );
 	}

@@ -17,6 +17,7 @@ use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Log\EmailLogRepository;
 use OD_Product_Hub\Log\LogCleanupService;
 use OD_Product_Hub\Log\WebhookLogRepository;
+use OD_Product_Hub\Plugin;
 use OD_Product_Hub\Product\ProductRepository;
 use OD_Product_Hub\Subscription\SubscriptionRepository;
 use OD_Product_Hub\Webhook\PayloadRedactor;
@@ -32,6 +33,14 @@ function odph_operations_assert( bool $condition, string $message, $actual = nul
 	}
 }
 
+function odph_operations_scheduled_event_count( string $hook ): int {
+	$count = 0;
+	foreach ( _get_cron_array() as $events ) {
+		$count += count( $events[ $hook ] ?? array() );
+	}
+	return $count;
+}
+
 global $wpdb;
 
 update_option( 'odph_settings', array( 'delete_on_uninstall' => 1 ), false );
@@ -40,10 +49,35 @@ Installer::activate();
 
 $settings = (array) get_option( 'odph_settings', array() );
 odph_operations_assert( 365 === (int) ( $settings['log_retention_days'] ?? 0 ), 'Default log retention must be 365 days', $settings );
+Installer::deactivate();
+odph_operations_assert( false === wp_next_scheduled( 'odph_cleanup_logs' ), 'Deactivation must remove the cleanup event' );
+
+update_option( 'odph_schema_version', OD_Product_Hub\Database\Schema::VERSION, false );
+Plugin::instance()->register();
 $first_schedule = wp_next_scheduled( 'odph_cleanup_logs' );
-Installer::activate();
+odph_operations_assert( false !== $first_schedule, 'Plugin initialization must repair a missing cleanup event on an existing installation' );
+odph_operations_assert( 1 === odph_operations_scheduled_event_count( 'odph_cleanup_logs' ), 'Plugin initialization must register exactly one cleanup event' );
+Plugin::instance()->register();
 $second_schedule = wp_next_scheduled( 'odph_cleanup_logs' );
-odph_operations_assert( false !== $first_schedule && $first_schedule === $second_schedule, 'Repeated activation must not duplicate or move the cleanup event' );
+odph_operations_assert( $first_schedule === $second_schedule, 'Repeated plugin initialization must not move the cleanup event' );
+odph_operations_assert( 1 === odph_operations_scheduled_event_count( 'odph_cleanup_logs' ), 'Repeated plugin initialization must not duplicate the cleanup event' );
+
+Installer::deactivate();
+odph_operations_assert( false === wp_next_scheduled( 'odph_cleanup_logs' ), 'Deactivation must remove the repaired cleanup event' );
+
+$schedule_failure   = static fn () => new WP_Error( 'odph_test_schedule_failure', 'Simulated scheduling failure.' );
+$schedule_exception = null;
+add_filter( 'pre_schedule_event', $schedule_failure );
+try {
+	Installer::ensure_scheduled_events();
+} catch ( RuntimeException $exception ) {
+	$schedule_exception = $exception;
+} finally {
+	remove_filter( 'pre_schedule_event', $schedule_failure );
+}
+odph_operations_assert( $schedule_exception instanceof RuntimeException, 'A cleanup scheduling failure must stop initialization with an exception' );
+odph_operations_assert( str_contains( $schedule_exception->getMessage(), 'Simulated scheduling failure.' ), 'The scheduling exception must retain the WordPress error message' );
+Installer::ensure_scheduled_events();
 
 $products      = new ProductRepository();
 $customers     = new CustomerRepository();
@@ -274,4 +308,4 @@ $changed_retention = $cleanup->run();
 odph_operations_assert( 1 === $changed_retention['api_logs'], 'Changing retention to 30 days must remove the 31-day fixture only', $changed_retention );
 odph_operations_assert( 1 === $api_logs->search_admin( 'verify', 'failure', '', 'https://retention.example.test/recent', 1 )->total, 'A 29-day log must remain after 30-day retention cleanup' );
 
-WP_CLI::success( 'Dashboard, searchable logs, payload masking, 10k pagination, Cron idempotency, and retention cleanup passed.' );
+WP_CLI::success( 'Dashboard, searchable logs, payload masking, 10k pagination, Cron self-repair, and retention cleanup passed.' );

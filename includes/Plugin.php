@@ -35,8 +35,4 @@ final class Plugin {
 		( new Shortcodes() )->register();
 		add_action( 'odph_cleanup_logs', array( new LogCleanupService(), 'run_scheduled' ) );
 	}
-
-	public static function deactivate(): void {
-		wp_clear_scheduled_hook( 'odph_cleanup_logs' );
-	}
 }

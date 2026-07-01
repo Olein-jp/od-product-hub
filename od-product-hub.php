@@ -41,7 +41,7 @@ if ( file_exists( $odph_autoload ) ) {
 }
 
 register_activation_hook( __FILE__, array( 'OD_Product_Hub\\Database\\Installer', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'OD_Product_Hub\\Plugin', 'deactivate' ) );
+register_deactivation_hook( __FILE__, array( 'OD_Product_Hub\\Database\\Installer', 'deactivate' ) );
 
 add_action(
 	'plugins_loaded',
