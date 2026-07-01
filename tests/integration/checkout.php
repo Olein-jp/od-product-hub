@@ -58,6 +58,7 @@ odph_checkout_assert( 'subscription' === $captured_args['mode'], 'Checkout must 
 odph_checkout_assert( 'price_checkout' === $captured_args['line_items'][0]['price'], 'Checkout must use the configured Price ID' );
 odph_checkout_assert( 'checkout-product' === $captured_args['metadata']['odph_product_slug'], 'Checkout must include product metadata' );
 odph_checkout_assert( str_contains( $captured_args['success_url'], 'session_id={CHECKOUT_SESSION_ID}' ), 'Success URL must include the Checkout Session placeholder' );
+odph_checkout_assert( ! isset( $captured_args['payment_method_types'] ), 'Checkout must preserve Stripe dynamic payment methods' );
 odph_checkout_assert( ! isset( $captured_args['customer_email'] ) && ! isset( $captured_args['customer'] ), 'Guest Checkout must not receive invented customer data' );
 
 $existing_user_id = username_exists( 'odph-checkout-user' );

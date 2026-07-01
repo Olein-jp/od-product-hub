@@ -7,6 +7,13 @@
 
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
+if ( ! function_exists( 'get_option' ) ) {
+	/** @return mixed */
+	function get_option( string $option, mixed $default = false ): mixed {
+		return $GLOBALS['odph_test_options'][ $option ] ?? $default;
+	}
+}
+
 if ( ! function_exists( 'do_action' ) ) {
 	function do_action( string $hook, mixed ...$args ): void {
 		unset( $hook, $args );
