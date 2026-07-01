@@ -1,0 +1,11 @@
+{
+  "name": "olein-design/od-product-hub-client-example",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "repositories": [
+    {"type": "path", "url": "../../packages/client-sdk", "options": {"symlink": true}}
+  ],
+  "require": {
+    "olein-design/od-product-hub-client": "dev-main"
+  }
+}
