@@ -201,7 +201,7 @@ $webhooks->create(
 	)
 );
 
-$counts = ( new DashboardService() )->counts();
+$counts = ( new DashboardService( $subscriptions, $webhooks, $licenses, $api_logs ) )->counts();
 odph_operations_assert(
 	array(
 		'active_licenses'    => 1,
@@ -226,16 +226,19 @@ $admin_logs->create(
 );
 odph_operations_assert( 1 === $admin_logs->search_admin( 'product_updated', 'product', 1, 1 )->total, 'Admin log filters must work together' );
 
-$previous_get = $_GET; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The integration test temporarily supplies read-only detail parameters.
-$_GET         = array(
+$previous_get     = $_GET; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The integration test temporarily supplies read-only detail parameters.
+$previous_user_id = get_current_user_id();
+wp_set_current_user( 1 );
+$_GET = array(
 	'page'   => 'odph-logs',
 	'tab'    => 'webhook',
 	'log_id' => $detail_id,
 );
 ob_start();
-( new LogsPage() )->render();
+( new LogsPage( $webhooks, $api_logs, $admin_logs, new PayloadRedactor() ) )->render();
 $detail_html = (string) ob_get_clean();
 $_GET        = $previous_get;
+wp_set_current_user( $previous_user_id );
 odph_operations_assert( str_contains( $detail_html, 'マスク済みpayload' ) && str_contains( $detail_html, '[redacted]' ), 'Webhook detail must show a clearly labelled masked payload' );
 foreach ( array( 'private@example.test', '1 Secret Street', 'pm_secret_value', 'private-receipt' ) as $secret ) {
 	odph_operations_assert( ! str_contains( $detail_html, $secret ), 'Webhook detail must not reveal sensitive payload values', $secret );

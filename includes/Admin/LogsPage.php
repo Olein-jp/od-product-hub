@@ -15,7 +15,15 @@ use OD_Product_Hub\Log\WebhookLogRepository;
 use OD_Product_Hub\Webhook\PayloadRedactor;
 
 final class LogsPage {
+	public function __construct(
+		private readonly WebhookLogRepository $webhook_logs,
+		private readonly ApiLogRepository $api_logs,
+		private readonly AdminLogRepository $admin_logs,
+		private readonly PayloadRedactor $redactor
+	) {}
+
 	public function render(): void {
+		AdminAccess::guard();
 		$tab = sanitize_key( wp_unslash( $_GET['tab'] ?? 'webhook' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab selection.
 		$tab = in_array( $tab, array( 'webhook', 'api', 'admin' ), true ) ? $tab : 'webhook';
 		echo '<div class="wrap"><h1>運用ログ</h1>';
@@ -54,7 +62,7 @@ final class LogsPage {
 		$query  = sanitize_text_field( wp_unslash( $_GET['s'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only search.
 		$result = sanitize_key( wp_unslash( $_GET['result'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$rows   = ( new WebhookLogRepository() )->search_admin( $query, $result, $page );
+		$rows   = $this->webhook_logs->search_admin( $query, $result, $page );
 		echo '<h2>Webhookログ</h2><form method="get"><input type="hidden" name="page" value="odph-logs"><input type="hidden" name="tab" value="webhook"><label for="webhook-search">イベントID・種類</label> <input id="webhook-search" name="s" value="' . esc_attr( $query ) . '"> <label for="webhook-result">結果</label> <select id="webhook-result" name="result"><option value="">すべて</option>';
 		foreach ( array( 'processing', 'success', 'error', 'signature_error', 'unsupported' ) as $option ) {
 			printf( '<option value="%1$s" %2$s>%1$s</option>', esc_attr( $option ), selected( $result, $option, false ) );
@@ -69,11 +77,11 @@ final class LogsPage {
 	}
 
 	private function webhook_detail( int $id ): void {
-		$log = ( new WebhookLogRepository() )->find( $id );
+		$log = $this->webhook_logs->find( $id );
 		if ( ! $log ) {
 			wp_die( esc_html__( 'Webhookログが見つかりません。', 'od-product-hub' ), '', array( 'response' => 404 ) );
 		}
-		$masked  = ( new PayloadRedactor() )->redact_json( (string) $log->payload );
+		$masked  = $this->redactor->redact_json( (string) $log->payload );
 		$decoded = json_decode( $masked, true );
 		$pretty  = is_array( $decoded ) ? wp_json_encode( $decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) : $masked;
 		echo '<p><a href="' . esc_url( admin_url( 'admin.php?page=odph-logs&tab=webhook' ) ) . '">← Webhookログ一覧へ戻る</a></p><h2>Webhookログ詳細</h2><table class="form-table">';
@@ -98,7 +106,7 @@ final class LogsPage {
 		$error  = sanitize_key( wp_unslash( $_GET['error_code'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$site   = esc_url_raw( wp_unslash( $_GET['site_url'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$rows   = ( new ApiLogRepository() )->search_admin( $action, $result, $error, $site, $page );
+		$rows   = $this->api_logs->search_admin( $action, $result, $error, $site, $page );
 		echo '<h2>APIログ</h2><form method="get"><input type="hidden" name="page" value="odph-logs"><input type="hidden" name="tab" value="api"><label for="api-action">操作</label> <select id="api-action" name="action_filter"><option value="">すべて</option>';
 		foreach ( array( 'activate', 'verify', 'deactivate' ) as $option ) {
 			printf( '<option value="%1$s" %2$s>%1$s</option>', esc_attr( $option ), selected( $action, $option, false ) );
@@ -118,7 +126,7 @@ final class LogsPage {
 		$type   = sanitize_key( wp_unslash( $_GET['object_type'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$user   = absint( $_GET['user_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$rows   = ( new AdminLogRepository() )->search_admin( $action, $type, $user, $page );
+		$rows   = $this->admin_logs->search_admin( $action, $type, $user, $page );
 		echo '<h2>管理操作ログ</h2><form method="get"><input type="hidden" name="page" value="odph-logs"><input type="hidden" name="tab" value="admin"><label for="admin-action">操作</label> <input id="admin-action" name="action_filter" value="' . esc_attr( $action ) . '"> <label for="admin-object">対象種別</label> <input id="admin-object" name="object_type" value="' . esc_attr( $type ) . '"> <label for="admin-user">ユーザーID</label> <input id="admin-user" type="number" min="1" name="user_id" value="' . esc_attr( $user ? (string) $user : '' ) . '"> <button class="button">絞り込む</button></form><p>' . esc_html( sprintf( '全 %d 件', $rows->total ) ) . '</p><table class="widefat striped"><thead><tr><th>ユーザー</th><th>操作</th><th>対象</th><th>対象ID</th><th>詳細</th><th>日時</th></tr></thead><tbody>';
 		foreach ( $rows->items as $row ) {
 			printf( '<tr><td>#%1$d</td><td>%2$s</td><td>%3$s</td><td>%4$s</td><td><code>%5$s</code></td><td>%6$s</td></tr>', absint( $row->user_id ), esc_html( (string) $row->action ), esc_html( (string) $row->object_type ), esc_html( (string) $row->object_id ), esc_html( (string) $row->details ), esc_html( $this->date( $row->created_at ) ) );

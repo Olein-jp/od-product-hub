@@ -10,11 +10,13 @@ namespace OD_Product_Hub\Admin;
 use OD_Product_Hub\Database\UtcDateTime;
 
 final class DashboardPage {
+	public function __construct( private readonly DashboardService $service ) {}
+
 	public function render(): void {
-		$service = new DashboardService();
-		$counts  = $service->counts();
-		$recent  = $service->recent();
-		$cards   = array(
+		AdminAccess::guard();
+		$counts = $this->service->counts();
+		$recent = $this->service->recent();
+		$cards  = array(
 			array( '有効ライセンス', $counts['active_licenses'], admin_url( 'admin.php?page=odph-licenses&status=active' ) ),
 			array( '停止ライセンス', $counts['suspended_licenses'], admin_url( 'admin.php?page=odph-licenses&status=suspended' ) ),
 			array( '支払い失敗', $counts['payment_failures'], admin_url( 'admin.php?page=odph-customers&tab=subscriptions&status=past_due' ) ),
