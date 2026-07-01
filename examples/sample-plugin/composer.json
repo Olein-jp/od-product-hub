@@ -1,5 +1,6 @@
 {
   "name": "olein-design/od-product-hub-client-example",
+  "description": "Example WordPress plugin integrating the OD Product Hub client SDK.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "repositories": [

@@ -24,7 +24,7 @@ for required in \
 	fi
 done
 
-if grep -Eq '^od-product-hub/(\.git|\.github|\.gitignore|\.env($|\.)|node_modules|tests|scripts|build|dist|\.phpunit\.cache)(/|$)|^od-product-hub/(composer\.(json|lock)|package(-lock)?\.json|phpcs\.xml\.dist|phpstan\.neon\.dist|phpunit\.xml\.dist)$' <<<"$CONTENTS"; then
+if grep -Eq '^od-product-hub/(\.git|\.github|\.gitignore|\.env($|\.)|node_modules|packages|examples|tests|scripts|build|dist|\.phpunit\.cache)(/|$)|^od-product-hub/(composer\.(json|lock)|package(-lock)?\.json|phpcs\.xml\.dist|phpstan\.neon\.dist|phpunit\.xml\.dist)$' <<<"$CONTENTS"; then
 	echo "Development-only content was found in the release ZIP." >&2
 	exit 1
 fi

@@ -5,6 +5,8 @@
 /.github
 /.wp-env.json
 /node_modules
+/packages
+/examples
 /tests
 /scripts
 /.phpunit.cache

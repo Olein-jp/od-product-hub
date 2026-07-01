@@ -24,7 +24,8 @@
   "scripts": {
     "lint": "phpcs",
     "phpstan": "phpstan analyse --memory-limit=1G --debug",
-    "test": "phpunit"
+    "test": "phpunit",
+    "quality": "scripts/quality-all.sh"
   },
   "config": {
     "allow-plugins": {"dealerdirect/phpcodesniffer-composer-installer": true},

@@ -35,14 +35,14 @@ final class Updater {
 		if ( null === $release || empty( $release['update_available'] ) || empty( $release['release'] ) || ! is_array( $release['release'] ) ) {
 			return $transient;
 		}
-		$item              = (object) $this->update_item( $release['release'] );
+		$item = (object) $this->update_item( $release['release'] );
 		$transient->response[ $this->config->plugin_file ] = $item;
 		return $transient;
 	}
 
 	/** @param mixed $result @param mixed $action @param mixed $args @return mixed */
 	public function plugin_information( $result, $action, $args ) {
-		if ( 'plugin_information' !== $action || ! is_object( $args ) || $this->config->product_slug !== (string) ( $args->slug ?? '' ) ) {
+		if ( 'plugin_information' !== $action || ! is_object( $args ) || (string) ( $args->slug ?? '' ) !== $this->config->product_slug ) {
 			return $result;
 		}
 		$response = $this->fetch_release();
@@ -63,7 +63,7 @@ final class Updater {
 	public function verified_download( $reply, $package, $upgrader, $hook_extra ) {
 		unset( $upgrader, $hook_extra );
 		$release = $this->release;
-		if ( ! is_string( $package ) || null === $release || $package !== (string) ( $release['download_url'] ?? '' ) ) {
+		if ( ! is_string( $package ) || null === $release || (string) ( $release['download_url'] ?? '' ) !== $package ) {
 			return $reply;
 		}
 		if ( ! function_exists( 'download_url' ) ) {
@@ -130,14 +130,14 @@ final class Updater {
 		if ( ! function_exists( 'sodium_crypto_sign_verify_detached' ) ) {
 			return false;
 		}
-		$hash      = hash_file( 'sha256', $file );
-		$expected  = (string) ( $release['sha256'] ?? '' );
-		$signature = base64_decode( (string) ( $release['signature'] ?? '' ), true );
+		$hash       = hash_file( 'sha256', $file );
+		$expected   = (string) ( $release['sha256'] ?? '' );
+		$signature  = base64_decode( (string) ( $release['signature'] ?? '' ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Decodes the detached signature received from the Hub.
 		$advertised = (string) ( $release['public_key'] ?? '' );
 		if ( ! hash_equals( $this->config->release_public_key, $advertised ) ) {
 			return false;
 		}
-		$public    = base64_decode( $this->config->release_public_key, true );
+		$public = base64_decode( $this->config->release_public_key, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Decodes the configured Ed25519 public key.
 		return is_string( $hash ) && hash_equals( $expected, $hash ) && is_string( $signature ) && is_string( $public )
 			&& SODIUM_CRYPTO_SIGN_BYTES === strlen( $signature ) && SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES === strlen( $public )
 			&& sodium_crypto_sign_verify_detached( $signature, $hash, $public );
