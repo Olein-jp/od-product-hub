@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=8.3",
-    "stripe/stripe-php": "^17.0"
+    "stripe/stripe-php": "^20.3"
   },
   "require-dev": {
     "phpstan/phpstan": "^2.1",
