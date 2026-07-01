@@ -8,7 +8,7 @@
 
 1. SodiumでEd25519鍵をオフライン生成し、秘密鍵はSecret Manager等に保存する。公開鍵はクライアントプラグインへ固定する。
 2. `ReleaseService::publish()` へZIP、商品ID、バージョン、チャンネル、プラグインファイル、互換条件を渡す。サービスが秘密ストレージへコピーし、SHA-256と署名をDBへ保存する。
-3. SDKが `POST /od-product-hub/v1/updates/check` を呼ぶ。Hubは商品・ライセンス・契約を再評価し、有効な場合だけ5分以内（設定範囲60〜900秒）の一回利用URLを返す。
+3. SDKが現在の `plugin_version` を付けて `POST /od-product-hub/v1/updates/check` を呼ぶ。Hubは商品・ライセンス・契約とパッケージ署名を検証し、公開版がクライアント版より新しい場合だけ5分以内（設定範囲60〜900秒）の一回利用URLを発行する。同一版またはクライアント側が新しい場合はDBへダウンロード権を書き込まず、`success` と `update_available: false` だけを返す。不正形式またはバージョン省略はHTTP 400とし、ダウンロード権を発行しない。
 4. ダウンロード時にURL署名、有効期限、未使用状態、リリース署名、保存ZIPのハッシュを検証し、DB上で原子的に権利をclaimしてから配信する。
 5. SDKは `upgrader_pre_download` でZIPを取得し、固定済み公開鍵、署名、SHA-256を再検証してWordPress標準Upgraderへ渡す。
 

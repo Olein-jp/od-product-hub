@@ -142,10 +142,36 @@ $release_id = ( new ReleaseService() )->publish(
 	$secret
 );
 
+$download_repository = new DownloadRepository();
+$downloads_before    = $download_repository->search( array(), 1, 1 )->total;
+foreach ( array( '2.0.0', '2.0.1' ) as $current_version ) {
+	$no_update      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', array_merge( odph_api_license_params(), array( 'plugin_version' => $current_version ) ) );
+	$no_update_data = $no_update->get_data();
+	odph_api_assert( 200 === $no_update->get_status(), 'Same or newer client versions must produce HTTP 200', $no_update_data );
+	odph_api_assert(
+		array(
+			'success'          => true,
+			'update_available' => false,
+		) === $no_update_data,
+		'Same or newer client versions must receive the minimal no-update response',
+		$no_update_data
+	);
+	odph_api_assert( $downloads_before === $download_repository->search( array(), 1, 1 )->total, 'No-update checks must not issue download grants' );
+}
+
+$malformed_update = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', array_merge( odph_api_license_params(), array( 'plugin_version' => 'latest' ) ) );
+odph_api_assert( 400 === $malformed_update->get_status() && 'rest_invalid_param' === $malformed_update->get_data()['code'], 'Malformed update versions must return WordPress REST 400', $malformed_update->get_data() );
+$missing_version_params = odph_api_license_params();
+unset( $missing_version_params['plugin_version'] );
+$missing_version = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', $missing_version_params );
+odph_api_assert( 400 === $missing_version->get_status() && 'rest_missing_callback_param' === $missing_version->get_data()['code'], 'Update checks must require plugin_version', $missing_version->get_data() );
+odph_api_assert( $downloads_before === $download_repository->search( array(), 1, 1 )->total, 'Invalid update versions must not issue download grants' );
+
 $update      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', array_merge( odph_api_license_params(), array( 'channel' => 'stable' ) ) );
 $update_data = $update->get_data();
 odph_api_assert( 200 === $update->get_status() && true === $update_data['update_available'], 'Active contracts must receive update metadata', $update_data );
 odph_api_assert( ! str_contains( (string) $update_data['release']['download_url'], 'ODPH-' ), 'Download URL must never expose the license key' );
+odph_api_assert( $downloads_before + 1 === $download_repository->search( array(), 1, 1 )->total, 'An available release must issue exactly one download grant' );
 $update_samples = array();
 for ( $index = 0; $index < 7; $index++ ) {
 	$started          = hrtime( true );
@@ -158,7 +184,6 @@ odph_api_assert( $update_samples[6] < 500, 'Update-check p95 sample must remain 
 $token = basename( (string) wp_parse_url( (string) $update_data['release']['download_url'], PHP_URL_PATH ) );
 $grant = ( new DownloadTokenService() )->validate( rawurldecode( $token ) );
 odph_api_assert( null !== $grant && $release_id === $grant['release_id'], 'Issued download URL must contain a valid signed grant' );
-$download_repository = new DownloadRepository();
 odph_api_assert( $download_repository->claim( (int) $grant['grant']->id ), 'First download claim must succeed' );
 odph_api_assert( ! $download_repository->claim( (int) $grant['grant']->id ), 'A download grant must be one-time use' );
 $release = ( new \OD_Product_Hub\Release\ReleaseRepository() )->find( $release_id );

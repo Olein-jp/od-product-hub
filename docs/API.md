@@ -8,6 +8,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 - `POST /verify`: 定期契約検証。成功時に最終検証日時を更新します。
 - `POST /deactivate`: サイト側の解除をログへ記録します。ライセンス状態と最終検証日時は変更しません。
 - `GET /product?product_slug=...`: active商品の公開情報を返します。
+- `POST /updates/check`: 契約と署名済み公開版を検証し、更新がある場合だけ一回利用URLを返します。
 - `OPTIONS /activate`、`/verify`、`/deactivate`、`/product`: 引数のJSON Schemaを返します。
 
 ## POST入力Schema
@@ -20,6 +21,8 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 | `plugin_version` | いいえ | 数字をドットで区切ったバージョン、最大32文字 |
 | `wp_version` | いいえ | 同上 |
 | `php_version` | いいえ | 同上 |
+
+`updates/check` に限り `plugin_version` は必須です。形式に合わない値、または省略時はHTTP 400となり、ダウンロード権を発行しません。
 
 不正な入力はWordPress REST API標準の `rest_invalid_param` とHTTP 400を返し、APIログへ保存しません。
 
@@ -62,6 +65,21 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 ```
 
 `deactivate` は同じ安全な契約情報に `"deactivated": true` を加え、`status` は `active` のまま返します。これはサイト解除の記録であり、キー自体の無効化ではありません。
+
+## 更新確認レスポンス
+
+署名検証済みの公開版が `plugin_version` より新しい場合だけ、`updates/check` は `update_available: true`、リリース情報、短命・一回利用の `download_url` を返し、ダウンロード権を1件発行します。
+
+同一版、またはクライアント側が新しい版の場合、ダウンロード権は発行せず、次の最小レスポンスを返します。`release` と `download_url` は含みません。
+
+```json
+{
+  "success": true,
+  "update_available": false
+}
+```
+
+`plugin_version` がバージョン形式に合わない場合は `rest_invalid_param`、省略時は `rest_missing_callback_param` とHTTP 400を返します。公開版がない場合やパッケージ署名を検証できない場合も、ダウンロード権を発行せず上記の最小レスポンスを返します。
 
 ## 契約状態とerror_code
 
@@ -117,4 +135,4 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 
 `npm run test:api` は、OPTIONS Schema、全状態、HTTPコード、JSON本文、情報非開示、信頼プロキシ、429ヘッダー、ログ境界、`last_verified_at`、deactivateの非破壊性をWordPress実環境で検証します。同じ環境・データで7回計測した中央値が500ms未満であることも確認します。
 
-ライセンスキーはパスワードと同等の共有秘密として扱い、ログ、解析ツール、問い合わせ本文へ平文で記録しないでください。漏洩時は管理画面から再発行します。クライアントSDK、自動更新配布、署名付きダウンロードURLはMVP外で、Phase 2/3の対象です。
+ライセンスキーはパスワードと同等の共有秘密として扱い、ログ、解析ツール、問い合わせ本文へ平文で記録しないでください。漏洩時は管理画面から再発行します。

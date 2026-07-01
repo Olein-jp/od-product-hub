@@ -35,6 +35,13 @@ final class UpdateController extends PublicController {
 	}
 
 	public function register_routes(): void {
+		$args                               = ApiSchema::license_args();
+		$args['plugin_version']['required'] = true;
+		$args['channel']                    = array(
+			'type'    => 'string',
+			'enum'    => array( 'stable', 'beta' ),
+			'default' => 'stable',
+		);
 		register_rest_route(
 			$this->namespace,
 			'/updates/check',
@@ -42,16 +49,7 @@ final class UpdateController extends PublicController {
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'check' ),
 				'permission_callback' => array( $this, 'check_permission' ),
-				'args'                => array_merge(
-					ApiSchema::license_args(),
-					array(
-						'channel' => array(
-							'type'    => 'string',
-							'enum'    => array( 'stable', 'beta' ),
-							'default' => 'stable',
-						),
-					)
-				),
+				'args'                => $args,
 			)
 		);
 	}
@@ -94,13 +92,26 @@ final class UpdateController extends PublicController {
 				$limit
 			);
 		}
+		if ( ! version_compare( (string) $release->version, (string) $request->get_param( 'plugin_version' ), '>' ) ) {
+			$this->log( $request, $license, 'success', null );
+			return $this->with_limit_headers(
+				new WP_REST_Response(
+					array(
+						'success'          => true,
+						'update_available' => false,
+					),
+					200
+				),
+				$limit
+			);
+		}
 		$grant = $this->tokens->issue( (int) $release->id, (int) $license->id, (string) $request->get_param( 'site_url' ) );
 		$this->log( $request, $license, 'success', null );
 		return $this->with_limit_headers(
 			new WP_REST_Response(
 				array(
 					'success'          => true,
-					'update_available' => version_compare( (string) $release->version, (string) $request->get_param( 'plugin_version' ), '>' ),
+					'update_available' => true,
 					'release'          => array(
 						'version'       => (string) $release->version,
 						'plugin_file'   => (string) $release->plugin_file,
