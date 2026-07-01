@@ -1,0 +1,23 @@
+name: WordPress integration
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  wordpress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20', cache: npm}
+      - uses: shivammathur/setup-php@v2
+        with: {php-version: '8.3', coverage: none, tools: composer}
+      - run: npm ci --ignore-scripts
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: npm run env:start
+      - run: npm run test:integration
+      - if: always()
+        run: npm run env:stop

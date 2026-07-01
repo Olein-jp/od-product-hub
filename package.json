@@ -19,7 +19,14 @@
     "test:account": "wp-env run tests-cli wp eval-file wp-content/plugins/od-product-hub/tests/integration/account.php",
     "test:api": "wp-env run tests-cli wp eval-file wp-content/plugins/od-product-hub/tests/integration/api.php",
     "test:operations": "wp-env run tests-cli wp eval-file wp-content/plugins/od-product-hub/tests/integration/operations.php",
-    "lint:php": "find . -path ./vendor -prune -o -path ./node_modules -prune -o -name '*.php' -exec php -l {} +",
+    "test:integration": "npm run test:database && npm run test:webhook && npm run test:email && npm run test:checkout && npm run test:account && npm run test:api && npm run test:operations",
+    "build:release": "scripts/build-release.sh",
+    "build:i18n": "wp-env run cli wp i18n make-pot wp-content/plugins/od-product-hub wp-content/plugins/od-product-hub/languages/od-product-hub.pot --domain=od-product-hub --exclude=vendor,node_modules,tests,build,dist",
+    "test:release": "scripts/test-release.sh",
+    "test:release:reproducible": "scripts/test-reproducible-release.sh",
+    "test:version": "php scripts/check-version.php",
+    "audit:repository": "scripts/audit-repository.sh",
+    "lint:php": "find . -path ./vendor -prune -o -path ./node_modules -prune -o -path ./build -prune -o -path ./dist -prune -o -name '*.php' -exec php -l {} +",
     "test": "npm run lint:php"
   },
   "devDependencies": {

@@ -1,0 +1,30 @@
+name: Release package
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20', cache: npm}
+      - uses: shivammathur/setup-php@v2
+        with: {php-version: '8.3', coverage: none, tools: composer}
+      - run: npm ci --ignore-scripts
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: npm run test:release
+      - run: npm run test:release:reproducible
+      - uses: actions/upload-artifact@v4
+        with:
+          name: od-product-hub-release
+          path: dist/*.zip
+          if-no-files-found: error

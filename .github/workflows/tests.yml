@@ -1,11 +1,21 @@
 name: PHPUnit
 on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with: {php-version: '8.3', coverage: none, tools: composer}
-      - run: composer install --no-interaction --prefer-dist
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - uses: actions/setup-node@v4
+        with: {node-version: '20', cache: npm}
+      - run: npm ci --ignore-scripts
+      - run: npm run test:version
+      - run: npm run audit:repository
       - run: composer test
+      - run: npm run build:release
