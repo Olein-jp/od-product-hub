@@ -23,7 +23,7 @@ jobs:
       - run: composer install --no-interaction --prefer-dist --no-progress
       - run: npm run test:release
       - run: npm run test:release:reproducible
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: od-product-hub-release
           path: dist/*.zip
