@@ -30,12 +30,30 @@ function odph_example_client(): ?\OD_Product_Hub_Client\Client {
 			$hub_url,
 			'example-plugin',
 			'0.1.0',
-			home_url( '/' )
+			home_url( '/' ),
+			86400,
+			259200,
+			'',
+			'stable',
+			''
 		),
 		new \OD_Product_Hub_Client\WordPress\HttpTransport(),
 		new \OD_Product_Hub_Client\WordPress\OptionStateStore( 'odph_example_contract_state' )
 	);
 }
+
+add_action(
+	'plugins_loaded',
+	static function (): void {
+		$hub_url = (string) get_option( 'odph_example_hub_url', '' );
+		$key     = (string) get_option( 'odph_example_license_key', '' );
+		if ( '' === $hub_url || '' === $key || ! defined( 'ODPH_EXAMPLE_RELEASE_PUBLIC_KEY' ) || ! class_exists( '\OD_Product_Hub_Client\WordPress\Updater' ) ) {
+			return;
+		}
+		$config = new \OD_Product_Hub_Client\Config( $hub_url, 'example-plugin', '0.1.0', home_url( '/' ), 86400, 259200, plugin_basename( __FILE__ ), 'stable', (string) ODPH_EXAMPLE_RELEASE_PUBLIC_KEY );
+		( new \OD_Product_Hub_Client\WordPress\Updater( $config, $key ) )->register();
+	}
+);
 
 function odph_example_activate_plugin(): void {
 	if ( ! wp_next_scheduled( ODPH_EXAMPLE_CRON ) ) {

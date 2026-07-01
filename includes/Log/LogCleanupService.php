@@ -13,7 +13,7 @@ final class LogCleanupService {
 	private const SECONDS_PER_DAY = 86400;
 	private const BATCH_SIZE      = 1000;
 	private const MAX_BATCHES     = 100;
-	private const TABLES          = array( 'webhook_logs', 'api_logs', 'admin_logs', 'email_logs' );
+	private const TABLES          = array( 'webhook_logs', 'api_logs', 'admin_logs', 'email_logs', 'downloads' );
 
 	/** @return array<string, int> */
 	public function run( ?int $retention_days = null ): array {

@@ -13,6 +13,7 @@
 | Checkout/Portal | 任意URL、他人のCustomer利用、外部誘導 | 同一サイトの戻り先検証、現在ユーザーに同期したCustomerのみ使用、Stripe SDKが返すURLだけへ遷移 | Stripeアカウント侵害に備えMFAと権限分離を行う |
 | DB/ライセンス | SQL injection、状態競合、管理停止の上書き | allowlist付きRepository、prepared SQL、トランザクション、一意制約、suspended保護 | DBユーザーを最小権限にし、バックアップ復元試験を行う |
 | CI/配布 | Secret混入、依存改ざん、開発物同梱、版ずれ | lockファイル、読み取り専用Actions権限、Dependabot、ZIP内容/秘密値/本番依存/版同期検査 | Branch protection、Secret Scanning、private vulnerability reportingをGitHubで有効化する |
+| 契約者向け更新 | URL漏洩・再利用、期限切れURL、保存ZIP改ざん、署名鍵差し替え、ダウンロード集中 | HMAC付き短命URL、DBの原子的な一回利用claim、契約再評価、HubとSDKの二重SHA-256/Ed25519検証、SDKへの公開鍵固定、経路別レート制限 | 秘密鍵をオフライン管理し、漏洩時はリリース停止・鍵ローテーションを行う。詳細は[UPDATE_DELIVERY.md](UPDATE_DELIVERY.md) |
 
 ## レビュー結論
 

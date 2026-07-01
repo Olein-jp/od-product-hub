@@ -8,11 +8,11 @@
 namespace OD_Product_Hub\Database;
 
 final class Schema {
-	public const VERSION = '1.5.0';
+	public const VERSION = '1.6.0';
 
 	/** @return list<string> */
 	public static function table_suffixes(): array {
-		return array( 'products', 'customers', 'subscriptions', 'licenses', 'webhook_logs', 'api_logs', 'admin_logs', 'email_logs' );
+		return array( 'products', 'customers', 'subscriptions', 'licenses', 'releases', 'downloads', 'webhook_logs', 'api_logs', 'admin_logs', 'email_logs' );
 	}
 
 	/** @return array<string, string> */
@@ -90,6 +90,48 @@ final class Schema {
 				KEY customer_id (customer_id),
 				KEY subscription_id (subscription_id),
 				KEY status (status)
+			) {$charset};",
+			'releases'      => "CREATE TABLE {$p}releases (
+				id bigint unsigned NOT NULL AUTO_INCREMENT,
+				product_id bigint unsigned NOT NULL,
+				version varchar(32) NOT NULL,
+				channel varchar(20) NOT NULL DEFAULT 'stable',
+				plugin_file varchar(191) NOT NULL,
+				package_path text NOT NULL,
+				sha256 varchar(64) NOT NULL,
+				signature text NOT NULL,
+				public_key varchar(191) NOT NULL,
+				release_notes longtext NULL,
+				requires_wp varchar(32) NULL,
+				requires_php varchar(32) NULL,
+				status varchar(20) NOT NULL DEFAULT 'draft',
+				published_at datetime NULL,
+				created_at datetime NOT NULL,
+				updated_at datetime NOT NULL,
+				PRIMARY KEY  (id),
+				UNIQUE KEY product_version_channel (product_id,version,channel),
+				KEY product_channel_status (product_id,channel,status),
+				KEY published_at (published_at)
+			) {$charset};",
+			'downloads'     => "CREATE TABLE {$p}downloads (
+				id bigint unsigned NOT NULL AUTO_INCREMENT,
+				release_id bigint unsigned NOT NULL,
+				license_id bigint unsigned NOT NULL,
+				token_hash varchar(64) NOT NULL,
+				site_url varchar(255) NULL,
+				expires_at datetime NOT NULL,
+				used_at datetime NULL,
+				ip_address varchar(100) NULL,
+				user_agent text NULL,
+				result varchar(20) NOT NULL DEFAULT 'issued',
+				created_at datetime NOT NULL,
+				PRIMARY KEY  (id),
+				UNIQUE KEY token_hash (token_hash),
+				KEY release_id (release_id),
+				KEY license_id (license_id),
+				KEY expires_at (expires_at),
+				KEY result (result),
+				KEY created_at (created_at)
 			) {$charset};",
 			'webhook_logs'  => "CREATE TABLE {$p}webhook_logs (
 				id bigint unsigned NOT NULL AUTO_INCREMENT,

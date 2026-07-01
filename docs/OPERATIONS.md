@@ -15,3 +15,5 @@ npm run test:operations
 ```
 
 このテストは集計値、検索、payloadマスキング、1万件時のページング、保持期間の変更、全ログ種別の削除、Cron登録の冪等性を検証します。
+
+契約者向け更新の公開、鍵管理、監視、負荷試験、インシデント対応は[UPDATE_DELIVERY.md](UPDATE_DELIVERY.md)を参照してください。

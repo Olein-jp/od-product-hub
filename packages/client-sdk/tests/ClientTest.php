@@ -13,6 +13,11 @@ use OD_Product_Hub_Client\TransportException;
 use PHPUnit\Framework\TestCase;
 
 final class ClientTest extends TestCase {
+	public function test_updates_require_a_pinned_public_key(): void {
+		$this->expectException( \InvalidArgumentException::class );
+		new Config( 'https://hub.example.test', 'example-plugin', '1.0.0', 'https://site.example.test', 86400, 259200, 'example/example.php' );
+	}
+
 	public function test_activate_and_cached_verify_return_active(): void {
 		$transport = new FakeTransport( array( $this->active_response() ) );
 		$client    = $this->client( $transport );

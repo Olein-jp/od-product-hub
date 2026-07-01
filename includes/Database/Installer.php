@@ -61,6 +61,7 @@ final class Installer {
 			'1.3.0' => array( self::class, 'reconcile_repository_schema' ),
 			'1.4.0' => array( self::class, 'reconcile_repository_schema' ),
 			'1.5.0' => array( self::class, 'reconcile_repository_schema' ),
+			'1.6.0' => array( self::class, 'reconcile_repository_schema' ),
 		);
 	}
 
@@ -98,6 +99,8 @@ final class Installer {
 			'log_retention_days'     => 365,
 			'api_rate_limit'         => 60,
 			'api_trusted_proxies'    => '',
+			'update_rate_limit'      => 20,
+			'download_url_ttl'       => 300,
 			'delete_on_uninstall'    => 0,
 			'email_templates'        => \OD_Product_Hub\Email\Templates::defaults(),
 		);

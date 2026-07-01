@@ -49,3 +49,24 @@ composer test
 ```
 
 `examples/sample-plugin` はライセンス入力、手動操作、状態表示、日次Cron再検証を含む最小サンプルです。
+
+## WordPress標準アップデート連携
+
+更新配布を使う場合は、プラグインの相対パスと、配布者から別経路で受け取ったEd25519公開鍵を `Config` に固定します。Hubが返した公開鍵をそのまま信頼しません。
+
+```php
+$config = new Config(
+	'https://hub.example.com',
+	'my-plugin',
+	'1.0.0',
+	home_url( '/' ),
+	86400,
+	259200,
+	plugin_basename( __FILE__ ),
+	'stable',
+	'MY_BASE64_ED25519_PUBLIC_KEY'
+);
+( new OD_Product_Hub_Client\WordPress\Updater( $config, get_option( 'my_plugin_license_key', '' ) ) )->register();
+```
+
+UpdaterはWordPressの更新一覧とプラグイン詳細へリリース情報を追加し、標準更新時のZIPをSHA-256と固定公開鍵によるEd25519署名で検証します。期限切れ・再利用済みURL、無効契約、改ざんZIPは更新に進みません。

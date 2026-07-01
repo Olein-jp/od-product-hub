@@ -14,6 +14,10 @@ use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Product\ProductRepository;
 use OD_Product_Hub\Subscription\SubscriptionRepository;
 use OD_Product_Hub\Customer\CustomerRepository;
+use OD_Product_Hub\Release\DownloadRepository;
+use OD_Product_Hub\Release\DownloadTokenService;
+use OD_Product_Hub\Release\PackageSigner;
+use OD_Product_Hub\Release\ReleaseService;
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	throw new RuntimeException( 'This integration check must run via WP-CLI.' );
@@ -113,6 +117,54 @@ $license_id      = $licenses->create(
 		'issued_at'        => UtcDateTime::now(),
 	)
 );
+
+if ( ! defined( 'ODPH_RELEASE_STORAGE_PATH' ) ) {
+	define( 'ODPH_RELEASE_STORAGE_PATH', sys_get_temp_dir() . '/odph-integration-releases' );
+}
+$package = sys_get_temp_dir() . '/odph-api-contract.zip';
+$archive = new ZipArchive();
+$archive->open( $package, ZipArchive::CREATE | ZipArchive::OVERWRITE );
+$archive->addFromString( 'api-contract/api-contract.php', "<?php\n/* Plugin Name: API Contract */\n" );
+$archive->close();
+$keypair    = sodium_crypto_sign_keypair();
+$secret     = base64_encode( sodium_crypto_sign_secretkey( $keypair ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Integration fixture for binary key transport.
+$release_id = ( new ReleaseService() )->publish(
+	$package,
+	array(
+		'product_id'    => $product_id,
+		'version'       => '2.0.0',
+		'channel'       => 'stable',
+		'plugin_file'   => 'api-contract/api-contract.php',
+		'release_notes' => 'Integration release',
+		'requires_wp'   => '6.9',
+		'requires_php'  => '8.1',
+	),
+	$secret
+);
+
+$update      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', array_merge( odph_api_license_params(), array( 'channel' => 'stable' ) ) );
+$update_data = $update->get_data();
+odph_api_assert( 200 === $update->get_status() && true === $update_data['update_available'], 'Active contracts must receive update metadata', $update_data );
+odph_api_assert( ! str_contains( (string) $update_data['release']['download_url'], 'ODPH-' ), 'Download URL must never expose the license key' );
+$update_samples = array();
+for ( $index = 0; $index < 7; $index++ ) {
+	$started          = hrtime( true );
+	$measured_update  = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', odph_api_license_params() );
+	$update_samples[] = ( hrtime( true ) - $started ) / 1_000_000;
+	odph_api_assert( 200 === $measured_update->get_status(), 'Measured update checks must preserve behavior' );
+}
+sort( $update_samples );
+odph_api_assert( $update_samples[6] < 500, 'Update-check p95 sample must remain below 500ms', $update_samples );
+$token = basename( (string) wp_parse_url( (string) $update_data['release']['download_url'], PHP_URL_PATH ) );
+$grant = ( new DownloadTokenService() )->validate( rawurldecode( $token ) );
+odph_api_assert( null !== $grant && $release_id === $grant['release_id'], 'Issued download URL must contain a valid signed grant' );
+$download_repository = new DownloadRepository();
+odph_api_assert( $download_repository->claim( (int) $grant['grant']->id ), 'First download claim must succeed' );
+odph_api_assert( ! $download_repository->claim( (int) $grant['grant']->id ), 'A download grant must be one-time use' );
+$release = ( new \OD_Product_Hub\Release\ReleaseRepository() )->find( $release_id );
+odph_api_assert( ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ), 'Published package signature must verify' );
+file_put_contents( (string) $release->package_path, 'tampered' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Tamper fixture.
+odph_api_assert( ! ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ), 'Tampered packages must be rejected' );
 
 $options      = odph_api_dispatch( $wp_rest_server, 'OPTIONS', '/od-product-hub/v1/verify' );
 $options_data = $options->get_data();
@@ -215,6 +267,8 @@ $subscriptions->update(
 $products->update( $product_id, array( 'status' => 'active' ) );
 $expired_by_date = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/verify', odph_api_license_params() );
 odph_api_assert( 'expired' === $expired_by_date->get_data()['status'] && 'license_expired' === $expired_by_date->get_data()['error_code'], 'A past expires_at must resolve to the expired contract state' );
+$expired_update = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', odph_api_license_params() );
+odph_api_assert( 403 === $expired_update->get_status() && false === $expired_update->get_data()['success'], 'Expired contracts must not receive update metadata' );
 
 $licenses->update(
 	$license_id,

@@ -15,5 +15,7 @@ final class RestController {
 	public function routes(): void {
 		( new LicenseController() )->register_routes();
 		( new ProductController() )->register_routes();
+		( new UpdateController() )->register_routes();
+		( new DownloadController() )->register_routes();
 	}
 }

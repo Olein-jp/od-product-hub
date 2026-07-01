@@ -9,9 +9,9 @@ namespace OD_Product_Hub\Security;
 
 final class RateLimiter {
 	/** @return array{allowed: bool, limit: int, remaining: int, retry_after: int, reset: int} */
-	public function consume( string $bucket ): array {
+	public function consume( string $bucket, ?int $configured_limit = null ): array {
 		$settings = get_option( 'odph_settings', array() );
-		$limit    = max( 1, min( 1000, (int) ( $settings['api_rate_limit'] ?? 60 ) ) );
+		$limit    = max( 1, min( 1000, $configured_limit ?? (int) ( $settings['api_rate_limit'] ?? 60 ) ) );
 		$now      = time();
 		$reset    = ( intdiv( $now, MINUTE_IN_SECONDS ) + 1 ) * MINUTE_IN_SECONDS;
 		$retry    = max( 1, $reset - $now );
