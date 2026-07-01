@@ -77,30 +77,40 @@ abstract class AbstractRepository {
 	 * @param array<string, scalar|null> $filters Exact-match filters.
 	 */
 	public function search( array $filters = array(), int $page = 1, int $per_page = 20, string $order_by = 'id', string $order = 'DESC' ): RepositoryPage {
-		global $wpdb;
-		$page       = max( 1, $page );
-		$per_page   = max( 1, min( 100, $per_page ) );
 		$order_by   = in_array( $order_by, array_merge( array( 'id' ), $this->writable_columns() ), true ) ? $order_by : 'id';
 		$order      = 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
 		$conditions = array();
-		$values     = array( $this->table() );
 		foreach ( $filters as $column => $value ) {
 			if ( ! in_array( $column, $this->filterable_columns(), true ) ) {
 				continue;
 			}
-			$conditions[] = null === $value ? '%i IS NULL' : '%i = %s';
-			$values[]     = $column;
-			if ( null !== $value ) {
-				$values[] = (string) $value;
-			}
+			$conditions[] = null === $value
+				? new SqlFragment( '%i IS NULL', array( $column ) )
+				: new SqlFragment( '%i = %s', array( $column, (string) $value ) );
 		}
-		$where     = $conditions ? ' WHERE ' . implode( ' AND ', $conditions ) : '';
-		$count_sql = 'SELECT COUNT(*) FROM %i' . $where;
-		$total     = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, ...$values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL fragments are generated only from repository allowlists.
-		$this->assert_read( 'count ' . $this->table_suffix() );
-		$rows_sql = 'SELECT * FROM %i' . $where . ' ORDER BY %i ' . $order . ' LIMIT %d OFFSET %d';
-		$rows     = $wpdb->get_results( $wpdb->prepare( $rows_sql, ...array_merge( $values, array( $order_by, $per_page, ( $page - 1 ) * $per_page ) ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL fragments are generated only from repository allowlists.
-		$this->assert_read( 'search ' . $this->table_suffix() );
+		$table = new SqlFragment( '%i', array( $this->table() ) );
+		return $this->paginate(
+			new PaginatedQuery( '*', $table, $table, $conditions, new SqlFragment( '%i ' . $order, array( $order_by ) ) ),
+			$page,
+			$per_page,
+			$this->table_suffix()
+		);
+	}
+
+	protected function paginate( PaginatedQuery $query, int $page, int $per_page, string $operation ): RepositoryPage {
+		global $wpdb;
+		$page             = max( 1, $page );
+		$per_page         = max( 1, min( 100, $per_page ) );
+		$where            = $query->where_sql();
+		$condition_values = $query->condition_values();
+		$count_sql        = 'SELECT COUNT(*) FROM ' . $query->count_from->sql . $where;
+		$count_values     = array_merge( $query->count_from->values, $condition_values );
+		$total            = (int) $wpdb->get_var( $wpdb->prepare( $count_sql, ...$count_values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL fragments are generated only from immutable repository definitions.
+		$this->assert_read( 'count ' . $operation );
+		$rows_sql    = 'SELECT ' . $query->select . ' FROM ' . $query->select_from->sql . $where . ' ORDER BY ' . $query->order_by->sql . ' LIMIT %d OFFSET %d';
+		$rows_values = array_merge( $query->select_from->values, $condition_values, $query->order_by->values, array( $per_page, ( $page - 1 ) * $per_page ) );
+		$rows        = $wpdb->get_results( $wpdb->prepare( $rows_sql, ...$rows_values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL fragments are generated only from immutable repository definitions.
+		$this->assert_read( 'search ' . $operation );
 		$items = is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
 		return new RepositoryPage( $items, $total, $page, $per_page, (int) ceil( $total / $per_page ) );
 	}

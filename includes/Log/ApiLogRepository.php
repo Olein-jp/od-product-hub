@@ -8,7 +8,9 @@
 namespace OD_Product_Hub\Log;
 
 use OD_Product_Hub\Database\AbstractRepository;
+use OD_Product_Hub\Database\PaginatedQuery;
 use OD_Product_Hub\Database\RepositoryPage;
+use OD_Product_Hub\Database\SqlFragment;
 
 final class ApiLogRepository extends AbstractRepository {
 	protected function table_suffix(): string {
@@ -66,36 +68,20 @@ final class ApiLogRepository extends AbstractRepository {
 		$result     = in_array( $result, $results, true ) ? $result : '';
 		$error_code = sanitize_key( $error_code );
 		$site_url   = trim( $site_url );
-		$page       = max( 1, $page );
-		$per_page   = max( 1, min( 100, $per_page ) );
 		$conditions = array();
-		$values     = array( $this->table() );
 		foreach ( array(
 			'action'     => $action,
 			'result'     => $result,
 			'error_code' => $error_code,
 		) as $column => $value ) {
 			if ( '' !== $value ) {
-				$conditions[] = $column . ' = %s';
-				$values[]     = $value;
+				$conditions[] = new SqlFragment( '%i = %s', array( $column, $value ) );
 			}
 		}
 		if ( '' !== $site_url ) {
-			$conditions[] = 'site_url LIKE %s';
-			$values[]     = $wpdb->esc_like( $site_url ) . '%';
+			$conditions[] = new SqlFragment( 'site_url LIKE %s', array( $wpdb->esc_like( $site_url ) . '%' ) );
 		}
-		$where = $conditions ? ' WHERE ' . implode( ' AND ', $conditions ) : '';
-		$total = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i' . $where, ...$values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Conditions are allowlisted and values are prepared dynamically.
-		$this->assert_read( 'count api logs' );
-		$rows = $wpdb->get_results(
-			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Optional allowlisted conditions add a dynamic number of prepared values.
-			$wpdb->prepare(
-				'SELECT id, license_id, product_id, action, result, site_url, ip_address, error_code, created_at FROM %i' . $where . ' ORDER BY id DESC LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Conditions are allowlisted and values are prepared.
-				...array_merge( $values, array( $per_page, ( $page - 1 ) * $per_page ) )
-			)
-		);
-		$this->assert_read( 'search api logs' );
-		$items = is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
-		return new RepositoryPage( $items, $total, $page, $per_page, (int) ceil( $total / $per_page ) );
+		$table = new SqlFragment( '%i', array( $this->table() ) );
+		return $this->paginate( new PaginatedQuery( 'id, license_id, product_id, action, result, site_url, ip_address, error_code, created_at', $table, $table, $conditions, new SqlFragment( 'id DESC' ) ), $page, $per_page, 'api logs' );
 	}
 }

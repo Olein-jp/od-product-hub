@@ -141,8 +141,23 @@ try {
 	$duplicate_rejected = true;
 }
 odph_test_assert( $duplicate_rejected, 'Unique constraints must be surfaced as a safe DatabaseException' );
-odph_test_assert( 1 === $customer_repository->search_admin( 'integration@', 1, 20 )->total, 'Customer email search must find the synchronized customer' );
-odph_test_assert( 1 === $subscription_repository->search_admin( 'trialing', 1, 20 )->total, 'Subscription status filtering must use synchronized state' );
+$product_page = $product_repository->search_admin( 'Integration Product', 'inactive', 1, 20 );
+odph_test_assert( 1 === $product_page->total && 1 === count( $product_page->items ), 'Product COUNT and SELECT must share query and status conditions' );
+$customer_page = $customer_repository->search_admin( 'integration@', 1, 20 );
+odph_test_assert( 1 === $customer_page->total && 1 === count( $customer_page->items ), 'Customer COUNT and SELECT must share email conditions' );
+$subscription_page = $subscription_repository->search_admin( 'trialing', 1, 20 );
+odph_test_assert( 1 === $subscription_page->total && 1 === count( $subscription_page->items ), 'Subscription COUNT and joined SELECT must share status conditions' );
+odph_test_assert( isset( $subscription_page->items[0]->customer_email, $subscription_page->items[0]->product_name ), 'Joined pagination must preserve subscription display fields' );
+$normalized_page = $product_repository->search_admin( '', '', 0, 0 );
+odph_test_assert( 1 === $normalized_page->page && 1 === $normalized_page->per_page, 'Pagination must normalize page and per-page lower bounds' );
+$maximum_page = $product_repository->search_admin( '', '', 1, 10000 );
+odph_test_assert( 100 === $maximum_page->per_page, 'Pagination must enforce the maximum per-page count' );
+$past_end_page = $product_repository->search_admin( '', '', 999, 20 );
+odph_test_assert( 1 === $past_end_page->total && array() === $past_end_page->items, 'Pagination past the final page must preserve total and return no items' );
+$empty_page = $product_repository->search_admin( 'missing-product', 'active', 1, 20 );
+odph_test_assert( 0 === $empty_page->total && array() === $empty_page->items && 0 === $empty_page->total_pages, 'Empty pagination results must remain consistent' );
+$injection_page = $product_repository->search_admin( "' OR 1=1 --", '', 1, 20 );
+odph_test_assert( 0 === $injection_page->total && array() === $injection_page->items, 'Search values must not alter prepared SQL conditions' );
 odph_test_assert( 1 === count( $subscription_repository->find_for_customer( $customer_id ) ), 'Customer detail must include subscriptions' );
 odph_test_assert( 1 === count( $license_repository->find_for_customer( $customer_id ) ), 'Customer detail must include licenses' );
 odph_test_assert( 1 === count( $api_repository->find_for_customer( $customer_id ) ), 'Customer detail must include API logs through owned licenses' );
@@ -163,7 +178,9 @@ odph_test_assert( current_user_can( 'manage_options' ), 'Administrators must ret
 wp_delete_user( (int) $subscriber_id );
 
 $license_manager = new LicenseManager();
-odph_test_assert( 1 === $license_repository->search_admin( LicenseGenerator::hash( 'ODPH-ABCD-EFGH-JKLM-NPQR' ), 'suspended' )->total, 'License search must use the key hash and status filter' );
+$license_page    = $license_repository->search_admin( LicenseGenerator::hash( 'ODPH-ABCD-EFGH-JKLM-NPQR' ), 'suspended' );
+odph_test_assert( 1 === $license_page->total && 1 === count( $license_page->items ), 'License COUNT and joined SELECT must share key hash and status conditions' );
+odph_test_assert( isset( $license_page->items[0]->product_name, $license_page->items[0]->customer_email ), 'Joined pagination must preserve license display fields' );
 odph_test_assert( 1 === count( $api_repository->find_for_license( $license_id ) ), 'License detail must include its authentication logs' );
 $nonce = wp_create_nonce( 'odph_license_suspend_' . $license_id );
 odph_test_assert( 1 === wp_verify_nonce( $nonce, 'odph_license_suspend_' . $license_id ), 'License operation nonce must verify only for its action and object' );

@@ -8,7 +8,9 @@
 namespace OD_Product_Hub\Customer;
 
 use OD_Product_Hub\Database\AbstractRepository;
+use OD_Product_Hub\Database\PaginatedQuery;
 use OD_Product_Hub\Database\RepositoryPage;
+use OD_Product_Hub\Database\SqlFragment;
 
 final class CustomerRepository extends AbstractRepository {
 	protected function table_suffix(): string {
@@ -40,21 +42,14 @@ final class CustomerRepository extends AbstractRepository {
 
 	public function search_admin( string $email, int $page = 1, int $per_page = 20 ): RepositoryPage {
 		global $wpdb;
-		$page   = max( 1, $page );
-		$email  = trim( $email );
-		$where  = '';
-		$values = array( $this->table() );
+		$email      = trim( $email );
+		$conditions = array();
 		if ( '' !== $email ) {
-			$where = ' WHERE email LIKE %s';
 			// Prefix search allows the existing email index to remain usable.
-			$values[] = $wpdb->esc_like( $email ) . '%';
+			$conditions[] = new SqlFragment( 'email LIKE %s', array( $wpdb->esc_like( $email ) . '%' ) );
 		}
-		$total = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i' . $where, ...$values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The condition is fixed and the value is prepared.
-		$this->assert_read( 'count customers' );
-		$rows = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i' . $where . ' ORDER BY id DESC LIMIT %d OFFSET %d', ...array_merge( $values, array( $per_page, ( $page - 1 ) * $per_page ) ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- The condition is fixed and dynamic values are prepared.
-		$this->assert_read( 'search customers' );
-		$items = is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
-		return new RepositoryPage( $items, $total, $page, $per_page, (int) ceil( $total / $per_page ) );
+		$table = new SqlFragment( '%i', array( $this->table() ) );
+		return $this->paginate( new PaginatedQuery( '*', $table, $table, $conditions, new SqlFragment( 'id DESC' ) ), $page, $per_page, 'customers' );
 	}
 
 	/** @param int|string $value */

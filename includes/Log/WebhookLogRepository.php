@@ -9,7 +9,9 @@ namespace OD_Product_Hub\Log;
 
 use OD_Product_Hub\Database\AbstractRepository;
 use OD_Product_Hub\Database\DatabaseException;
+use OD_Product_Hub\Database\PaginatedQuery;
 use OD_Product_Hub\Database\RepositoryPage;
+use OD_Product_Hub\Database\SqlFragment;
 use OD_Product_Hub\Database\UtcDateTime;
 
 final class WebhookLogRepository extends AbstractRepository {
@@ -122,32 +124,15 @@ final class WebhookLogRepository extends AbstractRepository {
 		$allowed    = array( 'processing', 'success', 'error', 'signature_error', 'unsupported' );
 		$result     = in_array( $result, $allowed, true ) ? $result : '';
 		$query      = trim( $query );
-		$page       = max( 1, $page );
-		$per_page   = max( 1, min( 100, $per_page ) );
 		$conditions = array();
-		$values     = array( $this->table() );
 		if ( '' !== $query ) {
-			$conditions[] = '(stripe_event_id LIKE %s OR event_type LIKE %s)';
 			$prefix       = $wpdb->esc_like( $query ) . '%';
-			$values[]     = $prefix;
-			$values[]     = $prefix;
+			$conditions[] = new SqlFragment( '(stripe_event_id LIKE %s OR event_type LIKE %s)', array( $prefix, $prefix ) );
 		}
 		if ( '' !== $result ) {
-			$conditions[] = 'result = %s';
-			$values[]     = $result;
+			$conditions[] = new SqlFragment( 'result = %s', array( $result ) );
 		}
-		$where = $conditions ? ' WHERE ' . implode( ' AND ', $conditions ) : '';
-		$total = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i' . $where, ...$values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Conditions are fixed and values are prepared.
-		$this->assert_read( 'count webhook logs' );
-		$rows = $wpdb->get_results(
-			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Optional fixed conditions add a dynamic number of prepared values.
-			$wpdb->prepare(
-				'SELECT id, stripe_event_id, event_type, result, error_message, duplicate_count, last_received_at, created_at FROM %i' . $where . ' ORDER BY id DESC LIMIT %d OFFSET %d', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Conditions are fixed and values are prepared.
-				...array_merge( $values, array( $per_page, ( $page - 1 ) * $per_page ) )
-			)
-		);
-		$this->assert_read( 'search webhook logs' );
-		$items = is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
-		return new RepositoryPage( $items, $total, $page, $per_page, (int) ceil( $total / $per_page ) );
+		$table = new SqlFragment( '%i', array( $this->table() ) );
+		return $this->paginate( new PaginatedQuery( 'id, stripe_event_id, event_type, result, error_message, duplicate_count, last_received_at, created_at', $table, $table, $conditions, new SqlFragment( 'id DESC' ) ), $page, $per_page, 'webhook logs' );
 	}
 }

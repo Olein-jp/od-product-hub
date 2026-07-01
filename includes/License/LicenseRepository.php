@@ -9,7 +9,9 @@ namespace OD_Product_Hub\License;
 
 use OD_Product_Hub\Database\AbstractRepository;
 use OD_Product_Hub\Database\DatabaseException;
+use OD_Product_Hub\Database\PaginatedQuery;
 use OD_Product_Hub\Database\RepositoryPage;
+use OD_Product_Hub\Database\SqlFragment;
 
 final class LicenseRepository extends AbstractRepository {
 	protected function table_suffix(): string {
@@ -112,37 +114,25 @@ final class LicenseRepository extends AbstractRepository {
 		global $wpdb;
 		$allowed    = array( 'active', 'inactive', 'expired', 'cancelled', 'suspended' );
 		$status     = in_array( $status, $allowed, true ) ? $status : '';
-		$page       = max( 1, $page );
 		$conditions = array();
-		$values     = array( $this->table() );
 		if ( null !== $key_hash ) {
-			$conditions[] = 'l.license_key_hash = %s';
-			$values[]     = $key_hash;
+			$conditions[] = new SqlFragment( 'l.license_key_hash = %s', array( $key_hash ) );
 		}
 		if ( '' !== $status ) {
-			$conditions[] = 'l.status = %s';
-			$values[]     = $status;
+			$conditions[] = new SqlFragment( 'l.status = %s', array( $status ) );
 		}
-		$where = $conditions ? ' WHERE ' . implode( ' AND ', $conditions ) : '';
-		$total = (int) $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i l' . $where, ...$values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Conditions are fixed and dynamic values are prepared.
-		$this->assert_read( 'count licenses' );
-		$sql  = 'SELECT l.id, l.license_key, l.status, l.issued_at, l.expires_at, l.last_verified_at,
-			p.name AS product_name, c.email AS customer_email
-			FROM %i l INNER JOIN %i p ON p.id = l.product_id INNER JOIN %i c ON c.id = l.customer_id' . $where . '
-			ORDER BY l.id DESC LIMIT %d OFFSET %d';
-		$rows = $wpdb->get_results(
-			$wpdb->prepare(
-				$sql, // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is composed only from fixed clauses and prepared placeholders.
-				...array_merge(
-					array( $this->table(), $wpdb->prefix . 'odph_products', $wpdb->prefix . 'odph_customers' ),
-					array_slice( $values, 1 ),
-					array( $per_page, ( $page - 1 ) * $per_page )
-				)
-			)
+		return $this->paginate(
+			new PaginatedQuery(
+				'l.id, l.license_key, l.status, l.issued_at, l.expires_at, l.last_verified_at, p.name AS product_name, c.email AS customer_email',
+				new SqlFragment( '%i l', array( $this->table() ) ),
+				new SqlFragment( '%i l INNER JOIN %i p ON p.id = l.product_id INNER JOIN %i c ON c.id = l.customer_id', array( $this->table(), $wpdb->prefix . 'odph_products', $wpdb->prefix . 'odph_customers' ) ),
+				$conditions,
+				new SqlFragment( 'l.id DESC' )
+			),
+			$page,
+			$per_page,
+			'licenses'
 		);
-		$this->assert_read( 'search licenses' );
-		$items = is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
-		return new RepositoryPage( $items, $total, $page, $per_page, (int) ceil( $total / $per_page ) );
 	}
 
 	public function find_admin_detail( int $id ): ?object {
