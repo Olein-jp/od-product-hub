@@ -2,7 +2,15 @@
 
 WordPress Options APIは秘密設定、`wp_odph_*` 独自テーブルは検索・同期対象データに使います。Stripe Webhookを契約状態の正とし、イベントIDの一意制約で冪等性を確保します。REST APIは保存済み状態だけを参照して高速応答し、Stripeへ同期問い合わせしません。
 
-依存方向は Admin / Frontend / API / Webhook → Service / Repository → WordPress DBです。Phase 2のSDKは公開REST契約だけに依存し、Phase 3のリリース配信を別ドメインとして追加できます。
+依存方向は Admin / Frontend / API / Webhook → Service / Repository → WordPress DBです。クライアントSDKは公開REST契約だけに依存し、HubのDBやStripe SDKへ依存しません。更新配信は `Release` ドメインとして分離され、SDKの `WordPress\Updater` がWordPress標準更新へ接続します。
+
+## 公開APIと更新配信
+
+- `API`: 契約検証、商品情報、更新確認、一回利用ダウンロードの公開RESTルートを登録します。
+- `Release`: リリース情報、秘密ストレージ、SHA-256・Ed25519署名、短命な一回利用ダウンロード権を管理します。
+- `packages/client-sdk`: Hubの公開REST契約を利用し、契約状態のキャッシュとWordPress標準Updater連携を提供します。
+
+RESTの正確な入出力は [API.md](API.md)、SDKの導入は [クライアントSDK README](../packages/client-sdk/README.md)、配布・署名鍵・監視の運用は [UPDATE_DELIVERY.md](UPDATE_DELIVERY.md) を参照してください。
 
 ## 管理画面
 

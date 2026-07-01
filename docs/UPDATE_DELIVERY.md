@@ -1,5 +1,7 @@
 # 契約者向け自動アップデート配布
 
+この文書はHub運用者向けの正本です。クライアントプラグインへの導入コードは [SDK README](../packages/client-sdk/README.md)、更新確認・ダウンロードのREST契約は [API.md](API.md)、Hub全体の依存境界は [ARCHITECTURE.md](ARCHITECTURE.md) を参照してください。
+
 ## 構成と信頼境界
 
 `odph_releases` は商品、SemVer、`stable` / `beta` チャンネル、プラグインファイル、互換条件、リリースノート、秘密ストレージ上のZIPパス、SHA-256、Ed25519署名と公開鍵を保持します。`odph_downloads` はライセンスとリリースへ結び付いた短命・一回利用のダウンロード権と結果を保持します。ZIPはメディアライブラリへ置かず、既定では `wp-content/odph-private-releases` に保存します。本番ではWebルート外を `ODPH_RELEASE_STORAGE_PATH` に指定してください。

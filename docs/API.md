@@ -9,7 +9,8 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 - `POST /deactivate`: サイト側の解除をログへ記録します。ライセンス状態と最終検証日時は変更しません。
 - `GET /product?product_slug=...`: active商品の公開情報を返します。
 - `POST /updates/check`: 契約と署名済み公開版を検証し、更新がある場合だけ一回利用URLを返します。
-- `OPTIONS /activate`、`/verify`、`/deactivate`、`/product`: 引数のJSON Schemaを返します。
+- `GET /downloads/{token}`: 更新確認で発行した短命・一回利用トークンを検証し、署名済みZIPを返します。
+- 各ルートへの `OPTIONS`: WordPress REST APIが引数のJSON Schemaと許可メソッドを返します。
 
 ## POST入力Schema
 
@@ -21,6 +22,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 | `plugin_version` | いいえ | 数字をドットで区切ったバージョン、最大32文字 |
 | `wp_version` | いいえ | 同上 |
 | `php_version` | いいえ | 同上 |
+| `channel` | 更新確認のみ | `stable` または `beta`。省略時は `stable` |
 
 `updates/check` に限り `plugin_version` は必須です。形式に合わない値、または省略時はHTTP 400となり、ダウンロード権を発行しません。
 
@@ -68,7 +70,29 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 
 ## 更新確認レスポンス
 
-署名検証済みの公開版が `plugin_version` より新しい場合だけ、`updates/check` は `update_available: true`、リリース情報、短命・一回利用の `download_url` を返し、ダウンロード権を1件発行します。
+署名検証済みの公開版が `plugin_version` より新しい場合だけ、`updates/check` は `update_available: true` と `release` を返し、ダウンロード権を1件発行します。`download_url` は `release` 内にあり、既定で5分以内（設定可能範囲60〜900秒）に期限切れとなり、一度だけ使用できます。
+
+```json
+{
+  "success": true,
+  "update_available": true,
+  "release": {
+    "version": "1.3.0",
+    "plugin_file": "example-plugin/example-plugin.php",
+    "channel": "stable",
+    "release_notes": "Security and compatibility fixes.",
+    "requires_wp": "6.9",
+    "requires_php": "8.1",
+    "sha256": "64文字のSHA-256ハッシュ",
+    "signature": "Base64形式のEd25519署名",
+    "public_key": "Base64形式のEd25519公開鍵",
+    "download_url": "https://hub.example.com/wp-json/od-product-hub/v1/downloads/ONE_TIME_TOKEN",
+    "expires_at": "2026-07-02T12:05:00+00:00"
+  }
+}
+```
+
+クライアントはレスポンス内の `public_key` を単独では信頼せず、プラグインへ固定した公開鍵との一致、ZIPのSHA-256、Ed25519署名を検証します。詳細は [クライアントSDK](../packages/client-sdk/README.md) と [更新配布](UPDATE_DELIVERY.md) を参照してください。
 
 同一版、またはクライアント側が新しい版の場合、ダウンロード権は発行せず、次の最小レスポンスを返します。`release` と `download_url` は含みません。
 
@@ -79,11 +103,20 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 }
 ```
 
-`plugin_version` がバージョン形式に合わない場合は `rest_invalid_param`、省略時は `rest_missing_callback_param` とHTTP 400を返します。公開版がない場合やパッケージ署名を検証できない場合も、ダウンロード権を発行せず上記の最小レスポンスを返します。
+`plugin_version` がバージョン形式に合わない場合は `rest_invalid_param`、省略時は `rest_missing_callback_param` とHTTP 400を返します。公開版がない場合やパッケージ署名を検証できない場合も、ダウンロード権を発行せず上記の最小レスポンスを返します。有効な契約を確認できない場合はHTTP 403、`success: false`、契約判定に対応する `error_code` を返します。
+
+## 更新ZIPダウンロード
+
+`GET /downloads/{token}` は成功時に `application/zip` を返します。トークンは更新確認を行ったライセンス、リリース、サイトURLへ結び付けられ、期限内でも一度しか成功しません。
+
+- 不正、期限切れ、使用済みトークン: HTTP 403 `odph_download_invalid`
+- 同時利用などclaim後の再利用: HTTP 403 `odph_download_replayed`
+- ZIP欠落、SHA-256またはEd25519署名不一致: HTTP 410 `odph_package_invalid`
+- ダウンロード試行のレート制限超過: HTTP 429 `odph_rate_limited`
 
 ## 契約状態とerror_code
 
-業務上の契約エラーはHTTP 200、`success: false` で返します。
+`activate`、`verify`、`deactivate` の業務上の契約エラーはHTTP 200、`success: false` で返します。`updates/check` は有効な契約を必須とするため、同じ契約判定エラーをHTTP 403で返します。
 
 | `status` | `error_code` | 意味 |
 | --- | --- | --- |
@@ -109,8 +142,9 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 
 - `200`: 商品取得成功、契約検証成功、または業務上の契約エラー
 - `400`: JSON Schemaに合わない入力
-- `403`: 本番環境でHTTPSを使用していない
+- `403`: 本番環境でHTTPSを使用していない、更新確認で契約が無効、またはダウンロードトークンが無効
 - `404`: 商品が存在しない、またはactiveではない
+- `410`: 更新ZIPが存在しない、または完全性を検証できない
 - `429`: レート制限超過
 
 ## レート制限

@@ -1,5 +1,7 @@
 # MVPリリースチェックリスト
 
+> **履歴資料:** この文書はPhase 2のクライアントSDKとPhase 3の自動更新配布を実装する前の、初回MVPリリース判定を記録したものです。現在の提供機能は [README](../README.md)、[SDK README](../packages/client-sdk/README.md)、[更新配布](UPDATE_DELIVERY.md) を参照してください。
+
 ## 自動検証
 
 - [x] WordPress 7.0 / PHP 8.3で全統合テストが実行できる。
@@ -25,7 +27,7 @@
 
 - [x] [THREAT_MODEL.md](THREAT_MODEL.md)でWebhook、公開API、個人情報、管理操作、CI/配布をレビューした。
 - [x] SECURITY、Stripe設定、API、運用、プライバシーポリシー例を更新した。
-- [x] Phase 2のSDKとPhase 3の自動更新配布をMVP外として明示した。
+- [x] 初回MVP判定時点では、後続開発予定だったクライアントSDKと自動更新配布を対象外として整理した（現在は実装済み）。
 - [x] コード監査と依存監査で既知の重大・高リスク問題がないことを確認する手順を用意した。
 
 外部サービス項目は、実行日、担当者、Stripe CLI/WordPress/PHPのバージョン、合否だけを記録します。秘密値、顧客情報、イベント本文は記録しません。
