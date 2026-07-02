@@ -3,6 +3,8 @@
 /.distignore
 /.editorconfig
 /.github
+/.agents
+/skills-lock.json
 /.wp-env.json
 /node_modules
 /packages

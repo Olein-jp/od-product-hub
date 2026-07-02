@@ -49,4 +49,19 @@ final class DownloadRepository extends AbstractRepository {
 	public function mark_result( int $id, string $result ): void {
 		$this->update( $id, array( 'result' => $result ) );
 	}
+
+	public function reject_issued_for_release( int $release_id ): int {
+		global $wpdb;
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE %i SET result = 'rejected' WHERE release_id = %d AND used_at IS NULL AND result = 'issued'",
+				$this->table(),
+				$release_id
+			)
+		); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Emergency withdrawal atomically revokes all unused grants for one release.
+		if ( false === $result ) {
+			throw DatabaseException::from_last_error( 'reject release download grants' );
+		}
+		return $result;
+	}
 }

@@ -19,6 +19,7 @@ use OD_Product_Hub\Admin\LicensePage;
 use OD_Product_Hub\Admin\ProductPage;
 use OD_Product_Hub\API\RestController;
 use OD_Product_Hub\Customer\CustomerRepository;
+use OD_Product_Hub\CLI\ReleaseCommand;
 use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Frontend\Shortcodes;
 use OD_Product_Hub\Log\LogCleanupService;
@@ -53,6 +54,9 @@ final class Plugin {
 		( new WebhookNotificationSubscriber() )->register();
 		( new Shortcodes() )->register();
 		add_action( 'odph_cleanup_logs', array( new LogCleanupService(), 'run_scheduled' ) );
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			ReleaseCommand::register();
+		}
 	}
 
 	private function admin_menu(): AdminMenu {

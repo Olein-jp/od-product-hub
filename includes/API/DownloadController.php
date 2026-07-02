@@ -58,7 +58,7 @@ final class DownloadController extends PublicController {
 		}
 		$downloads = new DownloadRepository();
 		$release   = ( new ReleaseRepository() )->find( $valid['release_id'] );
-		if ( ! $release || ! is_file( (string) $release->package_path ) || ! ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ) ) {
+		if ( ! $release || 'published' !== (string) $release->status || ! is_file( (string) $release->package_path ) || ! ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ) ) {
 			$downloads->mark_result( (int) $valid['grant']->id, 'rejected' );
 			$this->log( $request, $valid, $release, 'failure', 'package_invalid' );
 			return new WP_Error( 'odph_package_invalid', 'Release package integrity check failed.', array( 'status' => 410 ) );

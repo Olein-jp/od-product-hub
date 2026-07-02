@@ -31,4 +31,37 @@ final class ReleaseRepository extends AbstractRepository {
 		$this->assert_read( 'find latest release' );
 		return is_object( $row ) ? $row : null;
 	}
+
+	public function find_by_identity( int $product_id, string $version, string $channel ): ?object {
+		global $wpdb;
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE product_id = %d AND version = %s AND channel = %s LIMIT 1',
+				$this->table(),
+				$product_id,
+				$version,
+				$channel
+			)
+		);
+		$this->assert_read( 'find release identity' );
+		return is_object( $row ) ? $row : null;
+	}
+
+	public function most_recent_for_product( int $product_id, string $channel ): ?object {
+		global $wpdb;
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE product_id = %d AND channel = %s ORDER BY created_at DESC, id DESC LIMIT 1',
+				$this->table(),
+				$product_id,
+				$channel
+			)
+		);
+		$this->assert_read( 'find most recent release' );
+		return is_object( $row ) ? $row : null;
+	}
+
+	public function withdraw( int $id ): bool {
+		return $this->update( $id, array( 'status' => 'withdrawn' ) );
+	}
 }

@@ -62,7 +62,7 @@ final class DownloadTokenService {
 			return null;
 		}
 		$grant = $this->downloads->find_by_token_hash( hash( 'sha256', $token ) );
-		if ( ! $grant || null !== $grant->used_at || UtcDateTime::now() > (string) $grant->expires_at
+		if ( ! $grant || 'issued' !== (string) $grant->result || null !== $grant->used_at || UtcDateTime::now() > (string) $grant->expires_at
 			|| (int) $grant->release_id !== (int) $data['r'] || (int) $grant->license_id !== (int) $data['l'] ) {
 			return null;
 		}
