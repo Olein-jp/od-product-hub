@@ -40,7 +40,7 @@ final class AdminSettings {
 		$current['email_from_name'] = sanitize_text_field( $input['email_from_name'] ?? '' );
 		$email                      = sanitize_email( $input['email_from_address'] ?? '' );
 		if ( '' !== (string) ( $input['email_from_address'] ?? '' ) && ! is_email( $email ) ) {
-			add_settings_error( 'odph_settings', 'invalid_email', __( '送信元メールアドレスが不正です。以前の値を維持しました。', 'od-product-hub' ) );
+			add_settings_error( 'odph_settings', 'invalid_email', __( 'The sender email address is invalid. The previous value was preserved.', 'od-product-hub' ) );
 		} else {
 			$current['email_from_address'] = $email;
 		}
@@ -62,7 +62,8 @@ final class AdminSettings {
 				);
 			} else {
 				$current['email_templates'][ $type ] = $defaults[ $type ];
-				add_settings_error( 'odph_settings', 'invalid_email_template_' . $type, sprintf( '%sが不正なため既定値へ戻しました。', $definition['label'] ) );
+				/* translators: %s: email template label. */
+				add_settings_error( 'odph_settings', 'invalid_email_template_' . $type, sprintf( __( '%s was invalid and has been reset to its default.', 'od-product-hub' ), $definition['label'] ) );
 			}
 		}
 		return $current;
@@ -76,7 +77,7 @@ final class AdminSettings {
 		}
 		$url = esc_url_raw( $value, array( 'http', 'https' ) );
 		if ( '' === $url || ! wp_http_validate_url( $url ) ) {
-			add_settings_error( 'odph_settings', 'invalid_' . $key, __( 'URLが不正です。以前の値を維持しました。', 'od-product-hub' ) );
+			add_settings_error( 'odph_settings', 'invalid_' . $key, __( 'The URL is invalid. The previous value was preserved.', 'od-product-hub' ) );
 			return (string) ( $current[ $key ] ?? '' );
 		}
 		return $url;
@@ -86,7 +87,7 @@ final class AdminSettings {
 	private function bounded_integer( string $key, array $input, array $current, int $minimum, int $maximum ): int {
 		$value = filter_var( $input[ $key ] ?? null, FILTER_VALIDATE_INT );
 		if ( false === $value || $value < $minimum || $value > $maximum ) {
-			add_settings_error( 'odph_settings', 'invalid_' . $key, __( '数値が許容範囲外です。以前の値を維持しました。', 'od-product-hub' ) );
+			add_settings_error( 'odph_settings', 'invalid_' . $key, __( 'The number is outside the allowed range. The previous value was preserved.', 'od-product-hub' ) );
 			return (int) ( $current[ $key ] ?? $minimum );
 		}
 		return $value;
@@ -95,11 +96,11 @@ final class AdminSettings {
 	public function render(): void {
 		AdminAccess::guard();
 		$s = get_option( 'odph_settings', Installer::defaults() );
-		echo '<div class="wrap"><h1>OD Product Hub 設定</h1>';
+		echo '<div class="wrap"><h1>' . esc_html__( 'OD Product Hub Settings', 'od-product-hub' ) . '</h1>';
 		settings_errors( 'odph_settings' );
 		if ( isset( $_GET['stripe_test'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag after a nonce-protected action.
 			$success = 'success' === sanitize_key( wp_unslash( $_GET['stripe_test'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag after a nonce-protected action.
-			echo '<div class="notice notice-' . ( $success ? 'success' : 'error' ) . ' is-dismissible"><p>' . esc_html( $success ? __( 'Stripeへ正常に接続できました。', 'od-product-hub' ) : __( 'Stripeへ接続できませんでした。キーまたは通信環境を確認してください。', 'od-product-hub' ) ) . '</p></div>';
+			echo '<div class="notice notice-' . ( $success ? 'success' : 'error' ) . ' is-dismissible"><p>' . esc_html( $success ? __( 'Connected to Stripe successfully.', 'od-product-hub' ) : __( 'Could not connect to Stripe. Check the keys and network connection.', 'od-product-hub' ) ) . '</p></div>';
 		}
 		echo '<form method="post" action="options.php">';
 		settings_fields( 'odph_settings_group' );
@@ -107,39 +108,44 @@ final class AdminSettings {
 			'stripe_secret_key'      => 'Stripe Secret Key',
 			'stripe_publishable_key' => 'Stripe Publishable Key',
 			'stripe_webhook_secret'  => 'Stripe Webhook Secret',
-			'success_url'            => '購入完了URL',
-			'cancel_url'             => 'キャンセルURL',
-			'email_from_name'        => '送信元名',
-			'email_from_address'     => '送信元メール',
-			'log_retention_days'     => 'ログ保持日数',
-			'api_rate_limit'         => 'APIレート/分',
+			'success_url'            => __( 'Purchase success URL', 'od-product-hub' ),
+			'cancel_url'             => __( 'Checkout cancel URL', 'od-product-hub' ),
+			'email_from_name'        => __( 'Sender name', 'od-product-hub' ),
+			'email_from_address'     => __( 'Sender email', 'od-product-hub' ),
+			'log_retention_days'     => __( 'Log retention days', 'od-product-hub' ),
+			'api_rate_limit'         => __( 'API requests per minute', 'od-product-hub' ),
 		);
 		echo '<table class="form-table">';
 		foreach ( $fields as $key => $label ) {
-			$secret = str_contains( $key, 'key' ) || str_contains( $key, 'secret' );
-			$value  = $secret ? '' : (string) ( $s[ $key ] ?? '' );
-			printf( '<tr><th><label for="odph_%1$s">%2$s</label></th><td><input class="regular-text" type="%3$s" id="odph_%1$s" name="odph_settings[%1$s]" value="%4$s" placeholder="%5$s"></td></tr>', esc_attr( $key ), esc_html( $label ), $secret ? 'password' : 'text', esc_attr( $value ), esc_attr( $secret && ! empty( $s[ $key ] ) ? '設定済み（変更時のみ入力）末尾 ' . substr( $s[ $key ], -4 ) : '' ) );
+			$secret      = str_contains( $key, 'key' ) || str_contains( $key, 'secret' );
+			$value       = $secret ? '' : (string) ( $s[ $key ] ?? '' );
+			$placeholder = '';
+			if ( $secret && ! empty( $s[ $key ] ) ) {
+				/* translators: %s: last four characters of the stored secret. */
+				$placeholder = sprintf( __( 'Configured; enter a value only to change it. Ends in %s', 'od-product-hub' ), substr( $s[ $key ], -4 ) );
+			}
+			printf( '<tr><th><label for="odph_%1$s">%2$s</label></th><td><input class="regular-text" type="%3$s" id="odph_%1$s" name="odph_settings[%1$s]" value="%4$s" placeholder="%5$s"></td></tr>', esc_attr( $key ), esc_html( $label ), $secret ? 'password' : 'text', esc_attr( $value ), esc_attr( $placeholder ) );
 		}
-		printf( '<tr><th><label for="odph_api_trusted_proxies">信頼するプロキシ</label></th><td><textarea class="large-text code" rows="4" id="odph_api_trusted_proxies" name="odph_settings[api_trusted_proxies]">%s</textarea><p class="description">CIDRまたはIPを1行ずつ指定します。未設定時はX-Forwarded-Forを使用しません。</p></td></tr>', esc_textarea( (string) ( $s['api_trusted_proxies'] ?? '' ) ) );
-		echo '<tr><th>Customer Portal</th><td><label><input type="checkbox" name="odph_settings[portal_enabled]" value="1" ' . checked( ! empty( $s['portal_enabled'] ), true, false ) . '> 有効化</label></td></tr><tr><th>Webhook URL</th><td><code>' . esc_html( rest_url( 'od-product-hub/v1/stripe/webhook' ) ) . '</code></td></tr></table>';
-		echo '<h2>メールテンプレート</h2><p>メールはプレーンテキストで送信されます。使用可能なプレースホルダー以外を含むテンプレートは既定値へ戻ります。</p>';
+		printf( '<tr><th><label for="odph_api_trusted_proxies">%1$s</label></th><td><textarea class="large-text code" rows="4" id="odph_api_trusted_proxies" name="odph_settings[api_trusted_proxies]">%2$s</textarea><p class="description">%3$s</p></td></tr>', esc_html__( 'Trusted proxies', 'od-product-hub' ), esc_textarea( (string) ( $s['api_trusted_proxies'] ?? '' ) ), esc_html__( 'Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this field is empty.', 'od-product-hub' ) );
+		echo '<tr><th>Customer Portal</th><td><label><input type="checkbox" name="odph_settings[portal_enabled]" value="1" ' . checked( ! empty( $s['portal_enabled'] ), true, false ) . '> ' . esc_html__( 'Enable', 'od-product-hub' ) . '</label></td></tr><tr><th>Webhook URL</th><td><code>' . esc_html( rest_url( 'od-product-hub/v1/stripe/webhook' ) ) . '</code></td></tr></table>';
+		echo '<h2>' . esc_html__( 'Email templates', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'Emails are sent as plain text. Templates containing unsupported placeholders are reset to their defaults.', 'od-product-hub' ) . '</p>';
 		$stored_templates = is_array( $s['email_templates'] ?? null ) ? $s['email_templates'] : Templates::defaults();
 		foreach ( Templates::definitions() as $type => $definition ) {
 			$template = is_array( $stored_templates[ $type ] ?? null ) ? $stored_templates[ $type ] : Templates::defaults()[ $type ];
 			echo '<fieldset class="odph-email-template"><legend><strong>' . esc_html( $definition['label'] ) . '</strong></legend>';
-			printf( '<p><label for="odph-email-%1$s-subject">件名</label><br><input class="large-text" id="odph-email-%1$s-subject" name="odph_settings[email_templates][%1$s][subject]" value="%2$s"></p>', esc_attr( $type ), esc_attr( (string) $template['subject'] ) );
-			printf( '<p><label for="odph-email-%1$s-body">本文</label><br><textarea class="large-text" rows="5" id="odph-email-%1$s-body" name="odph_settings[email_templates][%1$s][body]">%2$s</textarea></p>', esc_attr( $type ), esc_textarea( (string) $template['body'] ) );
-			echo '<p class="description">使用可能: ';
+			printf( '<p><label for="odph-email-%1$s-subject">%3$s</label><br><input class="large-text" id="odph-email-%1$s-subject" name="odph_settings[email_templates][%1$s][subject]" value="%2$s"></p>', esc_attr( $type ), esc_attr( (string) $template['subject'] ), esc_html__( 'Subject', 'od-product-hub' ) );
+			printf( '<p><label for="odph-email-%1$s-body">%3$s</label><br><textarea class="large-text" rows="5" id="odph-email-%1$s-body" name="odph_settings[email_templates][%1$s][body]">%2$s</textarea></p>', esc_attr( $type ), esc_textarea( (string) $template['body'] ), esc_html__( 'Body', 'od-product-hub' ) );
+			echo '<p class="description">' . esc_html__( 'Available placeholders:', 'od-product-hub' ) . ' ';
 			foreach ( $definition['placeholders'] as $placeholder ) {
 				echo '<code>{' . esc_html( $placeholder ) . '}</code> ';
 			}
 			echo '</p></fieldset>';
 		}
-		printf( '<p><label><input type="checkbox" name="odph_settings[delete_on_uninstall]" value="1" %s> アンインストール時に全データを削除する</label></p>', checked( ! empty( $s['delete_on_uninstall'] ), true, false ) );
+		printf( '<p><label><input type="checkbox" name="odph_settings[delete_on_uninstall]" value="1" %1$s> %2$s</label></p>', checked( ! empty( $s['delete_on_uninstall'] ), true, false ), esc_html__( 'Delete all data when uninstalling', 'od-product-hub' ) );
 		submit_button();
 		echo '</form><hr><form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_test_stripe">';
 		wp_nonce_field( 'odph_test_stripe' );
-		submit_button( __( 'Stripe接続をテスト', 'od-product-hub' ), 'secondary', 'submit', false );
+		submit_button( __( 'Test Stripe connection', 'od-product-hub' ), 'secondary', 'submit', false );
 		echo '</form></div>';
 	}
 }

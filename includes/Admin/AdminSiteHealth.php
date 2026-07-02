@@ -21,7 +21,7 @@ final class AdminSiteHealth {
 	/** @param array<string, mixed> $tests @return array<string, mixed> */
 	public function tests( array $tests ): array {
 		$tests['direct']['odph_configuration'] = array(
-			'label' => __( 'OD Product Hub の本番設定', 'od-product-hub' ),
+			'label' => __( 'OD Product Hub production configuration', 'od-product-hub' ),
 			'test'  => array( $this, 'configuration_status' ),
 		);
 		return $tests;
@@ -34,14 +34,14 @@ final class AdminSiteHealth {
 		$https    = is_ssl() || 'local' === wp_get_environment_type() || 'development' === wp_get_environment_type();
 		$good     = ! $missing && $https;
 		return array(
-			'label'       => $good ? __( 'Stripe設定とHTTPSを確認しました', 'od-product-hub' ) : __( 'OD Product Hub の設定を確認してください', 'od-product-hub' ),
+			'label'       => $good ? __( 'Stripe settings and HTTPS are configured', 'od-product-hub' ) : __( 'Check the OD Product Hub configuration', 'od-product-hub' ),
 			'status'      => $good ? 'good' : 'recommended',
 			'badge'       => array(
 				'label' => 'OD Product Hub',
 				'color' => 'blue',
 			),
-			'description' => $good ? __( '本番運用に必要なStripe設定とHTTPSが有効です。', 'od-product-hub' ) : __( 'Stripeの3つのキーを設定し、本番環境ではHTTPSを有効にしてください。', 'od-product-hub' ),
-			'actions'     => sprintf( '<p><a href="%s">%s</a></p>', esc_url( admin_url( 'admin.php?page=odph-settings' ) ), esc_html__( '設定画面を開く', 'od-product-hub' ) ),
+			'description' => $good ? __( 'The Stripe settings and HTTPS required for production are enabled.', 'od-product-hub' ) : __( 'Configure all three Stripe keys and enable HTTPS in production.', 'od-product-hub' ),
+			'actions'     => sprintf( '<p><a href="%s">%s</a></p>', esc_url( admin_url( 'admin.php?page=odph-settings' ) ), esc_html__( 'Open settings', 'od-product-hub' ) ),
 			'test'        => 'odph_configuration',
 		);
 	}

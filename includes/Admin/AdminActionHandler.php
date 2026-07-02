@@ -33,19 +33,19 @@ final class AdminActionHandler {
 		check_admin_referer( 'odph_save_product' );
 		$data = $this->normalize_product_input( $_POST );
 		if ( null === $data ) {
-			wp_die( esc_html__( '入力値が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) );
+			wp_die( esc_html__( 'The submitted data is invalid.', 'od-product-hub' ), '', array( 'response' => 400 ) );
 		}
 		$id = absint( $_POST['product_id'] ?? 0 );
 		try {
 			foreach ( array( $this->products->find_by_slug( $data['slug'] ), $this->products->find_by_stripe_product_id( $data['stripe_product_id'] ), $this->products->find_by_price( $data['stripe_price_id'] ) ) as $duplicate ) {
 				if ( $duplicate && (int) $duplicate->id !== $id ) {
-					wp_die( esc_html__( 'スラッグまたはStripe IDが既に使用されています。', 'od-product-hub' ), '', array( 'response' => 409 ) );
+					wp_die( esc_html__( 'The slug or Stripe ID is already in use.', 'od-product-hub' ), '', array( 'response' => 409 ) );
 				}
 			}
 			$action = $id ? 'product_updated' : 'product_created';
 			if ( $id ) {
 				if ( ! $this->products->find( $id ) ) {
-					wp_die( esc_html__( '商品が見つかりません。', 'od-product-hub' ), '', array( 'response' => 404 ) );
+					wp_die( esc_html__( 'Product not found.', 'od-product-hub' ), '', array( 'response' => 404 ) );
 				}
 				$this->products->update( $id, $data );
 			} else {
@@ -94,7 +94,7 @@ final class AdminActionHandler {
 		$status = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) );
 		check_admin_referer( 'odph_product_status_' . $id );
 		if ( ! in_array( $status, array( 'active', 'inactive' ), true ) || ! $this->products->find( $id ) ) {
-			wp_die( esc_html__( '商品または状態が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) );
+			wp_die( esc_html__( 'The product or status is invalid.', 'od-product-hub' ), '', array( 'response' => 400 ) );
 		}
 		$this->products->update( $id, array( 'status' => $status ) );
 		$this->logs->create(
@@ -115,7 +115,7 @@ final class AdminActionHandler {
 		$license_id = absint( $_POST['license_id'] ?? 0 );
 		$operation  = sanitize_key( wp_unslash( $_POST['license_operation'] ?? '' ) );
 		if ( ! in_array( $operation, array( 'suspend', 'resume', 'reissue' ), true ) ) {
-			wp_die( esc_html__( 'ライセンス操作が不正です。', 'od-product-hub' ), '', array( 'response' => 400 ) );
+			wp_die( esc_html__( 'The license operation is invalid.', 'od-product-hub' ), '', array( 'response' => 400 ) );
 		}
 		check_admin_referer( 'odph_license_' . $operation . '_' . $license_id );
 		try {
@@ -130,7 +130,7 @@ final class AdminActionHandler {
 			wp_die( esc_html( $error->getMessage() ), '', array( 'response' => 409 ) );
 		} catch ( \Throwable $error ) {
 			unset( $error );
-			wp_die( esc_html__( 'ライセンス操作に失敗しました。', 'od-product-hub' ), '', array( 'response' => 500 ) );
+			wp_die( esc_html__( 'The license operation failed.', 'od-product-hub' ), '', array( 'response' => 500 ) );
 		}
 		wp_safe_redirect(
 			add_query_arg(

@@ -136,8 +136,8 @@ odph_checkout_assert( $safe_failure, 'Stripe API failures must map to a safe pur
 $purchase_url = home_url( '/purchase' );
 $success_html = ( new Shortcodes() )->checkout_success();
 $cancel_html  = ( new Shortcodes() )->checkout_cancel( array( 'return_url' => $purchase_url ) );
-odph_checkout_assert( str_contains( $success_html, 'マイページ' ) && str_contains( $success_html, 'メール' ), 'Success view must explain email and account follow-up' );
-odph_checkout_assert( str_contains( $cancel_html, '購入ページへ戻る' ) && str_contains( $cancel_html, $purchase_url ), 'Cancel view must return the purchaser to the same-site purchase page' );
+odph_checkout_assert( str_contains( $success_html, 'View account' ) && str_contains( $success_html, 'email' ), 'Success view must explain email and account follow-up' );
+odph_checkout_assert( str_contains( $cancel_html, 'Return to product' ) && str_contains( $cancel_html, $purchase_url ), 'Cancel view must return the purchaser to the same-site purchase page' );
 
 ( new CustomerRepository() )->delete( $customer_id );
 wp_delete_user( (int) $user_id );

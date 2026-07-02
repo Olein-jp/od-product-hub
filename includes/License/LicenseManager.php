@@ -36,7 +36,7 @@ final class LicenseManager {
 			function () use ( $license_id, $user_id ): void {
 				$license = $this->license( $license_id );
 				if ( 'suspended' !== $license->status ) {
-					throw new \DomainException( '停止中のライセンスだけを再開できます。' );
+					throw new \DomainException( esc_html__( 'Only suspended licenses can be resumed.', 'od-product-hub' ) );
 				}
 				$this->assert_subscription_active( $license );
 				( new LicenseRepository() )->update( $license_id, array( 'status' => 'active' ) );
@@ -49,7 +49,7 @@ final class LicenseManager {
 		for ( $attempt = 0; $attempt < 10; $attempt++ ) {
 			$key = ( $this->key_factory )();
 			if ( ! LicenseGenerator::is_valid( $key ) ) {
-				throw new \RuntimeException( '新しいライセンスキーの生成に失敗しました。' );
+				throw new \RuntimeException( esc_html__( 'Could not generate a new license key.', 'od-product-hub' ) );
 			}
 			try {
 				$this->transaction(
@@ -76,20 +76,20 @@ final class LicenseManager {
 				}
 			}
 		}
-		throw new \RuntimeException( 'ライセンスキーを再発行できませんでした。' );
+		throw new \RuntimeException( esc_html__( 'Could not reissue the license key.', 'od-product-hub' ) );
 	}
 
 	private function license( int $license_id ): object {
 		$license = ( new LicenseRepository() )->find_admin_detail( $license_id );
 		if ( ! $license ) {
-			throw new \DomainException( 'ライセンスが見つかりません。' );
+			throw new \DomainException( esc_html__( 'License not found.', 'od-product-hub' ) );
 		}
 		return $license;
 	}
 
 	private function assert_subscription_active( object $license ): void {
 		if ( ! $license->subscription_id ) {
-			throw new \DomainException( '有効なサブスクリプションがありません。' );
+			throw new \DomainException( esc_html__( 'No active subscription is available.', 'od-product-hub' ) );
 		}
 		$subscription = ( new SubscriptionRepository() )->find( (int) $license->subscription_id );
 		$active       = $subscription && in_array( $subscription->stripe_status, array( 'active', 'trialing' ), true ) && ! $subscription->payment_failed_at;
@@ -97,7 +97,7 @@ final class LicenseManager {
 			$active = strtotime( (string) $subscription->current_period_end . ' UTC' ) >= time();
 		}
 		if ( ! $active ) {
-			throw new \DomainException( 'Stripeサブスクリプションが有効でないため操作できません。' );
+			throw new \DomainException( esc_html__( 'This operation is unavailable because the Stripe subscription is not active.', 'od-product-hub' ) );
 		}
 	}
 

@@ -41,10 +41,10 @@ final class AdminMenu {
 
 	public function menu(): void {
 		add_menu_page( 'OD Product Hub', 'OD Product Hub', 'manage_options', 'od-product-hub', array( $this->dashboard, 'render' ), 'dashicons-products', 56 );
-		add_submenu_page( 'od-product-hub', '商品管理', '商品管理', 'manage_options', 'odph-products', array( $this->products, 'render' ) );
-		add_submenu_page( 'od-product-hub', 'ライセンス管理', 'ライセンス管理', 'manage_options', 'odph-licenses', array( $this->licenses, 'render' ) );
-		add_submenu_page( 'od-product-hub', '顧客・契約', '顧客・契約', 'manage_options', 'odph-customers', array( $this->customers, 'render' ) );
-		add_submenu_page( 'od-product-hub', 'ログ', 'ログ', 'manage_options', 'odph-logs', array( $this->logs, 'render' ) );
-		add_submenu_page( 'od-product-hub', '設定', '設定', 'manage_options', 'odph-settings', array( $this->settings, 'render' ) );
+		add_submenu_page( 'od-product-hub', __( 'Products', 'od-product-hub' ), __( 'Products', 'od-product-hub' ), 'manage_options', 'odph-products', array( $this->products, 'render' ) );
+		add_submenu_page( 'od-product-hub', __( 'Licenses', 'od-product-hub' ), __( 'Licenses', 'od-product-hub' ), 'manage_options', 'odph-licenses', array( $this->licenses, 'render' ) );
+		add_submenu_page( 'od-product-hub', __( 'Customers and subscriptions', 'od-product-hub' ), __( 'Customers and subscriptions', 'od-product-hub' ), 'manage_options', 'odph-customers', array( $this->customers, 'render' ) );
+		add_submenu_page( 'od-product-hub', __( 'Logs', 'od-product-hub' ), __( 'Logs', 'od-product-hub' ), 'manage_options', 'odph-logs', array( $this->logs, 'render' ) );
+		add_submenu_page( 'od-product-hub', __( 'Settings', 'od-product-hub' ), __( 'Settings', 'od-product-hub' ), 'manage_options', 'odph-settings', array( $this->settings, 'render' ) );
 	}
 }

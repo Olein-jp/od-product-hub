@@ -186,10 +186,10 @@ odph_account_assert( str_contains( $account_a_html, 'Account Product Alpha' ) &&
 odph_account_assert( str_contains( $account_a_html, 'ODPH-AAAA-BBBB-CCCC-DDDD' ) && str_contains( $account_a_html, 'ODPH-EEEE-FFFF-GGGG-HHHH' ), 'A user must see all of their license keys' );
 odph_account_assert( ! str_contains( $account_a_html, 'Foreign Account Product' ) && ! str_contains( $account_a_html, 'ODPH-JJJJ-KKKK-LLLL-MMMM' ), 'A user must never see another user contract or key' );
 odph_account_assert( str_contains( $account_a_html, '2026年2月1日' ), 'UTC period end must use the site timezone and configured date format' );
-odph_account_assert( str_contains( $account_a_html, '支払い遅延' ) && str_contains( $account_a_html, '期間終了時に解約予定' ), 'Account states must be communicated with text rather than color alone' );
+odph_account_assert( str_contains( $account_a_html, 'Past due' ) && str_contains( $account_a_html, 'Scheduled to cancel at period end' ), 'Account states must be communicated with text rather than color alone' );
 odph_account_assert( str_contains( $account_a_html, 'aria-live="polite"' ) && str_contains( $account_a_html, 'aria-describedby=' ), 'License copy controls must expose screen reader feedback' );
 odph_account_assert( str_contains( $account_a_html, 'odph-portal-form' ) && str_contains( $account_a_html, '_wpnonce' ), 'Synced users must receive a nonce-protected Portal form' );
-odph_account_assert( str_contains( $account_a_html, 'パスワードを変更' ) && str_contains( $account_a_html, 'ログアウト' ), 'Account navigation must include password and logout routes' );
+odph_account_assert( str_contains( $account_a_html, 'Change password' ) && str_contains( $account_a_html, 'Log out' ), 'Account navigation must include password and logout routes' );
 
 wp_set_current_user( $user_b );
 $account_b_html = $shortcodes->account();
@@ -197,7 +197,7 @@ odph_account_assert( str_contains( $account_b_html, 'Foreign Account Product' ) 
 
 wp_set_current_user( $user_c );
 $unsynced_html = $shortcodes->account();
-odph_account_assert( str_contains( $unsynced_html, 'Stripe顧客情報を同期しています' ) && ! str_contains( $unsynced_html, 'odph-portal-form' ), 'Unsynced customers must receive guidance instead of a Portal button' );
+odph_account_assert( str_contains( $unsynced_html, 'being synchronized' ) && ! str_contains( $unsynced_html, 'odph-portal-form' ), 'Unsynced customers must receive guidance instead of a Portal button' );
 
 $captured_portal_args = array();
 $portal_creator       = static function ( array $args ) use ( &$captured_portal_args ): object {
@@ -235,7 +235,7 @@ try {
 } catch ( PortalException $error ) {
 	$disabled_rejected = 'portal_disabled' === $error->error_code;
 }
-odph_account_assert( str_contains( $disabled_html, '現在利用できません' ) && ! str_contains( $disabled_html, 'odph-portal-form' ), 'Disabled Portal must be explained without rendering its form' );
+odph_account_assert( str_contains( $disabled_html, 'currently unavailable' ) && ! str_contains( $disabled_html, 'odph-portal-form' ), 'Disabled Portal must be explained without rendering its form' );
 odph_account_assert( $disabled_rejected, 'Disabled Portal must reject session creation' );
 
 $settings['portal_enabled'] = 1;

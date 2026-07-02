@@ -20,27 +20,27 @@ final class Templates {
 	public static function definitions(): array {
 		return array(
 			'purchase_completed' => array(
-				'label'        => '購入完了メール',
-				'subject'      => '【{site_name}】ご購入ありがとうございます',
-				'body'         => "契約手続きが完了しました。\nライセンスキー: {license_key}\n契約情報: {account_url}",
+				'label'        => __( 'Purchase completed email', 'od-product-hub' ),
+				'subject'      => __( '[{site_name}] Thank you for your purchase', 'od-product-hub' ),
+				'body'         => __( "Your subscription is now active.\nLicense key: {license_key}\nAccount: {account_url}", 'od-product-hub' ),
 				'placeholders' => array( 'site_name', 'license_key', 'account_url' ),
 			),
 			'new_user'           => array(
-				'label'        => '新規ユーザーのパスワード設定メール',
-				'subject'      => '【{site_name}】パスワードを設定してください',
-				'body'         => "アカウントを作成しました。\nユーザー名: {user_login}\n次のURLからパスワードを設定してください。\n{password_url}",
+				'label'        => __( 'New user password setup email', 'od-product-hub' ),
+				'subject'      => __( '[{site_name}] Set your password', 'od-product-hub' ),
+				'body'         => __( "Your account has been created.\nUsername: {user_login}\nSet your password at the following URL.\n{password_url}", 'od-product-hub' ),
 				'placeholders' => array( 'site_name', 'user_login', 'password_url' ),
 			),
 			'payment_failed'     => array(
-				'label'        => '支払い失敗メール',
-				'subject'      => '【{site_name}】お支払い方法をご確認ください',
-				'body'         => "お支払いを確認できませんでした。\n契約情報ページからStripe Customer Portalを開き、お支払い方法をご確認ください。\n{account_url}",
+				'label'        => __( 'Payment failed email', 'od-product-hub' ),
+				'subject'      => __( '[{site_name}] Please check your payment method', 'od-product-hub' ),
+				'body'         => __( "We could not confirm your payment.\nOpen the Stripe Customer Portal from your account page and check your payment method.\n{account_url}", 'od-product-hub' ),
 				'placeholders' => array( 'site_name', 'account_url' ),
 			),
 			'webhook_failed'     => array(
-				'label'        => 'Webhook失敗の管理者メール',
-				'subject'      => '【{site_name}】Webhook処理に失敗しました',
-				'body'         => "Webhook処理に失敗しました。\nイベント: {event_type}\nエラーコード: {error_code}",
+				'label'        => __( 'Webhook failure administrator email', 'od-product-hub' ),
+				'subject'      => __( '[{site_name}] Webhook processing failed', 'od-product-hub' ),
+				'body'         => __( "Webhook processing failed.\nEvent: {event_type}\nError code: {error_code}", 'od-product-hub' ),
 				'placeholders' => array( 'site_name', 'event_type', 'error_code' ),
 			),
 		);

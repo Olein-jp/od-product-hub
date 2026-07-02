@@ -4,18 +4,18 @@ document.addEventListener('click', (event) => {
 	const messages = window.odphFrontend || {};
 	const status = button.parentElement.querySelector('.odph-copy-status');
 	if (!navigator.clipboard || !navigator.clipboard.writeText) {
-		status.textContent = messages.copyError || 'コピーできませんでした。';
+		status.textContent = messages.copyError || 'Could not copy the license key.';
 		return;
 	}
 	navigator.clipboard.writeText(button.dataset.license).then(() => {
-		status.textContent = messages.copySuccess || 'ライセンスキーをコピーしました。';
-		button.textContent = messages.copied || 'コピー済み';
+		status.textContent = messages.copySuccess || 'License key copied.';
+		button.textContent = messages.copied || 'Copied';
 		setTimeout(() => {
-			button.textContent = messages.copy || 'コピー';
+			button.textContent = messages.copy || 'Copy';
 			status.textContent = '';
 		}, 5000);
 	}).catch(() => {
-		status.textContent = messages.copyError || 'コピーできませんでした。';
+		status.textContent = messages.copyError || 'Could not copy the license key.';
 	});
 });
 
@@ -33,11 +33,11 @@ document.addEventListener('submit', (event) => {
 	if (button) {
 		button.disabled = true;
 		const label = button.querySelector('.odph-button-label');
-		if (label && form.classList.contains('odph-checkout-form')) label.textContent = '購入画面を準備しています…';
+		if (label && form.classList.contains('odph-checkout-form')) label.textContent = (window.odphFrontend || {}).checkoutButtonLoading || 'Preparing checkout…';
 	}
 	if (status) {
 		status.textContent = form.classList.contains('odph-portal-form')
-			? ((window.odphFrontend || {}).portalLoading || 'Stripeの支払い・契約管理画面を準備しています。')
-			: 'Stripe Checkoutを準備しています。';
+			? ((window.odphFrontend || {}).portalLoading || 'Preparing Stripe billing and subscription management.')
+			: ((window.odphFrontend || {}).checkoutLoading || 'Preparing Stripe Checkout.');
 	}
 });

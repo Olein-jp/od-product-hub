@@ -239,7 +239,7 @@ ob_start();
 $detail_html = (string) ob_get_clean();
 $_GET        = $previous_get;
 wp_set_current_user( $previous_user_id );
-odph_operations_assert( str_contains( $detail_html, 'マスク済みpayload' ) && str_contains( $detail_html, '[redacted]' ), 'Webhook detail must show a clearly labelled masked payload' );
+odph_operations_assert( str_contains( $detail_html, 'Masked payload' ) && str_contains( $detail_html, '[redacted]' ), 'Webhook detail must show a clearly labelled masked payload' );
 foreach ( array( 'private@example.test', '1 Secret Street', 'pm_secret_value', 'private-receipt' ) as $secret ) {
 	odph_operations_assert( ! str_contains( $detail_html, $secret ), 'Webhook detail must not reveal sensitive payload values', $secret );
 }

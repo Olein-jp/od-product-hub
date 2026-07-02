@@ -16,6 +16,9 @@ for required in \
 	"od-product-hub/od-product-hub.php" \
 	"od-product-hub/readme.txt" \
 	"od-product-hub/LICENSE" \
+	"od-product-hub/languages/od-product-hub.pot" \
+	"od-product-hub/languages/od-product-hub-ja.po" \
+	"od-product-hub/languages/od-product-hub-ja.mo" \
 	"od-product-hub/vendor/autoload.php" \
 	"od-product-hub/vendor/stripe/stripe-php/init.php"; do
 	if ! grep -Fxq "$required" <<<"$CONTENTS"; then

@@ -1,12 +1,13 @@
 <?php
 /**
  * Plugin Name:       OD Product Hub
- * Description:       Stripe と連携する WordPress プロダクトの契約検証・ライセンス管理基盤です。
+ * Description:       Contract verification and license management for WordPress products integrated with Stripe.
  * Version:           0.1.0
  * Requires at least: 7.0
  * Requires PHP:      8.3
  * Author:            Olein Design
  * Text Domain:       od-product-hub
+ * Domain Path:       /languages
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  *

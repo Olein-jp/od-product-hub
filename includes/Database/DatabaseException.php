@@ -12,6 +12,6 @@ final class DatabaseException extends \RuntimeException {
 		global $wpdb;
 		$error = (string) $wpdb->last_error;
 		error_log( sprintf( 'OD Product Hub database error during %s: %s', $operation, $error ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Database details are intentionally limited to the server log.
-		return new self( 'データベース処理に失敗しました。時間をおいて再度お試しください。' );
+		return new self( esc_html__( 'The database operation failed. Please try again later.', 'od-product-hub' ) );
 	}
 }

@@ -43,10 +43,23 @@ npm test
 npm run test:database
 npm run test:api
 npm run test:integration
+npm run test:i18n
 npm run test:release
 composer lint
 composer phpstan
 composer test
+```
+
+## 対応言語と翻訳
+
+プラグインの原文は英語で、日本語翻訳を同梱しています。WordPressのサイト言語に応じて管理画面、購入・契約画面、通知、既定のメールテンプレートが切り替わります。商品名や商品説明、保存済みのカスタムメールテンプレートなど、管理者が入力したデータは自動翻訳されません。
+
+翻訳を更新する場合は `npm run build:i18n` で `languages/od-product-hub.pot` を再生成し、`languages/od-product-hub-ja.po` を更新してから、次のコマンドでMOファイルを生成します。
+
+```bash
+msgfmt --check --check-format \
+  --output-file=languages/od-product-hub-ja.mo \
+  languages/od-product-hub-ja.po
 ```
 
 ## 初期設定
