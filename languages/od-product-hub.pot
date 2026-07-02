@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-02T00:39:23+00:00\n"
+"POT-Creation-Date: 2026-07-02T08:05:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -33,51 +33,55 @@ msgstr ""
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:36
+#: includes/Admin/AdminActionHandler.php:38
 msgid "The submitted data is invalid."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:42
+#: includes/Admin/AdminActionHandler.php:44
 msgid "The slug or Stripe ID is already in use."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:48
+#: includes/Admin/AdminActionHandler.php:50
 msgid "Product not found."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:97
+#: includes/Admin/AdminActionHandler.php:99
 msgid "The product or status is invalid."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:118
+#: includes/Admin/AdminActionHandler.php:120
 msgid "The license operation is invalid."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:133
+#: includes/Admin/AdminActionHandler.php:135
 msgid "The license operation failed."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:44
+#: includes/Admin/AdminActionHandler.php:173
+msgid "This webhook cannot be retried."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:45
 #: includes/Admin/ProductPage.php:24
 msgid "Products"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:45
+#: includes/Admin/AdminMenu.php:46
 #: includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31
 msgid "Licenses"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:46
+#: includes/Admin/AdminMenu.php:47
 #: includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:47
+#: includes/Admin/AdminMenu.php:48
 msgid "Logs"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:49
 msgid "Settings"
 msgstr ""
 
@@ -233,8 +237,8 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:73
 #: includes/Admin/LicensePage.php:36
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:116
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:145
 #, php-format
 msgid "%d results"
 msgstr ""
@@ -283,7 +287,7 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:56
 #: includes/Admin/LicensePage.php:46
 #: includes/Admin/LogsPage.php:73
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Details"
 msgstr ""
 
@@ -303,16 +307,16 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:68
 #: includes/Admin/LicensePage.php:31
 #: includes/Admin/LogsPage.php:66
-#: includes/Admin/LogsPage.php:111
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:123
+#: includes/Admin/LogsPage.php:128
 msgid "All"
 msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:73
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:116
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:145
 #: includes/Admin/ProductPage.php:24
 msgid "Filter"
 msgstr ""
@@ -403,9 +407,9 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:114
 #: includes/Admin/DashboardPage.php:50
 #: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:111
-#: includes/Admin/LogsPage.php:116
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:123
+#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:145
 msgid "Action"
 msgstr ""
 
@@ -416,22 +420,22 @@ msgstr ""
 #: includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:66
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:92
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:95
+#: includes/Admin/LogsPage.php:128
 msgid "Result"
 msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114
 #: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:128
 msgid "Site URL"
 msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114
 #: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:128
 msgid "Error code"
 msgstr ""
 
@@ -441,8 +445,8 @@ msgstr ""
 #: includes/Admin/DashboardPage.php:50
 #: includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:116
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:145
 msgid "Date"
 msgstr ""
 
@@ -485,7 +489,7 @@ msgstr ""
 #. translators: %d: total number of results.
 #: includes/Admin/DashboardPage.php:38
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:91
+#: includes/Admin/LogsPage.php:94
 msgid "Type"
 msgstr ""
 
@@ -500,7 +504,7 @@ msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/DashboardPage.php:50
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:128
 msgid "Site"
 msgstr ""
 
@@ -601,8 +605,13 @@ msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:90
+#: includes/Admin/LogsPage.php:93
 msgid "Event ID"
+msgstr ""
+
+#. translators: %d: total number of results.
+#: includes/Admin/LogsPage.php:71
+msgid "Attempts"
 msgstr ""
 
 #. translators: %d: total number of results.
@@ -612,8 +621,8 @@ msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:94
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:98
+#: includes/Admin/LogsPage.php:128
 msgid "Error"
 msgstr ""
 
@@ -621,95 +630,119 @@ msgstr ""
 msgid "Webhook log not found."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:88
+#: includes/Admin/LogsPage.php:89
+msgid "The event is ready for a new delivery from Stripe."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:91
 msgid "← Back to webhook logs"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:88
+#: includes/Admin/LogsPage.php:91
 msgid "Webhook log details"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:93
+#: includes/Admin/LogsPage.php:96
+msgid "Attempt count"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:97
 msgid "Duplicate count"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:95
+#: includes/Admin/LogsPage.php:99
+msgid "Last attempt"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:100
 msgid "Received"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:96
+#: includes/Admin/LogsPage.php:101
 msgid "Last received"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:101
+#: includes/Admin/LogsPage.php:108
+msgid "Retry this event"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:108
+msgid "This does not replay the masked payload. It resets the retry state so that the event can be resent from Stripe."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:110
+msgid "Allow retry from Stripe"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:113
 msgid "Masked payload"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:101
+#: includes/Admin/LogsPage.php:113
 msgid "Email, address, and payment-related information is masked again when displayed."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:111
+#: includes/Admin/LogsPage.php:123
 msgid "API logs"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:128
 msgid "License"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Administrative action logs"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Object type"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "User ID"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "User"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Object"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Object ID"
 msgstr ""
 
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:146
+#: includes/Admin/LogsPage.php:158
 msgid "Manual log cleanup"
 msgstr ""
 
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:146
+#: includes/Admin/LogsPage.php:158
 #, php-format
 msgid "The current retention period is <strong>%d days</strong>. You can safely rerun the same cleanup performed by the daily cron task."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:148
+#: includes/Admin/LogsPage.php:160
 msgid "Delete logs older than the retention period"
 msgstr ""
 
 #. translators: %d: number of deleted log entries.
-#: includes/Admin/LogsPage.php:162
+#: includes/Admin/LogsPage.php:174
 #, php-format
 msgid "Deleted %d log entries."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:182
+#: includes/Admin/LogsPage.php:194
 msgid "No matching logs found."
 msgstr ""
 

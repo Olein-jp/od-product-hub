@@ -11,6 +11,7 @@ use OD_Product_Hub\Admin\AdminActionHandler;
 use OD_Product_Hub\License\LicenseManager;
 use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Log\LogCleanupService;
+use OD_Product_Hub\Log\WebhookLogRepository;
 use OD_Product_Hub\Product\ProductRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -50,6 +51,6 @@ final class AdminActionHandlerTest extends TestCase {
 	}
 
 	private function handler(): AdminActionHandler {
-		return new AdminActionHandler( new ProductRepository(), new AdminLogRepository(), new LicenseManager(), new LogCleanupService(), static fn(): bool => true );
+		return new AdminActionHandler( new ProductRepository(), new AdminLogRepository(), new LicenseManager(), new LogCleanupService(), new WebhookLogRepository(), static fn(): bool => true );
 	}
 }

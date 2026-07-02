@@ -75,6 +75,7 @@ final class Plugin {
 			$admin_logs,
 			new LicenseManager(),
 			$cleanup,
+			$webhook_logs,
 			static function (): bool {
 				try {
 					StripeClientFactory::create()->balance->retrieve();

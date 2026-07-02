@@ -56,8 +56,8 @@ final class WebhookController {
 			return new WP_Error( 'invalid_event', 'Webhook event is invalid.', array( 'status' => 400 ) );
 		}
 
-		$log_id = $logs->claim( $event_id, $event_type, $masked_payload );
-		if ( null === $log_id ) {
+		$claim = $logs->claim( $event_id, $event_type, $masked_payload );
+		if ( 'duplicate' === $claim['status'] ) {
 			return new WP_REST_Response(
 				array(
 					'success' => true,
@@ -66,11 +66,21 @@ final class WebhookController {
 				200
 			);
 		}
+		if ( 'processing' === $claim['status'] ) {
+			return new WP_Error( 'webhook_processing', 'Webhook event is already being processed.', array( 'status' => 409 ) );
+		}
+		if ( 'exhausted' === $claim['status'] ) {
+			return new WP_Error( 'webhook_retry_exhausted', 'Webhook retry limit reached.', array( 'status' => 503 ) );
+		}
+		$log_id  = (int) $claim['id'];
+		$attempt = $claim['attempt'];
 
 		try {
 			$handled = ( new WebhookDispatcher() )->dispatch( $event_type, $object );
 			if ( ! $handled ) {
-				$logs->finish( $log_id, 'unsupported', 'unsupported_event_type' );
+				if ( ! $logs->complete_claim( $log_id, $attempt, 'unsupported', 'unsupported_event_type' ) ) {
+					return new WP_Error( 'webhook_claim_superseded', 'Webhook claim was superseded.', array( 'status' => 409 ) );
+				}
 				return new WP_REST_Response(
 					array(
 						'success' => true,
@@ -79,7 +89,9 @@ final class WebhookController {
 					200
 				);
 			}
-			$logs->finish( $log_id, 'success' );
+			if ( ! $logs->complete_claim( $log_id, $attempt, 'success' ) ) {
+				return new WP_Error( 'webhook_claim_superseded', 'Webhook claim was superseded.', array( 'status' => 409 ) );
+			}
 			return new WP_REST_Response(
 				array(
 					'success' => true,
@@ -89,9 +101,15 @@ final class WebhookController {
 			);
 		} catch ( \Throwable $error ) {
 			unset( $error );
-			$logs->finish( $log_id, 'error', 'webhook_processing_failed' );
+			$result = $logs->fail_claim( $log_id, $attempt, 'webhook_processing_failed' );
+			if ( 'superseded' === $result ) {
+				return new WP_Error( 'webhook_claim_superseded', 'Webhook claim was superseded.', array( 'status' => 409 ) );
+			}
 			do_action( 'odph_webhook_processing_failed', $event_type, 'webhook_processing_failed' );
-			return new WP_Error( 'webhook_processing_failed', 'Webhook processing failed.', array( 'status' => 500 ) );
+			if ( 'exhausted' === $result ) {
+				do_action( 'odph_webhook_retry_exhausted', $event_type, 'webhook_processing_failed' );
+			}
+			return new WP_Error( 'exhausted' === $result ? 'webhook_retry_exhausted' : 'webhook_processing_failed', 'Webhook processing failed.', array( 'status' => 'exhausted' === $result ? 503 : 500 ) );
 		}
 	}
 }

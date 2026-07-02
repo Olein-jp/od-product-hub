@@ -45,6 +45,8 @@ foreach ( Schema::table_suffixes() as $suffix ) {
 	$table = $wpdb->prefix . 'odph_' . $suffix;
 	odph_test_assert( $table === $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ), 'dbDelta must create ' . $suffix );
 }
+$webhook_columns = $wpdb->get_col( 'SHOW COLUMNS FROM ' . $wpdb->prefix . 'odph_webhook_logs' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery -- Fixed integration-test table name.
+odph_test_assert( in_array( 'attempt_count', $webhook_columns, true ) && in_array( 'last_attempt_at', $webhook_columns, true ), 'Webhook retry migration must create attempt tracking columns' );
 
 $product_repository      = new ProductRepository();
 $customer_repository     = new CustomerRepository();

@@ -28,6 +28,7 @@ final class AdminMenu {
 		add_action( 'admin_post_odph_license_action', array( $this->actions, 'license_action' ) );
 		add_action( 'admin_post_odph_test_stripe', array( $this->actions, 'test_stripe_connection' ) );
 		add_action( 'admin_post_odph_cleanup_logs', array( $this->actions, 'cleanup_logs' ) );
+		add_action( 'admin_post_odph_retry_webhook', array( $this->actions, 'retry_webhook' ) );
 		add_action( 'admin_notices', array( $this->site_health, 'configuration_notice' ) );
 		add_filter( 'site_status_tests', array( $this->site_health, 'tests' ) );
 	}

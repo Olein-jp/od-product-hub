@@ -64,15 +64,15 @@ final class LogsPage {
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
 		$rows   = $this->webhook_logs->search_admin( $query, $result, $page );
 		echo '<h2>' . esc_html__( 'Webhook logs', 'od-product-hub' ) . '</h2><form method="get"><input type="hidden" name="page" value="odph-logs"><input type="hidden" name="tab" value="webhook"><label for="webhook-search">' . esc_html__( 'Event ID or type', 'od-product-hub' ) . '</label> <input id="webhook-search" name="s" value="' . esc_attr( $query ) . '"> <label for="webhook-result">' . esc_html__( 'Result', 'od-product-hub' ) . '</label> <select id="webhook-result" name="result"><option value="">' . esc_html__( 'All', 'od-product-hub' ) . '</option>';
-		foreach ( array( 'processing', 'success', 'error', 'signature_error', 'unsupported' ) as $option ) {
+		foreach ( array( 'processing', 'success', 'error', 'exhausted', 'signature_error', 'unsupported' ) as $option ) {
 			printf( '<option value="%1$s" %2$s>%1$s</option>', esc_attr( $option ), selected( $result, $option, false ) );
 		}
 		/* translators: %d: total number of results. */
-		echo '</select> <button class="button">' . esc_html__( 'Filter', 'od-product-hub' ) . '</button></form><p>' . esc_html( sprintf( __( '%d results', 'od-product-hub' ), $rows->total ) ) . '</p><table class="widefat striped"><thead><tr><th>' . esc_html__( 'Event ID', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Type', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Result', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Duplicates', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Error', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Date', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Actions', 'od-product-hub' ) . '</th></tr></thead><tbody>';
+		echo '</select> <button class="button">' . esc_html__( 'Filter', 'od-product-hub' ) . '</button></form><p>' . esc_html( sprintf( __( '%d results', 'od-product-hub' ), $rows->total ) ) . '</p><table class="widefat striped"><thead><tr><th>' . esc_html__( 'Event ID', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Type', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Result', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Attempts', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Duplicates', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Error', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Date', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Actions', 'od-product-hub' ) . '</th></tr></thead><tbody>';
 		foreach ( $rows->items as $row ) {
-			printf( '<tr><td><code>%1$s</code></td><td>%2$s</td><td>%3$s</td><td>%4$d</td><td>%5$s</td><td>%6$s</td><td><a href="%7$s">%8$s</a></td></tr>', esc_html( (string) $row->stripe_event_id ), esc_html( (string) $row->event_type ), esc_html( (string) $row->result ), absint( $row->duplicate_count ), esc_html( (string) $row->error_message ), esc_html( $this->date( $row->created_at ) ), esc_url( admin_url( 'admin.php?page=odph-logs&tab=webhook&log_id=' . absint( $row->id ) ) ), esc_html__( 'Details', 'od-product-hub' ) );
+			printf( '<tr><td><code>%1$s</code></td><td>%2$s</td><td>%3$s</td><td>%4$d</td><td>%5$d</td><td>%6$s</td><td>%7$s</td><td><a href="%8$s">%9$s</a></td></tr>', esc_html( (string) $row->stripe_event_id ), esc_html( (string) $row->event_type ), esc_html( (string) $row->result ), absint( $row->attempt_count ), absint( $row->duplicate_count ), esc_html( (string) $row->error_message ), esc_html( $this->date( $row->created_at ) ), esc_url( admin_url( 'admin.php?page=odph-logs&tab=webhook&log_id=' . absint( $row->id ) ) ), esc_html__( 'Details', 'od-product-hub' ) );
 		}
-		$this->empty_row( $rows, 7 );
+		$this->empty_row( $rows, 8 );
 		echo '</tbody></table>';
 		$this->pagination( $rows );
 	}
@@ -85,20 +85,32 @@ final class LogsPage {
 		$masked  = $this->redactor->redact_json( (string) $log->payload );
 		$decoded = json_decode( $masked, true );
 		$pretty  = is_array( $decoded ) ? wp_json_encode( $decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) : $masked;
+		if ( isset( $_GET['retry'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag after a nonce-protected action.
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'The event is ready for a new delivery from Stripe.', 'od-product-hub' ) . '</p></div>';
+		}
 		echo '<p><a href="' . esc_url( admin_url( 'admin.php?page=odph-logs&tab=webhook' ) ) . '">' . esc_html__( '← Back to webhook logs', 'od-product-hub' ) . '</a></p><h2>' . esc_html__( 'Webhook log details', 'od-product-hub' ) . '</h2><table class="form-table">';
 		foreach ( array(
 			'stripe_event_id'  => __( 'Event ID', 'od-product-hub' ),
 			'event_type'       => __( 'Type', 'od-product-hub' ),
 			'result'           => __( 'Result', 'od-product-hub' ),
+			'attempt_count'    => __( 'Attempt count', 'od-product-hub' ),
 			'duplicate_count'  => __( 'Duplicate count', 'od-product-hub' ),
 			'error_message'    => __( 'Error', 'od-product-hub' ),
+			'last_attempt_at'  => __( 'Last attempt', 'od-product-hub' ),
 			'created_at'       => __( 'Received', 'od-product-hub' ),
 			'last_received_at' => __( 'Last received', 'od-product-hub' ),
 		) as $column => $label ) {
 			$value = str_ends_with( $column, '_at' ) ? $this->date( $log->$column ?? null ) : (string) ( $log->$column ?? '' );
 			printf( '<tr><th>%1$s</th><td>%2$s</td></tr>', esc_html( $label ), esc_html( $value ) );
 		}
-		echo '</table><h2>' . esc_html__( 'Masked payload', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'Email, address, and payment-related information is masked again when displayed.', 'od-product-hub' ) . '</p><pre class="odph-log-payload">' . esc_html( (string) $pretty ) . '</pre>';
+		echo '</table>';
+		if ( in_array( (string) $log->result, array( 'error', 'exhausted' ), true ) ) {
+			echo '<h2>' . esc_html__( 'Retry this event', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'This does not replay the masked payload. It resets the retry state so that the event can be resent from Stripe.', 'od-product-hub' ) . '</p><form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_retry_webhook"><input type="hidden" name="log_id" value="' . absint( $id ) . '">';
+			wp_nonce_field( 'odph_retry_webhook_' . $id );
+			submit_button( __( 'Allow retry from Stripe', 'od-product-hub' ), 'secondary', 'submit', false );
+			echo '</form>';
+		}
+		echo '<h2>' . esc_html__( 'Masked payload', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'Email, address, and payment-related information is masked again when displayed.', 'od-product-hub' ) . '</p><pre class="odph-log-payload">' . esc_html( (string) $pretty ) . '</pre>';
 	}
 
 	private function api(): void {

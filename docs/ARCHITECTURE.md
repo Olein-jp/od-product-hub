@@ -2,6 +2,8 @@
 
 WordPress Options APIは秘密設定、`wp_odph_*` 独自テーブルは検索・同期対象データに使います。Stripe Webhookを契約状態の正とし、イベントIDの一意制約で冪等性を確保します。REST APIは保存済み状態だけを参照して高速応答し、Stripeへ同期問い合わせしません。
 
+Webhookの状態は `processing` → `success` / `unsupported` / `error` → `exhausted` と遷移します。`success` と `unsupported` だけを処理済みの重複としてHTTP 200で応答します。`error` または5分以上更新されていない `processing` は、条件付きUPDATEで排他的に再claimします。処理中の並行配送はHTTP 409、5回失敗した終端状態はHTTP 503とし、Stripeへ未完了を伝えます。管理者が終端状態を再開した場合も、保存済みのマスク済みpayloadは再生せず、Stripeからの新しい署名付き配送だけを受け付けます。
+
 依存方向は Admin / Frontend / API / Webhook → Service / Repository → WordPress DBです。クライアントSDKは公開REST契約だけに依存し、HubのDBやStripe SDKへ依存しません。更新配信は `Release` ドメインとして分離され、SDKの `WordPress\Updater` がWordPress標準更新へ接続します。
 
 ## 公開APIと更新配信

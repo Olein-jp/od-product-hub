@@ -25,7 +25,7 @@ DBの詳細エラーはサーバーログだけへ記録し、呼び出し側に
 | `wp_odph_customers` | WPユーザーとStripe Customerの対応 | `stripe_customer_id` | `wp_user_id`, `email` |
 | `wp_odph_subscriptions` | Stripe Subscription状態 | `stripe_subscription_id` | `customer_id`, `product_id`, `stripe_status` |
 | `wp_odph_licenses` | ライセンスキーと契約状態 | `license_key` | `license_key_hash`, `product_id`, `customer_id`, `subscription_id`, `status` |
-| `wp_odph_webhook_logs` | Webhook冪等性と処理結果 | `stripe_event_id` | `result`, `created_at` |
+| `wp_odph_webhook_logs` | Webhook冪等性、試行履歴、処理結果 | `stripe_event_id` | `result`, `created_at` |
 | `wp_odph_api_logs` | 契約検証API監査 | なし | `license_id`, `product_id`, `action`, `result`, `created_at` |
 | `wp_odph_admin_logs` | 管理操作監査 | なし | `user_id`, `action`, `created_at` |
 
@@ -37,7 +37,7 @@ DBの詳細エラーはサーバーログだけへ記録し、呼び出し側に
 - `customers`: `wp_user_id`, `stripe_customer_id`, `email`, `name`, `created_at`, `updated_at`
 - `subscriptions`: `customer_id`, `product_id`, `stripe_subscription_id`, `stripe_status`, `current_period_start`, `current_period_end`, `cancel_at_period_end`, `payment_failed_at`, `created_at`, `updated_at`
 - `licenses`: `product_id`, `customer_id`, `subscription_id`, `license_key`, `license_key_hash`, `status`, `issued_at`, `expires_at`, `last_verified_at`, `created_at`, `updated_at`
-- `webhook_logs`: `stripe_event_id`, `event_type`, `payload`, `result`, `error_message`, `created_at`
+- `webhook_logs`: `stripe_event_id`, `event_type`, `payload`, `result`, `error_message`, `attempt_count`, `duplicate_count`, `last_attempt_at`, `last_received_at`, `created_at`
 - `api_logs`: `license_id`, `product_id`, `action`, `result`, `site_url`, `ip_address`, `user_agent`, `error_code`, `created_at`
 - `admin_logs`: `user_id`, `action`, `object_type`, `object_id`, `details`, `created_at`
 

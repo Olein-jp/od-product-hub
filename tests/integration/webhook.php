@@ -200,6 +200,60 @@ $failed_event    = array(
 $failed_response = $controller->handle( odph_signed_request( $failed_event, $secret ) );
 odph_webhook_assert( is_wp_error( $failed_response ) && 500 === $failed_response->get_error_data()['status'], 'Handler failure must return HTTP 500' );
 odph_webhook_assert( 'error' === $logs->find_by_event_id( 'evt_failed' )->result, 'Handler failure must be classified as an error' );
+odph_webhook_assert( 1 === (int) $logs->find_by_event_id( 'evt_failed' )->attempt_count, 'First handler failure must record one attempt' );
+
+$second_failed_response = $controller->handle( odph_signed_request( $failed_event, $secret ) );
+odph_webhook_assert( is_wp_error( $second_failed_response ) && 500 === $second_failed_response->get_error_data()['status'], 'A failed event delivery must be reclaimed and retried' );
+odph_webhook_assert( 2 === (int) $logs->find_by_event_id( 'evt_failed' )->attempt_count, 'Automatic retry must increment the attempt count' );
+
+$missing_subscription           = clone $subscription_object;
+$missing_subscription->id       = 'sub_missing';
+$missing_subscription->customer = 'cus_webhook';
+$missing_subscription->items    = (object) array( 'data' => array( (object) array( 'price' => (object) array( 'id' => 'price_webhook' ) ) ) );
+( new CustomerSyncService() )->upsert_subscription( $customer_id, $product_id, $missing_subscription );
+$recovered_response = $controller->handle( odph_signed_request( $failed_event, $secret ) );
+odph_webhook_assert( $recovered_response instanceof WP_REST_Response && 200 === $recovered_response->get_status(), 'A retried event must recover after the transient cause is fixed' );
+$recovered_log = $logs->find_by_event_id( 'evt_failed' );
+odph_webhook_assert( 'success' === $recovered_log->result && 3 === (int) $recovered_log->attempt_count, 'Recovered event must retain its complete attempt history' );
+$recovered_duplicate = $controller->handle( odph_signed_request( $failed_event, $secret ) );
+odph_webhook_assert( 'duplicated_event' === $recovered_duplicate->get_data()['result'], 'A successful recovered event must not run again' );
+
+$parallel_first = $logs->claim( 'evt_parallel', 'test.parallel', '{}' );
+odph_webhook_assert( 'claimed' === $parallel_first['status'], 'Parallel fixture must receive its initial claim' );
+$logs->fail_claim( (int) $parallel_first['id'], (int) $parallel_first['attempt'], 'temporary_failure' );
+$parallel_retry = $logs->claim( 'evt_parallel', 'test.parallel', '{}' );
+$parallel_busy  = $logs->claim( 'evt_parallel', 'test.parallel', '{}' );
+odph_webhook_assert( 'claimed' === $parallel_retry['status'] && 'processing' === $parallel_busy['status'], 'Only one concurrent retry may own the event' );
+$logs->complete_claim( (int) $parallel_retry['id'], (int) $parallel_retry['attempt'], 'success' );
+
+$stale_first = $logs->claim( 'evt_stale', 'test.stale', '{}' );
+global $wpdb;
+$wpdb->update(
+	$wpdb->prefix . 'odph_webhook_logs',
+	array( 'last_attempt_at' => gmdate( 'Y-m-d H:i:s', time() - ( 10 * MINUTE_IN_SECONDS ) ) ),
+	array( 'id' => (int) $stale_first['id'] )
+);
+$stale_retry = $logs->claim( 'evt_stale', 'test.stale', '{}' );
+odph_webhook_assert( 'claimed' === $stale_retry['status'], 'A stale processing event must be reclaimable' );
+odph_webhook_assert( ! $logs->complete_claim( (int) $stale_first['id'], (int) $stale_first['attempt'], 'success' ), 'A stale worker must not overwrite a newer claim' );
+odph_webhook_assert( $logs->complete_claim( (int) $stale_retry['id'], (int) $stale_retry['attempt'], 'success' ), 'The current claim owner must be able to finish the event' );
+
+$exhausted = $logs->claim( 'evt_exhausted', 'test.exhausted', '{}' );
+for ( $attempt = 1; $attempt <= WebhookLogRepository::MAX_ATTEMPTS; $attempt++ ) {
+	$logs->fail_claim( (int) $exhausted['id'], (int) $exhausted['attempt'], 'persistent_failure' );
+	if ( $attempt < WebhookLogRepository::MAX_ATTEMPTS ) {
+		$exhausted = $logs->claim( 'evt_exhausted', 'test.exhausted', '{}' );
+		odph_webhook_assert( 'claimed' === $exhausted['status'], 'A failed event below the limit must remain retryable' );
+	}
+}
+$exhausted_log = $logs->find_by_event_id( 'evt_exhausted' );
+odph_webhook_assert( 'exhausted' === $exhausted_log->result && WebhookLogRepository::MAX_ATTEMPTS === (int) $exhausted_log->attempt_count, 'Persistent failure must reach an explicit terminal state' );
+$exhausted_delivery = $logs->claim( 'evt_exhausted', 'test.exhausted', '{}' );
+odph_webhook_assert( 'exhausted' === $exhausted_delivery['status'], 'Exhausted events must reject automatic retries' );
+odph_webhook_assert( $logs->request_manual_retry( (int) $exhausted_log->id ), 'An administrator must be able to reopen an exhausted event' );
+$manual_retry = $logs->claim( 'evt_exhausted', 'test.exhausted', '{}' );
+odph_webhook_assert( 'claimed' === $manual_retry['status'] && 1 === (int) $logs->find_by_event_id( 'evt_exhausted' )->attempt_count, 'Manual recovery must begin a new bounded retry cycle' );
+$logs->complete_claim( (int) $manual_retry['id'], (int) $manual_retry['attempt'], 'success' );
 
 $checkout_user = get_user_by( 'email', $checkout_email );
 if ( $checkout_user ) {

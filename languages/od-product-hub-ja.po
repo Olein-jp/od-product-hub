@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-02T00:39:23+00:00\n"
+"POT-Creation-Date: 2026-07-02T08:03:24+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -23,8 +23,11 @@ msgstr "OD Product Hub"
 
 #. Description of the plugin
 #: od-product-hub.php
-msgid "Contract verification and license management for WordPress products integrated with Stripe."
-msgstr "Stripeと連携するWordPressプロダクトの契約検証・ライセンス管理基盤です。"
+msgid ""
+"Contract verification and license management for WordPress products "
+"integrated with Stripe."
+msgstr ""
+"Stripeと連携するWordPressプロダクトの契約検証・ライセンス管理基盤です。"
 
 #. Author of the plugin
 #: od-product-hub.php
@@ -35,48 +38,52 @@ msgstr "Olein Design"
 msgid "You do not have permission to access this page."
 msgstr "このページにアクセスする権限がありません。"
 
-#: includes/Admin/AdminActionHandler.php:36
+#: includes/Admin/AdminActionHandler.php:38
 msgid "The submitted data is invalid."
 msgstr "入力値が不正です。"
 
-#: includes/Admin/AdminActionHandler.php:42
+#: includes/Admin/AdminActionHandler.php:44
 msgid "The slug or Stripe ID is already in use."
 msgstr "スラッグまたはStripe IDが既に使用されています。"
 
-#: includes/Admin/AdminActionHandler.php:48
+#: includes/Admin/AdminActionHandler.php:50
 msgid "Product not found."
 msgstr "商品が見つかりません。"
 
-#: includes/Admin/AdminActionHandler.php:97
+#: includes/Admin/AdminActionHandler.php:99
 msgid "The product or status is invalid."
 msgstr "商品または状態が不正です。"
 
-#: includes/Admin/AdminActionHandler.php:118
+#: includes/Admin/AdminActionHandler.php:120
 msgid "The license operation is invalid."
 msgstr "ライセンス操作が不正です。"
 
-#: includes/Admin/AdminActionHandler.php:133
+#: includes/Admin/AdminActionHandler.php:135
 msgid "The license operation failed."
 msgstr "ライセンス操作に失敗しました。"
 
-#: includes/Admin/AdminMenu.php:44 includes/Admin/ProductPage.php:24
+#: includes/Admin/AdminActionHandler.php:173
+msgid "This webhook cannot be retried."
+msgstr "このWebhookは再試行できません。"
+
+#: includes/Admin/AdminMenu.php:45 includes/Admin/ProductPage.php:24
 msgid "Products"
 msgstr "商品"
 
-#: includes/Admin/AdminMenu.php:45 includes/Admin/CustomerPage.php:110
+#: includes/Admin/AdminMenu.php:46 includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31
 msgid "Licenses"
 msgstr "ライセンス"
 
-#: includes/Admin/AdminMenu.php:46 includes/Admin/CustomerPage.php:28
+#: includes/Admin/AdminMenu.php:47 includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr "顧客・契約"
 
-#: includes/Admin/AdminMenu.php:47
+#: includes/Admin/AdminMenu.php:48
 msgid "Logs"
 msgstr "ログ"
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:49
 msgid "Settings"
 msgstr "設定"
 
@@ -95,7 +102,8 @@ msgid "The URL is invalid. The previous value was preserved."
 msgstr "URLが不正です。以前の値を維持しました。"
 
 #: includes/Admin/AdminSettings.php:90
-msgid "The number is outside the allowed range. The previous value was preserved."
+msgid ""
+"The number is outside the allowed range. The previous value was preserved."
 msgstr "数値が許容範囲外です。以前の値を維持しました。"
 
 #: includes/Admin/AdminSettings.php:99
@@ -145,8 +153,11 @@ msgid "Trusted proxies"
 msgstr "信頼するプロキシ"
 
 #: includes/Admin/AdminSettings.php:129
-msgid "Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this field is empty."
-msgstr "CIDRまたはIPを1行ずつ指定します。未設定時はX-Forwarded-Forを使用しません。"
+msgid ""
+"Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this "
+"field is empty."
+msgstr ""
+"CIDRまたはIPを1行ずつ指定します。未設定時はX-Forwarded-Forを使用しません。"
 
 #: includes/Admin/AdminSettings.php:130
 msgid "Enable"
@@ -157,8 +168,12 @@ msgid "Email templates"
 msgstr "メールテンプレート"
 
 #: includes/Admin/AdminSettings.php:131
-msgid "Emails are sent as plain text. Templates containing unsupported placeholders are reset to their defaults."
-msgstr "メールはプレーンテキストで送信されます。未対応のプレースホルダーを含むテンプレートは既定値へ戻ります。"
+msgid ""
+"Emails are sent as plain text. Templates containing unsupported placeholders "
+"are reset to their defaults."
+msgstr ""
+"メールはプレーンテキストで送信されます。未対応のプレースホルダーを含むテンプ"
+"レートは既定値へ戻ります。"
 
 #: includes/Admin/AdminSettings.php:136
 msgid "Subject"
@@ -228,7 +243,7 @@ msgstr "検索"
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:46 includes/Admin/CustomerPage.php:73
 #: includes/Admin/LicensePage.php:36 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:116 includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
 #, php-format
 msgid "%d results"
 msgstr "全 %d 件"
@@ -267,7 +282,7 @@ msgstr "（新しいタブで開く）"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:56 includes/Admin/LicensePage.php:46
-#: includes/Admin/LogsPage.php:73 includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:73 includes/Admin/LogsPage.php:145
 msgid "Details"
 msgstr "詳細"
 
@@ -281,14 +296,14 @@ msgstr "状態"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:68 includes/Admin/LicensePage.php:31
-#: includes/Admin/LogsPage.php:66 includes/Admin/LogsPage.php:111
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:66 includes/Admin/LogsPage.php:123
+#: includes/Admin/LogsPage.php:128
 msgid "All"
 msgstr "すべて"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:73 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:116 includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
 #: includes/Admin/ProductPage.php:24
 msgid "Filter"
 msgstr "絞り込む"
@@ -364,8 +379,8 @@ msgstr "最近のAPIログ"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:50
-#: includes/Admin/LicensePage.php:77 includes/Admin/LogsPage.php:111
-#: includes/Admin/LogsPage.php:116 includes/Admin/LogsPage.php:133
+#: includes/Admin/LicensePage.php:77 includes/Admin/LogsPage.php:123
+#: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
 msgid "Action"
 msgstr "操作"
 
@@ -373,27 +388,27 @@ msgstr "操作"
 #: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:38
 #: includes/Admin/DashboardPage.php:50 includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:66 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:92 includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:95 includes/Admin/LogsPage.php:128
 msgid "Result"
 msgstr "結果"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:128
 msgid "Site URL"
 msgstr "サイトURL"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:128
 msgid "Error code"
 msgstr "エラーコード"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:38
 #: includes/Admin/DashboardPage.php:50 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:116
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:145
 msgid "Date"
 msgstr "日時"
 
@@ -418,7 +433,9 @@ msgid "Webhook errors"
 msgstr "Webhookエラー"
 
 #: includes/Admin/DashboardPage.php:26
-msgid "Review the operational status of subscriptions, licenses, webhooks, and the API."
+msgid ""
+"Review the operational status of subscriptions, licenses, webhooks, and the "
+"API."
 msgstr "契約、ライセンス、Webhook、APIの運用状態を確認できます。"
 
 #: includes/Admin/DashboardPage.php:28
@@ -435,7 +452,7 @@ msgstr "イベント"
 
 #. translators: %d: total number of results.
 #: includes/Admin/DashboardPage.php:38 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:91
+#: includes/Admin/LogsPage.php:94
 msgid "Type"
 msgstr "種類"
 
@@ -448,7 +465,7 @@ msgid "View all webhook logs"
 msgstr "Webhookログをすべて表示"
 
 #. translators: %d: total number of results.
-#: includes/Admin/DashboardPage.php:50 includes/Admin/LogsPage.php:116
+#: includes/Admin/DashboardPage.php:50 includes/Admin/LogsPage.php:128
 msgid "Site"
 msgstr "サイト"
 
@@ -466,7 +483,9 @@ msgstr "完全なライセンスキー"
 
 #. translators: %d: total number of results.
 #: includes/Admin/LicensePage.php:36
-msgid "Search uses the key hash and does not perform partial matching on plain-text keys."
+msgid ""
+"Search uses the key hash and does not perform partial matching on plain-text "
+"keys."
 msgstr "検索はキーのハッシュを用い、平文の部分一致検索は行いません。"
 
 #: includes/Admin/LicensePage.php:37 includes/Admin/LicensePage.php:63
@@ -545,9 +564,14 @@ msgid "Event ID or type"
 msgstr "イベントID・種類"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:90
+#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:93
 msgid "Event ID"
 msgstr "イベントID"
+
+#. translators: %d: total number of results.
+#: includes/Admin/LogsPage.php:71
+msgid "Attempts"
+msgstr "試行回数"
 
 #. translators: %d: total number of results.
 #: includes/Admin/LogsPage.php:71
@@ -555,8 +579,8 @@ msgid "Duplicates"
 msgstr "重複"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:94
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:98
+#: includes/Admin/LogsPage.php:128
 msgid "Error"
 msgstr "エラー"
 
@@ -564,95 +588,129 @@ msgstr "エラー"
 msgid "Webhook log not found."
 msgstr "Webhookログが見つかりません。"
 
-#: includes/Admin/LogsPage.php:88
+#: includes/Admin/LogsPage.php:89
+msgid "The event is ready for a new delivery from Stripe."
+msgstr "Stripeからイベントを再送できる状態になりました。"
+
+#: includes/Admin/LogsPage.php:91
 msgid "← Back to webhook logs"
 msgstr "← Webhookログ一覧へ戻る"
 
-#: includes/Admin/LogsPage.php:88
+#: includes/Admin/LogsPage.php:91
 msgid "Webhook log details"
 msgstr "Webhookログ詳細"
 
-#: includes/Admin/LogsPage.php:93
+#: includes/Admin/LogsPage.php:96
+msgid "Attempt count"
+msgstr "試行回数"
+
+#: includes/Admin/LogsPage.php:97
 msgid "Duplicate count"
 msgstr "重複回数"
 
-#: includes/Admin/LogsPage.php:95
+#: includes/Admin/LogsPage.php:99
+msgid "Last attempt"
+msgstr "最終試行"
+
+#: includes/Admin/LogsPage.php:100
 msgid "Received"
 msgstr "受信日時"
 
-#: includes/Admin/LogsPage.php:96
+#: includes/Admin/LogsPage.php:101
 msgid "Last received"
 msgstr "最終受信日時"
 
-#: includes/Admin/LogsPage.php:101
+#: includes/Admin/LogsPage.php:108
+msgid "Retry this event"
+msgstr "このイベントを再試行"
+
+#: includes/Admin/LogsPage.php:108
+msgid ""
+"This does not replay the masked payload. It resets the retry state so that "
+"the event can be resent from Stripe."
+msgstr ""
+"マスク済みpayloadを再生する操作ではありません。Stripeからイベントを再送できるよう、"
+"再試行状態をリセットします。"
+
+#: includes/Admin/LogsPage.php:110
+msgid "Allow retry from Stripe"
+msgstr "Stripeからの再試行を許可"
+
+#: includes/Admin/LogsPage.php:113
 msgid "Masked payload"
 msgstr "マスク済みpayload"
 
-#: includes/Admin/LogsPage.php:101
-msgid "Email, address, and payment-related information is masked again when displayed."
+#: includes/Admin/LogsPage.php:113
+msgid ""
+"Email, address, and payment-related information is masked again when "
+"displayed."
 msgstr "表示時にもメール、住所、支払い関連情報を再マスクします。"
 
-#: includes/Admin/LogsPage.php:111
+#: includes/Admin/LogsPage.php:123
 msgid "API logs"
 msgstr "APIログ"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:116
+#: includes/Admin/LogsPage.php:128
 msgid "License"
 msgstr "ライセンス"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Administrative action logs"
 msgstr "管理操作ログ"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Object type"
 msgstr "対象種別"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "User ID"
 msgstr "ユーザーID"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "User"
 msgstr "ユーザー"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Object"
 msgstr "対象"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:133
+#: includes/Admin/LogsPage.php:145
 msgid "Object ID"
 msgstr "対象ID"
 
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:146
+#: includes/Admin/LogsPage.php:158
 msgid "Manual log cleanup"
 msgstr "ログ保持期間の手動削除"
 
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:146
+#: includes/Admin/LogsPage.php:158
 #, php-format
-msgid "The current retention period is <strong>%d days</strong>. You can safely rerun the same cleanup performed by the daily cron task."
-msgstr "現在の保持期間は<strong>%d日</strong>です。日次Cronと同じ処理を安全に再実行できます。"
+msgid ""
+"The current retention period is <strong>%d days</strong>. You can safely "
+"rerun the same cleanup performed by the daily cron task."
+msgstr ""
+"現在の保持期間は<strong>%d日</strong>です。日次Cronと同じ処理を安全に再実行で"
+"きます。"
 
-#: includes/Admin/LogsPage.php:148
+#: includes/Admin/LogsPage.php:160
 msgid "Delete logs older than the retention period"
 msgstr "保持期間より古いログを削除"
 
 #. translators: %d: number of deleted log entries.
-#: includes/Admin/LogsPage.php:162
+#: includes/Admin/LogsPage.php:174
 #, php-format
 msgid "Deleted %d log entries."
 msgstr "ログを%d件削除しました。"
 
-#: includes/Admin/LogsPage.php:182
+#: includes/Admin/LogsPage.php:194
 msgid "No matching logs found."
 msgstr "該当するログはありません。"
 
@@ -777,11 +835,13 @@ msgstr "【{site_name}】お支払い方法をご確認ください"
 #: includes/Email/Templates.php:37
 msgid ""
 "We could not confirm your payment.\n"
-"Open the Stripe Customer Portal from your account page and check your payment method.\n"
+"Open the Stripe Customer Portal from your account page and check your "
+"payment method.\n"
 "{account_url}"
 msgstr ""
 "お支払いを確認できませんでした。\n"
-"契約情報ページからStripe Customer Portalを開き、お支払い方法をご確認ください。\n"
+"契約情報ページからStripe Customer Portalを開き、お支払い方法をご確認くださ"
+"い。\n"
 "{account_url}"
 
 #: includes/Email/Templates.php:41
@@ -855,8 +915,12 @@ msgid "Thank you for your purchase"
 msgstr "ご購入ありがとうございます"
 
 #: includes/Frontend/Shortcodes.php:94
-msgid "Your subscription is being processed. You can find your license information in your email and account page."
-msgstr "契約処理を受け付けました。ライセンス情報はメールとマイページからご確認いただけます。"
+msgid ""
+"Your subscription is being processed. You can find your license information "
+"in your email and account page."
+msgstr ""
+"契約処理を受け付けました。ライセンス情報はメールとマイページからご確認いただ"
+"けます。"
 
 #: includes/Frontend/Shortcodes.php:94
 msgid "View account"
@@ -867,8 +931,12 @@ msgid "Checkout was canceled"
 msgstr "購入手続きはキャンセルされました"
 
 #: includes/Frontend/Shortcodes.php:102
-msgid "You have not been charged. You can review the product and restart checkout at any time."
-msgstr "料金は発生していません。内容をご確認のうえ、いつでも購入手続きを再開できます。"
+msgid ""
+"You have not been charged. You can review the product and restart checkout "
+"at any time."
+msgstr ""
+"料金は発生していません。内容をご確認のうえ、いつでも購入手続きを再開できま"
+"す。"
 
 #: includes/Frontend/Shortcodes.php:102
 msgid "Return to product"
@@ -891,8 +959,12 @@ msgid "Subscribed products"
 msgstr "契約中の商品"
 
 #: includes/Frontend/Shortcodes.php:125
-msgid "No subscription information is available yet. If you just purchased, wait a moment for synchronization to complete."
-msgstr "契約情報はまだありません。購入直後の場合は、同期が完了するまで少しお待ちください。"
+msgid ""
+"No subscription information is available yet. If you just purchased, wait a "
+"moment for synchronization to complete."
+msgstr ""
+"契約情報はまだありません。購入直後の場合は、同期が完了するまで少しお待ちくだ"
+"さい。"
 
 #: includes/Frontend/Shortcodes.php:134
 msgid "License status"
@@ -935,8 +1007,11 @@ msgid "Stripe billing and subscription management is currently unavailable."
 msgstr "Stripeでの支払い・契約管理は現在利用できません。"
 
 #: includes/Frontend/Shortcodes.php:167
-msgid "Your Stripe customer information is being synchronized. Billing and subscription management will be available when it completes."
-msgstr "Stripe顧客情報を同期しています。完了後に支払い・契約管理を利用できます。"
+msgid ""
+"Your Stripe customer information is being synchronized. Billing and "
+"subscription management will be available when it completes."
+msgstr ""
+"Stripe顧客情報を同期しています。完了後に支払い・契約管理を利用できます。"
 
 #: includes/Frontend/Shortcodes.php:170
 msgid "Stripe billing and subscription management is being configured."
@@ -947,16 +1022,23 @@ msgid "Manage billing and subscription in Stripe"
 msgstr "支払い・契約を Stripe で管理"
 
 #: includes/Frontend/Shortcodes.php:182
-msgid "Your Stripe customer information has not finished synchronizing. Please try again later."
-msgstr "Stripe顧客情報の同期が完了していません。時間をおいて再度お試しください。"
+msgid ""
+"Your Stripe customer information has not finished synchronizing. Please try "
+"again later."
+msgstr ""
+"Stripe顧客情報の同期が完了していません。時間をおいて再度お試しください。"
 
 #: includes/Frontend/Shortcodes.php:183
 msgid "The billing and subscription management page is not configured."
 msgstr "支払い・契約管理ページの準備が完了していません。"
 
 #: includes/Frontend/Shortcodes.php:184
-msgid "Stripe billing and subscription management is temporarily unavailable. Please try again later."
-msgstr "現在Stripeの支払い・契約管理を開始できません。時間をおいて再度お試しください。"
+msgid ""
+"Stripe billing and subscription management is temporarily unavailable. "
+"Please try again later."
+msgstr ""
+"現在Stripeの支払い・契約管理を開始できません。時間をおいて再度お試しくださ"
+"い。"
 
 #: includes/Frontend/Shortcodes.php:197 includes/Frontend/Shortcodes.php:200
 msgid "Not set"
@@ -1031,5 +1113,6 @@ msgid "No active subscription is available."
 msgstr "有効なサブスクリプションがありません。"
 
 #: includes/License/LicenseManager.php:100
-msgid "This operation is unavailable because the Stripe subscription is not active."
+msgid ""
+"This operation is unavailable because the Stripe subscription is not active."
 msgstr "Stripeサブスクリプションが有効でないため操作できません。"

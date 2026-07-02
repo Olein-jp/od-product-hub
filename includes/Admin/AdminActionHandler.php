@@ -11,6 +11,7 @@ use OD_Product_Hub\Database\DatabaseException;
 use OD_Product_Hub\License\LicenseManager;
 use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Log\LogCleanupService;
+use OD_Product_Hub\Log\WebhookLogRepository;
 use OD_Product_Hub\Product\ProductRepository;
 
 final class AdminActionHandler {
@@ -23,6 +24,7 @@ final class AdminActionHandler {
 		private readonly AdminLogRepository $logs,
 		private readonly LicenseManager $licenses,
 		private readonly LogCleanupService $cleanup,
+		private readonly WebhookLogRepository $webhook_logs,
 		callable $stripe_connection_test
 	) {
 		$this->stripe_connection_test = $stripe_connection_test;
@@ -159,6 +161,27 @@ final class AdminActionHandler {
 		);
 		set_transient( 'odph_cleanup_result_' . get_current_user_id(), $result, MINUTE_IN_SECONDS );
 		wp_safe_redirect( admin_url( 'admin.php?page=odph-logs&cleanup=1' ) );
+		exit;
+	}
+
+	public function retry_webhook(): void {
+		AdminAccess::guard();
+		$log_id = absint( $_POST['log_id'] ?? 0 );
+		check_admin_referer( 'odph_retry_webhook_' . $log_id );
+		$event = $this->webhook_logs->find( $log_id );
+		if ( ! $event || ! $this->webhook_logs->request_manual_retry( $log_id ) ) {
+			wp_die( esc_html__( 'This webhook cannot be retried.', 'od-product-hub' ), '', array( 'response' => 409 ) );
+		}
+		$this->logs->create(
+			array(
+				'user_id'     => get_current_user_id(),
+				'action'      => 'webhook_retry_requested',
+				'object_type' => 'webhook_log',
+				'object_id'   => $log_id,
+				'details'     => wp_json_encode( array( 'stripe_event_id' => (string) $event->stripe_event_id ) ),
+			)
+		);
+		wp_safe_redirect( admin_url( 'admin.php?page=odph-logs&tab=webhook&log_id=' . $log_id . '&retry=1' ) );
 		exit;
 	}
 

@@ -8,7 +8,7 @@
 namespace OD_Product_Hub\Database;
 
 final class Schema {
-	public const VERSION = '1.6.0';
+	public const VERSION = '1.7.0';
 
 	/** @return list<string> */
 	public static function table_suffixes(): array {
@@ -140,7 +140,9 @@ final class Schema {
 				payload longtext NOT NULL,
 				result varchar(20) NOT NULL,
 				error_message text NULL,
+				attempt_count int unsigned NOT NULL DEFAULT 1,
 				duplicate_count bigint unsigned NOT NULL DEFAULT 0,
+				last_attempt_at datetime NULL,
 				last_received_at datetime NULL,
 				created_at datetime NOT NULL,
 				PRIMARY KEY  (id),
