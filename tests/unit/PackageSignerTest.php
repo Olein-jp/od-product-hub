@@ -8,6 +8,7 @@
 namespace OD_Product_Hub\Tests;
 
 use OD_Product_Hub\Release\PackageSigner;
+use OD_Product_Hub\Release\ReleasePackageValidator;
 use PHPUnit\Framework\TestCase;
 
 final class PackageSignerTest extends TestCase {
@@ -27,5 +28,25 @@ final class PackageSignerTest extends TestCase {
 		file_put_contents( $file, 'tampered package' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- PHPUnit fixture.
 		self::assertFalse( $signer->verify( $file, $signed['sha256'], $signed['signature'], $signed['public_key'] ) );
 		unlink( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- PHPUnit fixture cleanup.
+	}
+
+	public function test_release_package_validator_distinguishes_missing_and_invalid_packages(): void {
+		if ( ! function_exists( 'sodium_crypto_sign_keypair' ) ) {
+			self::markTestSkipped( 'Sodium is unavailable.' );
+		}
+		$file = tempnam( sys_get_temp_dir(), 'odph-release-validator-' );
+		self::assertIsString( $file );
+		file_put_contents( $file, 'published package' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- PHPUnit fixture.
+		$keypair   = sodium_crypto_sign_keypair();
+		$secret    = base64_encode( sodium_crypto_sign_secretkey( $keypair ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Test fixture for binary key transport.
+		$signed    = ( new PackageSigner() )->sign( $file, $secret );
+		$release   = (object) array_merge( array( 'package_path' => $file ), $signed );
+		$validator = new ReleasePackageValidator();
+
+		self::assertNull( $validator->validate( $release ) );
+		file_put_contents( $file, 'tampered package' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- PHPUnit fixture.
+		self::assertSame( ReleasePackageValidator::ERROR_INTEGRITY_FAILED, $validator->validate( $release ) );
+		unlink( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- PHPUnit fixture cleanup.
+		self::assertSame( ReleasePackageValidator::ERROR_MISSING, $validator->validate( $release ) );
 	}
 }

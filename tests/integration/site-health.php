@@ -203,6 +203,12 @@ $release_id = $releases->create(
 	)
 );
 odph_health_assert( 'critical' === $health->update_delivery_status()['status'], 'Invalid published package must be critical' );
+$missing_result = $health->update_delivery_status();
+odph_health_assert( str_contains( (string) $missing_result['label'], 'missing' ), 'Missing packages must have a distinct Site Health diagnosis', $missing_result );
+file_put_contents( $storage . '/missing.zip', 'tampered' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Invalid integrity fixture.
+$integrity_result = $health->update_delivery_status();
+odph_health_assert( 'critical' === $integrity_result['status'] && str_contains( (string) $integrity_result['label'], 'integrity' ), 'Integrity failures must have a distinct Site Health diagnosis', $integrity_result );
+unlink( $storage . '/missing.zip' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Disposable integration fixture cleanup.
 $releases->withdraw( $release_id );
 odph_health_assert( 'good' === $health->update_delivery_status()['status'], 'Update diagnosis must recover after invalid release withdrawal' );
 

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-03T00:15:45+00:00\n"
+"POT-Creation-Date: 2026-07-03T02:16:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -156,7 +156,7 @@ msgid "Select a page"
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:139
-#: includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSiteHealth.php:195
 msgid "Select a published page containing the odph_my_account shortcode."
 msgstr ""
 
@@ -374,59 +374,67 @@ msgstr ""
 msgid "Configure a writable private release storage directory. The actual path is intentionally omitted."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:159
+#: includes/Admin/AdminSiteHealth.php:161
+msgid "A published release package is missing"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:161
+msgid "Withdraw the affected release, confirm private storage availability, and publish a newly verified build."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:164
 msgid "A published release failed integrity verification"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:159
+#: includes/Admin/AdminSiteHealth.php:164
 msgid "Withdraw the affected release, isolate its package, and publish a newly verified build."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:163
+#: includes/Admin/AdminSiteHealth.php:168
 msgid "Move release storage outside the Web root"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:163
+#: includes/Admin/AdminSiteHealth.php:168
 msgid "The storage is writable, but production releases should use ODPH_RELEASE_STORAGE_PATH outside the Web root."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:165
+#: includes/Admin/AdminSiteHealth.php:170
 msgid "Update delivery dependencies are ready"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:165
+#: includes/Admin/AdminSiteHealth.php:170
 msgid "Sodium, Zip, private storage, and published release signatures passed validation."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:185
+#: includes/Admin/AdminSiteHealth.php:190
 msgid "Checkout result pages are incomplete"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:185
+#: includes/Admin/AdminSiteHealth.php:190
 msgid "Use published pages for the success and cancel URLs and place the corresponding OD Product Hub shortcode on each page."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSiteHealth.php:195
 msgid "The account page is incomplete"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:192
+#: includes/Admin/AdminSiteHealth.php:197
 msgid "Checkout and account pages are ready"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:192
+#: includes/Admin/AdminSiteHealth.php:197
 msgid "The configured pages are published and contain the required shortcodes."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:214
+#: includes/Admin/AdminSiteHealth.php:219
 msgid "Not recorded"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:218
+#: includes/Admin/AdminSiteHealth.php:223
 msgid "Not scheduled"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:223
+#: includes/Admin/AdminSiteHealth.php:228
 msgid "Open the relevant OD Product Hub screen"
 msgstr ""
 

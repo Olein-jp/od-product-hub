@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-03T00:15:45+00:00\n"
+"POT-Creation-Date: 2026-07-03T02:16:51+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -157,7 +157,7 @@ msgstr "マイページ"
 msgid "Select a page"
 msgstr "固定ページを選択"
 
-#: includes/Admin/AdminSettings.php:139 includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSettings.php:139 includes/Admin/AdminSiteHealth.php:195
 msgid "Select a published page containing the odph_my_account shortcode."
 msgstr ""
 "odph_my_account ショートコードを含む公開済み固定ページを選択してください。"
@@ -403,11 +403,23 @@ msgstr ""
 "書き込み可能な秘密リリースストレージを設定してください。実パスは意図的に表示"
 "していません。"
 
-#: includes/Admin/AdminSiteHealth.php:159
+#: includes/Admin/AdminSiteHealth.php:161
+msgid "A published release package is missing"
+msgstr "公開済みリリースのパッケージが見つかりません"
+
+#: includes/Admin/AdminSiteHealth.php:161
+msgid ""
+"Withdraw the affected release, confirm private storage availability, and "
+"publish a newly verified build."
+msgstr ""
+"対象リリースを停止し、非公開ストレージを確認してから、検証済みの新しい"
+"ビルドを公開してください。"
+
+#: includes/Admin/AdminSiteHealth.php:164
 msgid "A published release failed integrity verification"
 msgstr "公開済みリリースの整合性検証に失敗しました"
 
-#: includes/Admin/AdminSiteHealth.php:159
+#: includes/Admin/AdminSiteHealth.php:164
 msgid ""
 "Withdraw the affected release, isolate its package, and publish a newly "
 "verified build."
@@ -415,11 +427,11 @@ msgstr ""
 "対象リリースを停止してパッケージを隔離し、新しく検証したビルドを公開してくだ"
 "さい。"
 
-#: includes/Admin/AdminSiteHealth.php:163
+#: includes/Admin/AdminSiteHealth.php:168
 msgid "Move release storage outside the Web root"
 msgstr "リリースストレージをWebルート外へ移動してください"
 
-#: includes/Admin/AdminSiteHealth.php:163
+#: includes/Admin/AdminSiteHealth.php:168
 msgid ""
 "The storage is writable, but production releases should use "
 "ODPH_RELEASE_STORAGE_PATH outside the Web root."
@@ -427,22 +439,22 @@ msgstr ""
 "ストレージは書き込み可能ですが、本番ではODPH_RELEASE_STORAGE_PATHを使ってWeb"
 "ルート外に配置してください。"
 
-#: includes/Admin/AdminSiteHealth.php:165
+#: includes/Admin/AdminSiteHealth.php:170
 msgid "Update delivery dependencies are ready"
 msgstr "更新配布の依存機能は正常です"
 
-#: includes/Admin/AdminSiteHealth.php:165
+#: includes/Admin/AdminSiteHealth.php:170
 msgid ""
 "Sodium, Zip, private storage, and published release signatures passed "
 "validation."
 msgstr ""
 "Sodium、Zip、秘密ストレージ、公開済みリリースの署名は検証に成功しました。"
 
-#: includes/Admin/AdminSiteHealth.php:185
+#: includes/Admin/AdminSiteHealth.php:190
 msgid "Checkout result pages are incomplete"
 msgstr "購入結果ページの設定が不完全です"
 
-#: includes/Admin/AdminSiteHealth.php:185
+#: includes/Admin/AdminSiteHealth.php:190
 msgid ""
 "Use published pages for the success and cancel URLs and place the "
 "corresponding OD Product Hub shortcode on each page."
@@ -450,28 +462,28 @@ msgstr ""
 "購入完了・キャンセルURLには公開済み固定ページを使用し、それぞれ対応するOD "
 "Product Hubショートコードを配置してください。"
 
-#: includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSiteHealth.php:195
 msgid "The account page is incomplete"
 msgstr "マイページの設定が不完全です"
 
-#: includes/Admin/AdminSiteHealth.php:192
+#: includes/Admin/AdminSiteHealth.php:197
 msgid "Checkout and account pages are ready"
 msgstr "購入・マイページは正常です"
 
-#: includes/Admin/AdminSiteHealth.php:192
+#: includes/Admin/AdminSiteHealth.php:197
 msgid "The configured pages are published and contain the required shortcodes."
 msgstr ""
 "設定された固定ページは公開済みで、必要なショートコードが配置されています。"
 
-#: includes/Admin/AdminSiteHealth.php:214
+#: includes/Admin/AdminSiteHealth.php:219
 msgid "Not recorded"
 msgstr "未記録"
 
-#: includes/Admin/AdminSiteHealth.php:218
+#: includes/Admin/AdminSiteHealth.php:223
 msgid "Not scheduled"
 msgstr "未登録"
 
-#: includes/Admin/AdminSiteHealth.php:223
+#: includes/Admin/AdminSiteHealth.php:228
 msgid "Open the relevant OD Product Hub screen"
 msgstr "関連するOD Product Hub画面を開く"
 

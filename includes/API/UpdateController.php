@@ -11,7 +11,7 @@ use OD_Product_Hub\License\LicenseGenerator;
 use OD_Product_Hub\License\LicenseRepository;
 use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Release\DownloadTokenService;
-use OD_Product_Hub\Release\PackageSigner;
+use OD_Product_Hub\Release\ReleasePackageValidator;
 use OD_Product_Hub\Release\ReleaseRepository;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -79,7 +79,7 @@ final class UpdateController extends PublicController {
 			);
 		}
 		$release = $this->releases->latest_for_product( (int) $license->product_id, (string) $request->get_param( 'channel' ) );
-		if ( ! $release || ! is_file( (string) $release->package_path ) || ! ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ) ) {
+		if ( ! $release ) {
 			$this->log( $request, $license, 'success', null );
 			return $this->with_limit_headers(
 				new WP_REST_Response(
@@ -88,6 +88,21 @@ final class UpdateController extends PublicController {
 						'update_available' => false,
 					),
 					200
+				),
+				$limit
+			);
+		}
+		$package_error = ( new ReleasePackageValidator() )->validate( $release );
+		if ( null !== $package_error ) {
+			$this->log( $request, $license, 'failure', $package_error );
+			return $this->with_limit_headers(
+				new WP_REST_Response(
+					array(
+						'success'    => false,
+						'error_code' => $package_error,
+						'message'    => 'The update package is temporarily unavailable.',
+					),
+					503
 				),
 				$limit
 			);

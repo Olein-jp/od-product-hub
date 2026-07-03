@@ -24,7 +24,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 | `php_version` | いいえ | 同上 |
 | `channel` | 更新確認のみ | `stable` または `beta`。省略時は `stable` |
 
-`updates/check` に限り `plugin_version` は必須です。形式に合わない値、または省略時はHTTP 400となり、ダウンロード権を発行しません。
+`updates/check` に限り `plugin_version` は必須です。形式に合わない値、または省略時はHTTP 400となり、ダウンロード権を発行しません。公開版が未登録の場合は正常な「更新なし」としてHTTP 200を返します。公開版のZIPが消失している場合はHTTP 503 `release_package_missing`、SHA-256またはEd25519署名検証に失敗した場合はHTTP 503 `release_package_integrity_failed` を返します。どちらもダウンロード権を発行せず、レスポンスにファイルパス、鍵、内部例外を含めません。
 
 不正な入力はWordPress REST API標準の `rest_invalid_param` とHTTP 400を返し、APIログへ保存しません。
 
@@ -103,7 +103,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 }
 ```
 
-`plugin_version` がバージョン形式に合わない場合は `rest_invalid_param`、省略時は `rest_missing_callback_param` とHTTP 400を返します。公開版がない場合やパッケージ署名を検証できない場合も、ダウンロード権を発行せず上記の最小レスポンスを返します。有効な契約を確認できない場合はHTTP 403、`success: false`、契約判定に対応する `error_code` を返します。
+`plugin_version` がバージョン形式に合わない場合は `rest_invalid_param`、省略時は `rest_missing_callback_param` とHTTP 400を返します。公開版がない場合は、ダウンロード権を発行せず上記の最小レスポンスを返します。公開版のパッケージを検証できない場合はHTTP 503と前述の安定した `error_code` を返します。有効な契約を確認できない場合はHTTP 403、`success: false`、契約判定に対応する `error_code` を返します。
 
 ## 更新ZIPダウンロード
 

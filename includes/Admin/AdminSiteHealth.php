@@ -8,7 +8,7 @@
 namespace OD_Product_Hub\Admin;
 
 use OD_Product_Hub\Log\WebhookLogRepository;
-use OD_Product_Hub\Release\PackageSigner;
+use OD_Product_Hub\Release\ReleasePackageValidator;
 use OD_Product_Hub\Release\ReleaseRepository;
 
 final class AdminSiteHealth {
@@ -154,8 +154,13 @@ final class AdminSiteHealth {
 		if ( ! $storage['writable'] ) {
 			return $this->result( 'critical', __( 'Release storage is not writable', 'od-product-hub' ), __( 'Configure a writable private release storage directory. The actual path is intentionally omitted.', 'od-product-hub' ), 'odph_update_delivery' );
 		}
+		$validator = new ReleasePackageValidator();
 		foreach ( ( new ReleaseRepository() )->published( 100 ) as $release ) {
-			if ( ! is_file( (string) $release->package_path ) || ! ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ) ) {
+			$package_error = $validator->validate( $release );
+			if ( ReleasePackageValidator::ERROR_MISSING === $package_error ) {
+				return $this->result( 'critical', __( 'A published release package is missing', 'od-product-hub' ), __( 'Withdraw the affected release, confirm private storage availability, and publish a newly verified build.', 'od-product-hub' ), 'odph_update_delivery' );
+			}
+			if ( ReleasePackageValidator::ERROR_INTEGRITY_FAILED === $package_error ) {
 				return $this->result( 'critical', __( 'A published release failed integrity verification', 'od-product-hub' ), __( 'Withdraw the affected release, isolate its package, and publish a newly verified build.', 'od-product-hub' ), 'odph_update_delivery' );
 			}
 		}

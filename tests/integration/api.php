@@ -17,6 +17,7 @@ use OD_Product_Hub\Customer\CustomerRepository;
 use OD_Product_Hub\Release\DownloadRepository;
 use OD_Product_Hub\Release\DownloadTokenService;
 use OD_Product_Hub\Release\PackageSigner;
+use OD_Product_Hub\Release\ReleaseRepository;
 use OD_Product_Hub\Release\ReleaseService;
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
@@ -63,6 +64,7 @@ Installer::uninstall();
 Installer::activate();
 $settings                        = get_option( 'odph_settings', array() );
 $settings['api_rate_limit']      = 1000;
+$settings['update_rate_limit']   = 1000;
 $settings['api_trusted_proxies'] = "10.0.0.0/8\n2001:db8:ffff::/48";
 update_option( 'odph_settings', $settings, false );
 
@@ -142,6 +144,69 @@ $release_id = ( new ReleaseService() )->publish(
 	$secret
 );
 
+$releases = new ReleaseRepository();
+$release  = $releases->find( $release_id );
+odph_api_assert( is_object( $release ), 'Published release fixture must exist' );
+$package_path     = (string) $release->package_path;
+$package_contents = file_get_contents( $package_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Integration fixture backup.
+odph_api_assert( is_string( $package_contents ), 'Published package fixture must be readable' );
+
+$releases->withdraw( $release_id );
+$no_release      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', odph_api_license_params() );
+$no_release_data = $no_release->get_data();
+odph_api_assert(
+	200 === $no_release->get_status() && array(
+		'success'          => true,
+		'update_available' => false,
+	) === $no_release_data,
+	'A missing published release must remain a normal no-update response',
+	$no_release_data
+);
+$releases->update( $release_id, array( 'status' => 'published' ) );
+
+$missing_path = $package_path . '.missing';
+$releases->update( $release_id, array( 'package_path' => $missing_path ) );
+$missing_package      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', odph_api_license_params() );
+$missing_package_data = $missing_package->get_data();
+odph_api_assert( 503 === $missing_package->get_status() && false === $missing_package_data['success'] && 'release_package_missing' === $missing_package_data['error_code'], 'A missing published package must be an explicit service failure', $missing_package_data );
+odph_api_assert( ! str_contains( (string) wp_json_encode( $missing_package_data ), $missing_path ), 'Missing-package responses must not expose the storage path', $missing_package_data );
+odph_api_assert(
+	1 === $api_logs->search(
+		array(
+			'action'     => 'update_check',
+			'result'     => 'failure',
+			'error_code' => 'release_package_missing',
+		),
+		1,
+		10
+	)->total,
+	'Missing packages must create a failure API log'
+);
+$releases->update( $release_id, array( 'package_path' => $package_path ) );
+
+file_put_contents( $package_path, 'tampered-before-update-check' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Tamper fixture.
+$invalid_package      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', odph_api_license_params() );
+$invalid_package_data = $invalid_package->get_data();
+odph_api_assert( 503 === $invalid_package->get_status() && false === $invalid_package_data['success'] && 'release_package_integrity_failed' === $invalid_package_data['error_code'], 'A tampered published package must be an explicit service failure', $invalid_package_data );
+$serialized_invalid = (string) wp_json_encode( $invalid_package_data );
+foreach ( array( $package_path, (string) $release->signature, (string) $release->public_key ) as $private_package_value ) {
+	odph_api_assert( ! str_contains( $serialized_invalid, $private_package_value ), 'Integrity-failure responses must not expose package internals', $private_package_value );
+}
+odph_api_assert(
+	1 === $api_logs->search(
+		array(
+			'action'     => 'update_check',
+			'result'     => 'failure',
+			'error_code' => 'release_package_integrity_failed',
+		),
+		1,
+		10
+	)->total,
+	'Integrity failures must create a failure API log'
+);
+file_put_contents( $package_path, $package_contents ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Restore signed integration fixture.
+odph_api_assert( ( new PackageSigner() )->verify( $package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ), 'Restored package fixture must verify before normal update checks' );
+
 $download_repository = new DownloadRepository();
 $downloads_before    = $download_repository->search( array(), 1, 1 )->total;
 foreach ( array( '2.0.0', '2.0.1' ) as $current_version ) {
@@ -186,7 +251,7 @@ $grant = ( new DownloadTokenService() )->validate( rawurldecode( $token ) );
 odph_api_assert( null !== $grant && $release_id === $grant['release_id'], 'Issued download URL must contain a valid signed grant' );
 odph_api_assert( $download_repository->claim( (int) $grant['grant']->id ), 'First download claim must succeed' );
 odph_api_assert( ! $download_repository->claim( (int) $grant['grant']->id ), 'A download grant must be one-time use' );
-$release = ( new \OD_Product_Hub\Release\ReleaseRepository() )->find( $release_id );
+$release = $releases->find( $release_id );
 odph_api_assert( ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ), 'Published package signature must verify' );
 file_put_contents( (string) $release->package_path, 'tampered' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Tamper fixture.
 odph_api_assert( ! ( new PackageSigner() )->verify( (string) $release->package_path, (string) $release->sha256, (string) $release->signature, (string) $release->public_key ), 'Tampered packages must be rejected' );
