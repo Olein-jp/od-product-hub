@@ -94,7 +94,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 
 クライアントはレスポンス内の `public_key` を単独では信頼せず、プラグインへ固定した公開鍵との一致、ZIPのSHA-256、Ed25519署名を検証します。詳細は [クライアントSDK](../packages/client-sdk/README.md) と [更新配布](UPDATE_DELIVERY.md) を参照してください。
 
-同一版、またはクライアント側が新しい版の場合、ダウンロード権は発行せず、次の最小レスポンスを返します。`release` と `download_url` は含みません。
+同一版、またはクライアント側が新しい版の場合、ZIPのハッシュ・署名検証とダウンロード権の発行を行わず、次の最小レスポンスを返します。`release` と `download_url` は含みません。
 
 ```json
 {

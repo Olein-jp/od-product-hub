@@ -185,6 +185,35 @@ odph_api_assert(
 $releases->update( $release_id, array( 'package_path' => $package_path ) );
 
 file_put_contents( $package_path, 'tampered-before-update-check' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Tamper fixture.
+$failure_logs_before_no_update = $api_logs->search(
+	array(
+		'action' => 'update_check',
+		'result' => 'failure',
+	),
+	1,
+	1
+)->total;
+$tampered_no_update            = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', array_merge( odph_api_license_params(), array( 'plugin_version' => '2.0.0' ) ) );
+$tampered_no_update_data       = $tampered_no_update->get_data();
+odph_api_assert(
+	200 === $tampered_no_update->get_status() && array(
+		'success'          => true,
+		'update_available' => false,
+	) === $tampered_no_update_data,
+	'Current clients must skip package hashing and receive the minimal no-update response even when the stored package is invalid',
+	$tampered_no_update_data
+);
+odph_api_assert(
+	$failure_logs_before_no_update === $api_logs->search(
+		array(
+			'action' => 'update_check',
+			'result' => 'failure',
+		),
+		1,
+		1
+	)->total,
+	'Skipped no-update integrity checks must not create a package failure log'
+);
 $invalid_package      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/updates/check', odph_api_license_params() );
 $invalid_package_data = $invalid_package->get_data();
 odph_api_assert( 503 === $invalid_package->get_status() && false === $invalid_package_data['success'] && 'release_package_integrity_failed' === $invalid_package_data['error_code'], 'A tampered published package must be an explicit service failure', $invalid_package_data );

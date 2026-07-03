@@ -92,6 +92,19 @@ final class UpdateController extends PublicController {
 				$limit
 			);
 		}
+		if ( ! version_compare( (string) $release->version, (string) $request->get_param( 'plugin_version' ), '>' ) ) {
+			$this->log( $request, $license, 'success', null );
+			return $this->with_limit_headers(
+				new WP_REST_Response(
+					array(
+						'success'          => true,
+						'update_available' => false,
+					),
+					200
+				),
+				$limit
+			);
+		}
 		$package_error = ( new ReleasePackageValidator() )->validate( $release );
 		if ( null !== $package_error ) {
 			$this->log( $request, $license, 'failure', $package_error );
@@ -103,19 +116,6 @@ final class UpdateController extends PublicController {
 						'message'    => 'The update package is temporarily unavailable.',
 					),
 					503
-				),
-				$limit
-			);
-		}
-		if ( ! version_compare( (string) $release->version, (string) $request->get_param( 'plugin_version' ), '>' ) ) {
-			$this->log( $request, $license, 'success', null );
-			return $this->with_limit_headers(
-				new WP_REST_Response(
-					array(
-						'success'          => true,
-						'update_available' => false,
-					),
-					200
 				),
 				$limit
 			);
