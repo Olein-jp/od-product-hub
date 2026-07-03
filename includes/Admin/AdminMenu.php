@@ -31,6 +31,7 @@ final class AdminMenu {
 		add_action( 'admin_post_odph_retry_webhook', array( $this->actions, 'retry_webhook' ) );
 		add_action( 'admin_notices', array( $this->site_health, 'configuration_notice' ) );
 		add_filter( 'site_status_tests', array( $this->site_health, 'tests' ) );
+		add_filter( 'debug_information', array( $this->site_health, 'debug_information' ) );
 	}
 
 	public function assets(): void {

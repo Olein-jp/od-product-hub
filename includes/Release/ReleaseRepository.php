@@ -64,4 +64,9 @@ final class ReleaseRepository extends AbstractRepository {
 	public function withdraw( int $id ): bool {
 		return $this->update( $id, array( 'status' => 'withdrawn' ) );
 	}
+
+	/** @return list<object> */
+	public function published( int $limit = 100 ): array {
+		return $this->search( array( 'status' => 'published' ), 1, max( 1, min( 100, $limit ) ), 'id', 'DESC' )->items;
+	}
 }

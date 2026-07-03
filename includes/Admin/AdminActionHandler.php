@@ -188,7 +188,15 @@ final class AdminActionHandler {
 	public function test_stripe_connection(): void {
 		AdminAccess::guard();
 		check_admin_referer( 'odph_test_stripe' );
-		$result = ( $this->stripe_connection_test )() ? 'success' : 'error';
+		$result                      = ( $this->stripe_connection_test )() ? 'success' : 'error';
+		$state                       = (array) get_option( 'odph_operational_state', array() );
+		$now                         = gmdate( 'Y-m-d H:i:s' );
+		$state['stripe_last_result'] = $result;
+		$state['stripe_last_test']   = $now;
+		if ( 'success' === $result ) {
+			$state['stripe_last_success'] = $now;
+		}
+		update_option( 'odph_operational_state', $state, false );
 		wp_safe_redirect( add_query_arg( 'stripe_test', $result, admin_url( 'admin.php?page=odph-settings' ) ) );
 		exit;
 	}

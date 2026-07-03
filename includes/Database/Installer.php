@@ -75,6 +75,7 @@ final class Installer {
 		self::deactivate();
 		delete_option( 'odph_settings' );
 		delete_option( 'odph_schema_version' );
+		delete_option( 'odph_operational_state' );
 	}
 
 	/** @return array<string, callable(): void> */

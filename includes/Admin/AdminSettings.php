@@ -126,6 +126,17 @@ final class AdminSettings {
 			}
 			printf( '<tr><th><label for="odph_%1$s">%2$s</label></th><td><input class="regular-text" type="%3$s" id="odph_%1$s" name="odph_settings[%1$s]" value="%4$s" placeholder="%5$s"></td></tr>', esc_attr( $key ), esc_html( $label ), $secret ? 'password' : 'text', esc_attr( $value ), esc_attr( $placeholder ) );
 		}
+		echo '<tr><th><label for="odph_account_page_id">' . esc_html__( 'Account page', 'od-product-hub' ) . '</label></th><td>';
+		wp_dropdown_pages(
+			array(
+				'name'              => 'odph_settings[account_page_id]',
+				'id'                => 'odph_account_page_id',
+				'selected'          => absint( $s['account_page_id'] ?? 0 ),
+				'show_option_none'  => esc_html__( 'Select a page', 'od-product-hub' ),
+				'option_none_value' => '0',
+			)
+		);
+		echo '<p class="description">' . esc_html__( 'Select a published page containing the odph_my_account shortcode.', 'od-product-hub' ) . '</p></td></tr>';
 		printf( '<tr><th><label for="odph_api_trusted_proxies">%1$s</label></th><td><textarea class="large-text code" rows="4" id="odph_api_trusted_proxies" name="odph_settings[api_trusted_proxies]">%2$s</textarea><p class="description">%3$s</p></td></tr>', esc_html__( 'Trusted proxies', 'od-product-hub' ), esc_textarea( (string) ( $s['api_trusted_proxies'] ?? '' ) ), esc_html__( 'Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this field is empty.', 'od-product-hub' ) );
 		echo '<tr><th>Customer Portal</th><td><label><input type="checkbox" name="odph_settings[portal_enabled]" value="1" ' . checked( ! empty( $s['portal_enabled'] ), true, false ) . '> ' . esc_html__( 'Enable', 'od-product-hub' ) . '</label></td></tr><tr><th>Webhook URL</th><td><code>' . esc_html( rest_url( 'od-product-hub/v1/stripe/webhook' ) ) . '</code></td></tr></table>';
 		echo '<h2>' . esc_html__( 'Email templates', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'Emails are sent as plain text. Templates containing unsupported placeholders are reset to their defaults.', 'od-product-hub' ) . '</p>';

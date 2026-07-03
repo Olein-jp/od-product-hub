@@ -222,6 +222,36 @@ final class WebhookLogRepository extends AbstractRepository {
 		return $count;
 	}
 
+	/** @return array{last_success: string|null, consecutive_errors: int, stale_processing: int} */
+	public function health_summary( int $stale_after_seconds = 300 ): array {
+		global $wpdb;
+		$cutoff       = gmdate( 'Y-m-d H:i:s', time() - max( 60, $stale_after_seconds ) );
+		$last_success = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(last_received_at) FROM %i WHERE result = 'success'", $this->table() ) );
+		$this->assert_read( 'latest successful webhook' );
+		$stale = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM %i WHERE result = 'processing' AND (last_attempt_at IS NULL OR last_attempt_at < %s)",
+				$this->table(),
+				$cutoff
+			)
+		);
+		$this->assert_read( 'stale webhooks' );
+		$results = $wpdb->get_col( $wpdb->prepare( 'SELECT result FROM %i ORDER BY id DESC LIMIT 20', $this->table() ) );
+		$this->assert_read( 'recent webhook health' );
+		$consecutive = 0;
+		foreach ( is_array( $results ) ? $results : array() as $result ) {
+			if ( ! in_array( (string) $result, array( 'error', 'exhausted', 'signature_error' ), true ) ) {
+				break;
+			}
+			++$consecutive;
+		}
+		return array(
+			'last_success'       => is_string( $last_success ) && '' !== $last_success ? $last_success : null,
+			'consecutive_errors' => $consecutive,
+			'stale_processing'   => $stale,
+		);
+	}
+
 	/** @return list<object> */
 	public function recent( int $limit = 5 ): array {
 		global $wpdb;

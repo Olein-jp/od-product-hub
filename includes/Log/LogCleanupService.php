@@ -24,6 +24,9 @@ final class LogCleanupService {
 		foreach ( self::TABLES as $suffix ) {
 			$deleted[ $suffix ] = $this->delete_batches( $suffix, $cutoff );
 		}
+		$state                         = (array) get_option( 'odph_operational_state', array() );
+		$state['cleanup_last_success'] = gmdate( 'Y-m-d H:i:s' );
+		update_option( 'odph_operational_state', $state, false );
 		return $deleted;
 	}
 

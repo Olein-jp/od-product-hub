@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-02T22:53:51+00:00\n"
+"POT-Creation-Date: 2026-07-03T00:15:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -63,27 +63,27 @@ msgstr ""
 msgid "This webhook cannot be retried."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:45
+#: includes/Admin/AdminMenu.php:46
 #: includes/Admin/ProductPage.php:24
 msgid "Products"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:46
+#: includes/Admin/AdminMenu.php:47
 #: includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31
 msgid "Licenses"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:47
+#: includes/Admin/AdminMenu.php:48
 #: includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:49
 msgid "Logs"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/AdminMenu.php:50
 msgid "Settings"
 msgstr ""
 
@@ -148,67 +148,286 @@ msgid "Configured; enter a value only to change it. Ends in %s"
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:129
+msgid "Account page"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:135
+msgid "Select a page"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:139
+#: includes/Admin/AdminSiteHealth.php:190
+msgid "Select a published page containing the odph_my_account shortcode."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:140
 msgid "Trusted proxies"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:129
+#: includes/Admin/AdminSettings.php:140
 msgid "Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this field is empty."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:130
+#: includes/Admin/AdminSettings.php:141
 msgid "Enable"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:131
+#: includes/Admin/AdminSettings.php:142
 msgid "Email templates"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:131
+#: includes/Admin/AdminSettings.php:142
 msgid "Emails are sent as plain text. Templates containing unsupported placeholders are reset to their defaults."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:136
+#: includes/Admin/AdminSettings.php:147
 msgid "Subject"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:137
+#: includes/Admin/AdminSettings.php:148
 msgid "Body"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:138
+#: includes/Admin/AdminSettings.php:149
 msgid "Available placeholders:"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:144
+#: includes/Admin/AdminSettings.php:155
 msgid "Delete all data when uninstalling"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:148
+#: includes/Admin/AdminSettings.php:159
 msgid "Test Stripe connection"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:24
-msgid "OD Product Hub production configuration"
+#: includes/Admin/AdminSiteHealth.php:31
+msgid "OD Product Hub: Stripe and HTTPS"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:37
-msgid "Stripe settings and HTTPS are configured"
+#: includes/Admin/AdminSiteHealth.php:32
+msgid "OD Product Hub: Webhook health"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:37
-msgid "Check the OD Product Hub configuration"
+#: includes/Admin/AdminSiteHealth.php:33
+msgid "OD Product Hub: Log retention"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:43
-msgid "The Stripe settings and HTTPS required for production are enabled."
+#: includes/Admin/AdminSiteHealth.php:34
+msgid "OD Product Hub: Update delivery"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:43
+#: includes/Admin/AdminSiteHealth.php:35
+msgid "OD Product Hub: Checkout and account pages"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:54
+msgid "Environment"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:58
+msgid "Stripe configured"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:59
+#: includes/Admin/AdminSiteHealth.php:71
+#: includes/Admin/CustomerPage.php:83
+#: includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
+msgid "Yes"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:59
+#: includes/Admin/AdminSiteHealth.php:71
+#: includes/Admin/CustomerPage.php:83
+#: includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
+msgid "No"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:62
+msgid "Last Stripe test result"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:66
+msgid "Last successful Stripe test"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:70
+msgid "Log cleanup scheduled"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:74
+msgid "Next log cleanup"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:78
+msgid "Last successful log cleanup"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:99
+msgid "Stripe or HTTPS configuration is incomplete"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:99
 msgid "Configure all three Stripe keys and enable HTTPS in production."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:44
-msgid "Open settings"
+#: includes/Admin/AdminSiteHealth.php:102
+msgid "Run the Stripe connection test"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:102
+msgid "The keys are configured, but a successful manual connection test has not been recorded."
+msgstr ""
+
+#. translators: %s: UTC date and time of the last successful Stripe connection test.
+#: includes/Admin/AdminSiteHealth.php:105
+#, php-format
+msgid "The last successful manual Stripe test was recorded at %s."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:106
+msgid "Stripe and HTTPS are ready"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:113
+msgid "Webhook processing appears to be stuck"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:113
+msgid "A Webhook has remained in processing for more than five minutes. Inspect the Webhook log and resend the event after resolving the cause."
+msgstr ""
+
+#. translators: %d: number of consecutive Webhook failures.
+#: includes/Admin/AdminSiteHealth.php:117
+#, php-format
+msgid "%d consecutive Webhook failures were detected. Inspect the latest errors and Stripe delivery history."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:118
+msgid "Webhook processing is failing repeatedly"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:121
+msgid "No successful Webhook has been recorded"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:121
+msgid "Send a Stripe test event and confirm that it completes successfully."
+msgstr ""
+
+#. translators: %s: UTC date and time of the latest successful Webhook.
+#: includes/Admin/AdminSiteHealth.php:124
+#, php-format
+msgid "The latest successful Webhook was recorded at %s."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:125
+msgid "Webhook processing is healthy"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:134
+msgid "The log cleanup schedule is missing"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:134
+msgid "Deactivate and reactivate the plugin, or load an OD Product Hub screen to repair the daily Cron event."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:137
+msgid "Log cleanup has not succeeded recently"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:137
+msgid "Run cleanup manually and verify that WP-Cron is invoked by the server."
+msgstr ""
+
+#. translators: %s: UTC date and time of the next scheduled log cleanup.
+#: includes/Admin/AdminSiteHealth.php:140
+#, php-format
+msgid "The daily cleanup is scheduled for %s. No successful run has been recorded yet."
+msgstr ""
+
+#. translators: 1: UTC date and time of the next cleanup, 2: UTC date and time of the last successful cleanup.
+#: includes/Admin/AdminSiteHealth.php:143
+#, php-format
+msgid "The next daily cleanup is scheduled for %1$s and the last successful run was at %2$s."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:145
+msgid "Log retention is scheduled"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:151
+msgid "Update delivery PHP extensions are missing"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:151
+msgid "Enable both Sodium and Zip before publishing or serving releases."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:155
+msgid "Release storage is not writable"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:155
+msgid "Configure a writable private release storage directory. The actual path is intentionally omitted."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:159
+msgid "A published release failed integrity verification"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:159
+msgid "Withdraw the affected release, isolate its package, and publish a newly verified build."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:163
+msgid "Move release storage outside the Web root"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:163
+msgid "The storage is writable, but production releases should use ODPH_RELEASE_STORAGE_PATH outside the Web root."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:165
+msgid "Update delivery dependencies are ready"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:165
+msgid "Sodium, Zip, private storage, and published release signatures passed validation."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:185
+msgid "Checkout result pages are incomplete"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:185
+msgid "Use published pages for the success and cancel URLs and place the corresponding OD Product Hub shortcode on each page."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:190
+msgid "The account page is incomplete"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:192
+msgid "Checkout and account pages are ready"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:192
+msgid "The configured pages are published and contain the required shortcodes."
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:214
+msgid "Not recorded"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:218
+msgid "Not scheduled"
+msgstr ""
+
+#: includes/Admin/AdminSiteHealth.php:223
+msgid "Open the relevant OD Product Hub screen"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:29
@@ -354,18 +573,6 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:74
 #: includes/Admin/CustomerPage.php:106
 msgid "Payment failure"
-msgstr ""
-
-#: includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:108
-#: includes/Privacy/PrivacyService.php:221
-msgid "Yes"
-msgstr ""
-
-#: includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:108
-#: includes/Privacy/PrivacyService.php:221
-msgid "No"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:92

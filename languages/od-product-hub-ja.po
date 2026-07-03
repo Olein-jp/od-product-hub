@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-02T22:53:51+00:00\n"
+"POT-Creation-Date: 2026-07-03T00:15:45+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -67,24 +67,24 @@ msgstr "ライセンス操作に失敗しました。"
 msgid "This webhook cannot be retried."
 msgstr "このWebhookは再試行できません。"
 
-#: includes/Admin/AdminMenu.php:45 includes/Admin/ProductPage.php:24
+#: includes/Admin/AdminMenu.php:46 includes/Admin/ProductPage.php:24
 msgid "Products"
 msgstr "商品"
 
-#: includes/Admin/AdminMenu.php:46 includes/Admin/CustomerPage.php:110
+#: includes/Admin/AdminMenu.php:47 includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31
 msgid "Licenses"
 msgstr "ライセンス"
 
-#: includes/Admin/AdminMenu.php:47 includes/Admin/CustomerPage.php:28
+#: includes/Admin/AdminMenu.php:48 includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr "顧客・契約"
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:49
 msgid "Logs"
 msgstr "ログ"
 
-#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/AdminMenu.php:50
 msgid "Settings"
 msgstr "設定"
 
@@ -150,25 +150,38 @@ msgid "Configured; enter a value only to change it. Ends in %s"
 msgstr "設定済み（変更時のみ入力）。末尾 %s"
 
 #: includes/Admin/AdminSettings.php:129
+msgid "Account page"
+msgstr "マイページ"
+
+#: includes/Admin/AdminSettings.php:135
+msgid "Select a page"
+msgstr "固定ページを選択"
+
+#: includes/Admin/AdminSettings.php:139 includes/Admin/AdminSiteHealth.php:190
+msgid "Select a published page containing the odph_my_account shortcode."
+msgstr ""
+"odph_my_account ショートコードを含む公開済み固定ページを選択してください。"
+
+#: includes/Admin/AdminSettings.php:140
 msgid "Trusted proxies"
 msgstr "信頼するプロキシ"
 
-#: includes/Admin/AdminSettings.php:129
+#: includes/Admin/AdminSettings.php:140
 msgid ""
 "Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this "
 "field is empty."
 msgstr ""
 "CIDRまたはIPを1行ずつ指定します。未設定時はX-Forwarded-Forを使用しません。"
 
-#: includes/Admin/AdminSettings.php:130
+#: includes/Admin/AdminSettings.php:141
 msgid "Enable"
 msgstr "有効化"
 
-#: includes/Admin/AdminSettings.php:131
+#: includes/Admin/AdminSettings.php:142
 msgid "Email templates"
 msgstr "メールテンプレート"
 
-#: includes/Admin/AdminSettings.php:131
+#: includes/Admin/AdminSettings.php:142
 msgid ""
 "Emails are sent as plain text. Templates containing unsupported placeholders "
 "are reset to their defaults."
@@ -176,49 +189,291 @@ msgstr ""
 "メールはプレーンテキストで送信されます。未対応のプレースホルダーを含むテンプ"
 "レートは既定値へ戻ります。"
 
-#: includes/Admin/AdminSettings.php:136
+#: includes/Admin/AdminSettings.php:147
 msgid "Subject"
 msgstr "件名"
 
-#: includes/Admin/AdminSettings.php:137
+#: includes/Admin/AdminSettings.php:148
 msgid "Body"
 msgstr "本文"
 
-#: includes/Admin/AdminSettings.php:138
+#: includes/Admin/AdminSettings.php:149
 msgid "Available placeholders:"
 msgstr "使用可能なプレースホルダー:"
 
-#: includes/Admin/AdminSettings.php:144
+#: includes/Admin/AdminSettings.php:155
 msgid "Delete all data when uninstalling"
 msgstr "アンインストール時に全データを削除する"
 
-#: includes/Admin/AdminSettings.php:148
+#: includes/Admin/AdminSettings.php:159
 msgid "Test Stripe connection"
 msgstr "Stripe接続をテスト"
 
-#: includes/Admin/AdminSiteHealth.php:24
-msgid "OD Product Hub production configuration"
-msgstr "OD Product Hub の本番設定"
+#: includes/Admin/AdminSiteHealth.php:31
+msgid "OD Product Hub: Stripe and HTTPS"
+msgstr "OD Product Hub: StripeとHTTPS"
 
-#: includes/Admin/AdminSiteHealth.php:37
-msgid "Stripe settings and HTTPS are configured"
-msgstr "Stripe設定とHTTPSを確認しました"
+#: includes/Admin/AdminSiteHealth.php:32
+msgid "OD Product Hub: Webhook health"
+msgstr "OD Product Hub: Webhook健全性"
 
-#: includes/Admin/AdminSiteHealth.php:37
-msgid "Check the OD Product Hub configuration"
-msgstr "OD Product Hub の設定を確認してください"
+#: includes/Admin/AdminSiteHealth.php:33
+msgid "OD Product Hub: Log retention"
+msgstr "OD Product Hub: ログ保持処理"
 
-#: includes/Admin/AdminSiteHealth.php:43
-msgid "The Stripe settings and HTTPS required for production are enabled."
-msgstr "本番運用に必要なStripe設定とHTTPSが有効です。"
+#: includes/Admin/AdminSiteHealth.php:34
+msgid "OD Product Hub: Update delivery"
+msgstr "OD Product Hub: 更新配布"
 
-#: includes/Admin/AdminSiteHealth.php:43
+#: includes/Admin/AdminSiteHealth.php:35
+msgid "OD Product Hub: Checkout and account pages"
+msgstr "OD Product Hub: 購入・マイページ"
+
+#: includes/Admin/AdminSiteHealth.php:54
+msgid "Environment"
+msgstr "環境"
+
+#: includes/Admin/AdminSiteHealth.php:58
+msgid "Stripe configured"
+msgstr "Stripe設定済み"
+
+#: includes/Admin/AdminSiteHealth.php:59 includes/Admin/AdminSiteHealth.php:71
+#: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
+msgid "Yes"
+msgstr "あり"
+
+#: includes/Admin/AdminSiteHealth.php:59 includes/Admin/AdminSiteHealth.php:71
+#: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
+msgid "No"
+msgstr "なし"
+
+#: includes/Admin/AdminSiteHealth.php:62
+msgid "Last Stripe test result"
+msgstr "Stripe接続試験の最終結果"
+
+#: includes/Admin/AdminSiteHealth.php:66
+msgid "Last successful Stripe test"
+msgstr "Stripe接続試験の最終成功日時"
+
+#: includes/Admin/AdminSiteHealth.php:70
+msgid "Log cleanup scheduled"
+msgstr "ログ削除Cron登録済み"
+
+#: includes/Admin/AdminSiteHealth.php:74
+msgid "Next log cleanup"
+msgstr "次回のログ削除"
+
+#: includes/Admin/AdminSiteHealth.php:78
+msgid "Last successful log cleanup"
+msgstr "ログ削除の最終成功日時"
+
+#: includes/Admin/AdminSiteHealth.php:99
+msgid "Stripe or HTTPS configuration is incomplete"
+msgstr "StripeまたはHTTPSの設定が不完全です"
+
+#: includes/Admin/AdminSiteHealth.php:99
 msgid "Configure all three Stripe keys and enable HTTPS in production."
 msgstr "Stripeの3つのキーを設定し、本番環境ではHTTPSを有効にしてください。"
 
-#: includes/Admin/AdminSiteHealth.php:44
-msgid "Open settings"
-msgstr "設定画面を開く"
+#: includes/Admin/AdminSiteHealth.php:102
+msgid "Run the Stripe connection test"
+msgstr "Stripe接続試験を実行してください"
+
+#: includes/Admin/AdminSiteHealth.php:102
+msgid ""
+"The keys are configured, but a successful manual connection test has not "
+"been recorded."
+msgstr "キーは設定されていますが、手動接続試験の成功が記録されていません。"
+
+#. translators: %s: UTC date and time of the last successful Stripe connection test.
+#: includes/Admin/AdminSiteHealth.php:105
+#, php-format
+msgid "The last successful manual Stripe test was recorded at %s."
+msgstr "手動Stripe接続試験の最終成功日時は%sです。"
+
+#: includes/Admin/AdminSiteHealth.php:106
+msgid "Stripe and HTTPS are ready"
+msgstr "StripeとHTTPSは正常です"
+
+#: includes/Admin/AdminSiteHealth.php:113
+msgid "Webhook processing appears to be stuck"
+msgstr "Webhook処理が停止している可能性があります"
+
+#: includes/Admin/AdminSiteHealth.php:113
+msgid ""
+"A Webhook has remained in processing for more than five minutes. Inspect the "
+"Webhook log and resend the event after resolving the cause."
+msgstr ""
+"Webhookが5分以上 processing のままです。Webhookログを確認し、原因を解消してか"
+"らイベントを再送してください。"
+
+#. translators: %d: number of consecutive Webhook failures.
+#: includes/Admin/AdminSiteHealth.php:117
+#, php-format
+msgid ""
+"%d consecutive Webhook failures were detected. Inspect the latest errors and "
+"Stripe delivery history."
+msgstr ""
+"Webhookの失敗を%d件連続で検出しました。直近のエラーとStripeの配信履歴を確認し"
+"てください。"
+
+#: includes/Admin/AdminSiteHealth.php:118
+msgid "Webhook processing is failing repeatedly"
+msgstr "Webhook処理が連続して失敗しています"
+
+#: includes/Admin/AdminSiteHealth.php:121
+msgid "No successful Webhook has been recorded"
+msgstr "成功したWebhookが記録されていません"
+
+#: includes/Admin/AdminSiteHealth.php:121
+msgid "Send a Stripe test event and confirm that it completes successfully."
+msgstr "Stripeのテストイベントを送信し、正常に完了することを確認してください。"
+
+#. translators: %s: UTC date and time of the latest successful Webhook.
+#: includes/Admin/AdminSiteHealth.php:124
+#, php-format
+msgid "The latest successful Webhook was recorded at %s."
+msgstr "Webhookの最終成功日時は%sです。"
+
+#: includes/Admin/AdminSiteHealth.php:125
+msgid "Webhook processing is healthy"
+msgstr "Webhook処理は正常です"
+
+#: includes/Admin/AdminSiteHealth.php:134
+msgid "The log cleanup schedule is missing"
+msgstr "ログ削除Cronが登録されていません"
+
+#: includes/Admin/AdminSiteHealth.php:134
+msgid ""
+"Deactivate and reactivate the plugin, or load an OD Product Hub screen to "
+"repair the daily Cron event."
+msgstr ""
+"プラグインを無効化して再度有効化するか、OD Product Hub画面を読み込み、日次"
+"Cronイベントを修復してください。"
+
+#: includes/Admin/AdminSiteHealth.php:137
+msgid "Log cleanup has not succeeded recently"
+msgstr "ログ削除が最近成功していません"
+
+#: includes/Admin/AdminSiteHealth.php:137
+msgid "Run cleanup manually and verify that WP-Cron is invoked by the server."
+msgstr ""
+"手動でログ削除を実行し、サーバーからWP-Cronが呼び出されていることを確認してく"
+"ださい。"
+
+#. translators: %s: UTC date and time of the next scheduled log cleanup.
+#: includes/Admin/AdminSiteHealth.php:140
+#, php-format
+msgid ""
+"The daily cleanup is scheduled for %s. No successful run has been recorded "
+"yet."
+msgstr "日次ログ削除は%sに実行予定です。成功した実行はまだ記録されていません。"
+
+#. translators: 1: UTC date and time of the next cleanup, 2: UTC date and time of the last successful cleanup.
+#: includes/Admin/AdminSiteHealth.php:143
+#, php-format
+msgid ""
+"The next daily cleanup is scheduled for %1$s and the last successful run was "
+"at %2$s."
+msgstr "次回の日次ログ削除は%1$sに実行予定で、最終成功日時は%2$sです。"
+
+#: includes/Admin/AdminSiteHealth.php:145
+msgid "Log retention is scheduled"
+msgstr "ログ保持処理は登録済みです"
+
+#: includes/Admin/AdminSiteHealth.php:151
+msgid "Update delivery PHP extensions are missing"
+msgstr "更新配布に必要なPHP拡張が不足しています"
+
+#: includes/Admin/AdminSiteHealth.php:151
+msgid "Enable both Sodium and Zip before publishing or serving releases."
+msgstr "リリースの公開・配信前にSodiumとZipを有効化してください。"
+
+#: includes/Admin/AdminSiteHealth.php:155
+msgid "Release storage is not writable"
+msgstr "リリースストレージへ書き込めません"
+
+#: includes/Admin/AdminSiteHealth.php:155
+msgid ""
+"Configure a writable private release storage directory. The actual path is "
+"intentionally omitted."
+msgstr ""
+"書き込み可能な秘密リリースストレージを設定してください。実パスは意図的に表示"
+"していません。"
+
+#: includes/Admin/AdminSiteHealth.php:159
+msgid "A published release failed integrity verification"
+msgstr "公開済みリリースの整合性検証に失敗しました"
+
+#: includes/Admin/AdminSiteHealth.php:159
+msgid ""
+"Withdraw the affected release, isolate its package, and publish a newly "
+"verified build."
+msgstr ""
+"対象リリースを停止してパッケージを隔離し、新しく検証したビルドを公開してくだ"
+"さい。"
+
+#: includes/Admin/AdminSiteHealth.php:163
+msgid "Move release storage outside the Web root"
+msgstr "リリースストレージをWebルート外へ移動してください"
+
+#: includes/Admin/AdminSiteHealth.php:163
+msgid ""
+"The storage is writable, but production releases should use "
+"ODPH_RELEASE_STORAGE_PATH outside the Web root."
+msgstr ""
+"ストレージは書き込み可能ですが、本番ではODPH_RELEASE_STORAGE_PATHを使ってWeb"
+"ルート外に配置してください。"
+
+#: includes/Admin/AdminSiteHealth.php:165
+msgid "Update delivery dependencies are ready"
+msgstr "更新配布の依存機能は正常です"
+
+#: includes/Admin/AdminSiteHealth.php:165
+msgid ""
+"Sodium, Zip, private storage, and published release signatures passed "
+"validation."
+msgstr ""
+"Sodium、Zip、秘密ストレージ、公開済みリリースの署名は検証に成功しました。"
+
+#: includes/Admin/AdminSiteHealth.php:185
+msgid "Checkout result pages are incomplete"
+msgstr "購入結果ページの設定が不完全です"
+
+#: includes/Admin/AdminSiteHealth.php:185
+msgid ""
+"Use published pages for the success and cancel URLs and place the "
+"corresponding OD Product Hub shortcode on each page."
+msgstr ""
+"購入完了・キャンセルURLには公開済み固定ページを使用し、それぞれ対応するOD "
+"Product Hubショートコードを配置してください。"
+
+#: includes/Admin/AdminSiteHealth.php:190
+msgid "The account page is incomplete"
+msgstr "マイページの設定が不完全です"
+
+#: includes/Admin/AdminSiteHealth.php:192
+msgid "Checkout and account pages are ready"
+msgstr "購入・マイページは正常です"
+
+#: includes/Admin/AdminSiteHealth.php:192
+msgid "The configured pages are published and contain the required shortcodes."
+msgstr ""
+"設定された固定ページは公開済みで、必要なショートコードが配置されています。"
+
+#: includes/Admin/AdminSiteHealth.php:214
+msgid "Not recorded"
+msgstr "未記録"
+
+#: includes/Admin/AdminSiteHealth.php:218
+msgid "Not scheduled"
+msgstr "未登録"
+
+#: includes/Admin/AdminSiteHealth.php:223
+msgid "Open the relevant OD Product Hub screen"
+msgstr "関連するOD Product Hub画面を開く"
 
 #: includes/Admin/CustomerPage.php:29
 msgid "Customers"
@@ -332,16 +587,6 @@ msgstr "解約予約"
 #: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
 msgid "Payment failure"
 msgstr "支払い失敗"
-
-#: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
-#: includes/Privacy/PrivacyService.php:221
-msgid "Yes"
-msgstr "あり"
-
-#: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
-#: includes/Privacy/PrivacyService.php:221
-msgid "No"
-msgstr "なし"
 
 #: includes/Admin/CustomerPage.php:92
 msgid "Customer not found."
@@ -1135,9 +1380,9 @@ msgid ""
 "contracts, accounting, fraud prevention, and Stripe synchronization were "
 "retained. Data managed by Stripe must be requested separately."
 msgstr ""
-"契約履行、会計記録、不正利用防止、Stripeとの同期に必要な顧客・契約・"
-"ライセンス・配信記録は保持しました。Stripeが管理するデータはStripe側で"
-"別途請求する必要があります。"
+"契約履行、会計記録、不正利用防止、Stripeとの同期に必要な顧客・契約・ライセン"
+"ス・配信記録は保持しました。Stripeが管理するデータはStripe側で別途請求する必"
+"要があります。"
 
 #: includes/Privacy/PrivacyService.php:180
 msgid "OD Product Hub customer data"
@@ -1226,3 +1471,12 @@ msgstr "利用日時"
 #: includes/Privacy/PrivacyService.php:255
 msgid "Email type"
 msgstr "メール種別"
+
+#~ msgid "OD Product Hub production configuration"
+#~ msgstr "OD Product Hub の本番設定"
+
+#~ msgid "The Stripe settings and HTTPS required for production are enabled."
+#~ msgstr "本番運用に必要なStripe設定とHTTPSが有効です。"
+
+#~ msgid "Open settings"
+#~ msgstr "設定画面を開く"
