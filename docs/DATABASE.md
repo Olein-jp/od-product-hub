@@ -8,7 +8,7 @@
 
 ## Repository 契約
 
-7テーブルはそれぞれ専用 Repository を持ち、共通基底クラスが次の戻り値を統一します。
+永続データごとに専用Repositoryを設け、共通基底クラスが次の戻り値を統一します。
 
 - `create(array): int`: 作成したID。失敗時は `DatabaseException`
 - `find(int): ?object`: 1行または `null`
@@ -28,6 +28,7 @@ DBの詳細エラーはサーバーログだけへ記録し、呼び出し側に
 | `wp_odph_webhook_logs` | Webhook冪等性、試行履歴、処理結果 | `stripe_event_id` | `result`, `created_at` |
 | `wp_odph_api_logs` | 契約検証API監査 | なし | `license_id`, `product_id`, `action`, `result`, `created_at` |
 | `wp_odph_admin_logs` | 管理操作監査 | なし | `user_id`, `action`, `created_at` |
+| `wp_odph_rate_limits` | 公開APIの原子的レート制限 | `bucket_hash` | `expires_at` |
 
 実際の接頭辞はサイトの `$wpdb->prefix` に従います。外部キー制約は WordPress の運用互換性を優先して設けず、参照整合性は Service / Repository 層で管理します。
 
@@ -40,6 +41,11 @@ DBの詳細エラーはサーバーログだけへ記録し、呼び出し側に
 - `webhook_logs`: `stripe_event_id`, `event_type`, `payload`, `result`, `error_message`, `attempt_count`, `duplicate_count`, `last_attempt_at`, `last_received_at`, `created_at`
 - `api_logs`: `license_id`, `product_id`, `action`, `result`, `site_url`, `ip_address`, `user_agent`, `error_code`, `created_at`
 - `admin_logs`: `user_id`, `action`, `object_type`, `object_id`, `details`, `created_at`
+- `rate_limits`: `bucket_hash`, `request_count`, `expires_at`, `created_at`, `updated_at`。bucketはクライアントIPとRESTルートを含む値のSHA-256で、生のIPやルートは保存しません。
+
+## レート制限カウンター
+
+標準Transientは複数PHPプロセス間のread-modify-writeを原子的にできず、オブジェクトキャッシュ経路とDB経路でカウントが分裂する可能性があります。そのため `wp_odph_rate_limits` をRedisの有無にかかわらない唯一の正本とし、`INSERT ... ON DUPLICATE KEY UPDATE` と接続単位の `LAST_INSERT_ID()` で各増分の確定値を取得します。期限切れ行は `odph_cleanup_logs` の固定サイズbatchで削除します。
 
 ## テスト
 

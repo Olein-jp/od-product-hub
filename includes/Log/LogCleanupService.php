@@ -8,6 +8,8 @@
 namespace OD_Product_Hub\Log;
 
 use OD_Product_Hub\Database\DatabaseException;
+use OD_Product_Hub\Database\UtcDateTime;
+use OD_Product_Hub\Security\RateLimitRepository;
 
 final class LogCleanupService {
 	private const SECONDS_PER_DAY = 86400;
@@ -24,6 +26,7 @@ final class LogCleanupService {
 		foreach ( self::TABLES as $suffix ) {
 			$deleted[ $suffix ] = $this->delete_batches( $suffix, $cutoff );
 		}
+		$deleted['rate_limits']        = $this->delete_expired_rate_limits();
 		$state                         = (array) get_option( 'odph_operational_state', array() );
 		$state['cleanup_last_success'] = gmdate( 'Y-m-d H:i:s' );
 		update_option( 'odph_operational_state', $state, false );
@@ -46,6 +49,19 @@ final class LogCleanupService {
 			}
 			$total += $result;
 			if ( $result < self::BATCH_SIZE ) {
+				break;
+			}
+		}
+		return $total;
+	}
+
+	private function delete_expired_rate_limits(): int {
+		$repository = new RateLimitRepository();
+		$total      = 0;
+		for ( $batch = 0; $batch < self::MAX_BATCHES; $batch++ ) {
+			$deleted = $repository->delete_expired( UtcDateTime::now(), self::BATCH_SIZE );
+			$total  += $deleted;
+			if ( $deleted < self::BATCH_SIZE ) {
 				break;
 			}
 		}

@@ -7,17 +7,33 @@
 
 namespace OD_Product_Hub\Security;
 
+use OD_Product_Hub\Database\DatabaseException;
+
 final class RateLimiter {
+	private RateLimitRepository $counters;
+	private \Closure $clock;
+
+	/** @param (callable(): int)|null $clock */
+	public function __construct( ?RateLimitRepository $counters = null, ?callable $clock = null ) {
+		$this->counters = $counters ?? new RateLimitRepository();
+		$this->clock    = \Closure::fromCallable( $clock ?? 'time' );
+	}
+
 	/** @return array{allowed: bool, limit: int, remaining: int, retry_after: int, reset: int} */
 	public function consume( string $bucket, ?int $configured_limit = null ): array {
 		$settings = get_option( 'odph_settings', array() );
 		$limit    = max( 1, min( 1000, $configured_limit ?? (int) ( $settings['api_rate_limit'] ?? 60 ) ) );
-		$now      = time();
+		$now      = ( $this->clock )();
 		$reset    = ( intdiv( $now, MINUTE_IN_SECONDS ) + 1 ) * MINUTE_IN_SECONDS;
 		$retry    = max( 1, $reset - $now );
-		$key      = 'odph_rl_' . hash( 'sha256', $bucket . '|' . intdiv( $now, MINUTE_IN_SECONDS ) );
-		$count    = $this->increment( $key, $retry + MINUTE_IN_SECONDS );
-		$allowed  = $count <= $limit;
+		$key      = hash( 'sha256', $bucket . '|' . intdiv( $now, MINUTE_IN_SECONDS ) );
+		try {
+			$count = $this->counters->increment( $key, gmdate( 'Y-m-d H:i:s', $reset + MINUTE_IN_SECONDS ) );
+		} catch ( DatabaseException $error ) {
+			unset( $error );
+			$count = $limit + 1;
+		}
+		$allowed = $count <= $limit;
 		return array(
 			'allowed'     => $allowed,
 			'limit'       => $limit,
@@ -25,17 +41,6 @@ final class RateLimiter {
 			'retry_after' => $retry,
 			'reset'       => $reset,
 		);
-	}
-
-	private function increment( string $key, int $ttl ): int {
-		if ( wp_using_ext_object_cache() ) {
-			wp_cache_add( $key, 0, 'odph_rate_limits', $ttl );
-			$count = wp_cache_incr( $key, 1, 'odph_rate_limits' );
-			return false === $count ? 1 : (int) $count;
-		}
-		$count = (int) get_transient( $key ) + 1;
-		set_transient( $key, $count, $ttl );
-		return $count;
 	}
 
 	public function allow( string $bucket ): bool {

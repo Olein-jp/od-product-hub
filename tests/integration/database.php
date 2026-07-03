@@ -20,6 +20,7 @@ use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Log\WebhookLogRepository;
 use OD_Product_Hub\Product\ProductRepository;
+use OD_Product_Hub\Security\RateLimitRepository;
 use OD_Product_Hub\Subscription\SubscriptionRepository;
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
@@ -47,6 +48,13 @@ foreach ( Schema::table_suffixes() as $suffix ) {
 }
 $webhook_columns = $wpdb->get_col( 'SHOW COLUMNS FROM ' . $wpdb->prefix . 'odph_webhook_logs' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery -- Fixed integration-test table name.
 odph_test_assert( in_array( 'attempt_count', $webhook_columns, true ) && in_array( 'last_attempt_at', $webhook_columns, true ), 'Webhook retry migration must create attempt tracking columns' );
+$rate_limits = new RateLimitRepository();
+$bucket_hash = hash( 'sha256', 'database-integration-bucket' );
+odph_test_assert( 1 === $rate_limits->increment( $bucket_hash, gmdate( 'Y-m-d H:i:s', time() + 120 ) ), 'First atomic rate-limit increment must return one' );
+odph_test_assert( 2 === $rate_limits->increment( $bucket_hash, gmdate( 'Y-m-d H:i:s', time() + 120 ) ), 'Repeated atomic rate-limit increment must return the exact count' );
+odph_test_assert( 2 === $rate_limits->count_for_hash( $bucket_hash ), 'Persisted rate-limit count must match atomic increments' );
+$stored_bucket = $wpdb->get_var( $wpdb->prepare( 'SELECT bucket_hash FROM %i WHERE bucket_hash = %s', $wpdb->prefix . 'odph_rate_limits', $bucket_hash ) );
+odph_test_assert( $bucket_hash === $stored_bucket && ! str_contains( (string) $stored_bucket, 'database-integration-bucket' ), 'Rate-limit storage must contain only the hashed bucket' );
 
 $product_repository      = new ProductRepository();
 $customer_repository     = new CustomerRepository();
@@ -287,6 +295,7 @@ odph_test_assert(
 	update_option( 'odph_schema_version', '1.0.0', false );
 	Installer::migrate();
 	odph_test_assert( null !== $product_repository->find( $product_id ), 'Incremental migration must preserve existing rows' );
+	odph_test_assert( 2 === $rate_limits->count_for_hash( $bucket_hash ), 'Incremental migration must preserve rate-limit counters' );
 	odph_test_assert( Schema::VERSION === get_option( 'odph_schema_version' ), 'Incremental migration must update the schema version' );
 
 	update_option( 'timezone_string', 'Asia/Tokyo', false );

@@ -149,7 +149,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 
 ## レート制限
 
-レート制限は「解決したクライアントIP + RESTルート」を1分単位で集計します。応答には `X-RateLimit-Limit`、`X-RateLimit-Remaining`、`X-RateLimit-Reset` を含み、HTTP 429では `Retry-After` も返します。制限超過リクエストはAPIログへ保存しないため、大量リクエストでログが無制限に増えません。
+レート制限は「解決したクライアントIP + RESTルート」を1分単位で集計します。bucketはSHA-256化して専用DBテーブルへ保存し、MySQLのatomic upsertで複数PHPプロセスからの同時更新を直列化します。Transientのread-modify-writeやRedis等の永続オブジェクトキャッシュには依存しないため、キャッシュ構成にかかわらず同じ制限が適用されます。期限切れカウンターは日次cleanupで削除されます。応答には `X-RateLimit-Limit`、`X-RateLimit-Remaining`、`X-RateLimit-Reset` を含み、HTTP 429では `Retry-After` も返します。DB更新に失敗した場合は安全側へ倒して429とし、制限超過リクエストはAPIログへ保存しないため、大量リクエストでログが無制限に増えません。
 
 ```json
 {

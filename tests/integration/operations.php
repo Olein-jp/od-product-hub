@@ -19,6 +19,7 @@ use OD_Product_Hub\Log\LogCleanupService;
 use OD_Product_Hub\Log\WebhookLogRepository;
 use OD_Product_Hub\Plugin;
 use OD_Product_Hub\Product\ProductRepository;
+use OD_Product_Hub\Security\RateLimitRepository;
 use OD_Product_Hub\Subscription\SubscriptionRepository;
 use OD_Product_Hub\Webhook\PayloadRedactor;
 
@@ -281,11 +282,14 @@ $email_logs->create(
 	)
 );
 
+$rate_limits = new RateLimitRepository();
+$rate_limits->increment( hash( 'sha256', 'expired-rate-limit' ), gmdate( 'Y-m-d H:i:s', time() - 60 ) );
 $cleanup = new LogCleanupService();
 $deleted = $cleanup->run();
 odph_operations_assert( 1 === $deleted['webhook_logs'], 'Default retention must remove the old webhook fixture', $deleted );
 odph_operations_assert( $bulk_total === $deleted['api_logs'], 'Cleanup must process the 10k API fixtures in bounded batches', $deleted );
 odph_operations_assert( 1 === $deleted['admin_logs'] && 1 === $deleted['email_logs'], 'Cleanup must cover admin and email logs', $deleted );
+odph_operations_assert( 1 === $deleted['rate_limits'], 'Cleanup must remove expired rate-limit counters', $deleted );
 odph_operations_assert( 0 === array_sum( $cleanup->run() ), 'Cleanup must be idempotent when repeated' );
 
 $settings                       = (array) get_option( 'odph_settings', array() );

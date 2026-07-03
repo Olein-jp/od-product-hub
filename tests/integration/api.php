@@ -19,6 +19,8 @@ use OD_Product_Hub\Release\DownloadTokenService;
 use OD_Product_Hub\Release\PackageSigner;
 use OD_Product_Hub\Release\ReleaseRepository;
 use OD_Product_Hub\Release\ReleaseService;
+use OD_Product_Hub\Security\RateLimiter;
+use OD_Product_Hub\Security\RateLimitRepository;
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 	throw new RuntimeException( 'This integration check must run via WP-CLI.' );
@@ -462,11 +464,52 @@ $rate_log_before = $api_logs->search( array( 'action' => 'verify' ), 1, 1 )->tot
 $rate_one        = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/verify', odph_api_license_params() );
 $rate_two        = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/verify', odph_api_license_params() );
 $rate_three      = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/verify', odph_api_license_params() );
-odph_api_assert( 200 === $rate_one->get_status() && 200 === $rate_two->get_status(), 'Requests within the limit must succeed' );
+odph_api_assert( 200 === $rate_one->get_status() && 200 === $rate_two->get_status(), 'Requests within the limit must succeed', array( $rate_one->get_status(), $rate_two->get_status(), $rate_one->get_data(), $rate_two->get_data() ) );
 odph_api_assert( 429 === $rate_three->get_status() && 'rate_limited' === $rate_three->get_data()['error_code'], 'Excess requests must return the stable 429 body' );
 odph_api_assert( 0 < (int) $rate_three->get_headers()['Retry-After'], '429 must include Retry-After' );
 odph_api_assert( '0' === $rate_three->get_headers()['X-RateLimit-Remaining'], '429 must expose zero remaining requests' );
 odph_api_assert( $rate_log_before + 2 === $api_logs->search( array( 'action' => 'verify' ), 1, 1 )->total, 'Rate-limited requests must not flood API logs' );
+
+$fixed_time      = 1783054860;
+$boundary_bucket = 'boundary-' . wp_generate_uuid4();
+$boundary_limit  = new RateLimiter( null, static fn(): int => $fixed_time + 59 );
+$boundary_one    = $boundary_limit->consume( $boundary_bucket, 1 );
+$boundary_two    = $boundary_limit->consume( $boundary_bucket, 1 );
+$next_window     = ( new RateLimiter( null, static fn(): int => $fixed_time + 60 ) )->consume( $boundary_bucket, 1 );
+odph_api_assert( $boundary_one['allowed'] && ! $boundary_two['allowed'] && 1 === $boundary_two['retry_after'], 'The final second of a window must enforce the limit and expose a one-second retry' );
+odph_api_assert( $next_window['allowed'] && $next_window['reset'] > $boundary_two['reset'], 'A new minute window must start with a fresh atomic counter' );
+
+odph_api_assert( function_exists( 'proc_open' ), 'The integration environment must provide proc_open for the concurrency proof' );
+$parallel_workers = 12;
+$parallel_time    = 1783054925;
+$parallel_bucket  = 'parallel-' . wp_generate_uuid4();
+$processes        = array();
+$worker_file      = WP_PLUGIN_DIR . '/od-product-hub/tests/integration/rate-limit-worker.php';
+for ( $worker = 0; $worker < $parallel_workers; $worker++ ) {
+	$pipes   = array();
+	$process = proc_open( // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_proc_open -- The integration test intentionally starts independent WP-CLI workers.
+		array( 'wp', 'eval-file', $worker_file, $parallel_bucket, (string) $parallel_time, (string) $parallel_workers ),
+		array(
+			0 => array( 'file', '/dev/null', 'r' ),
+			1 => array( 'pipe', 'w' ),
+			2 => array( 'pipe', 'w' ),
+		),
+		$pipes
+	);
+	odph_api_assert( is_resource( $process ), 'Rate-limit concurrency worker must start successfully' );
+	$processes[] = array( $process, $pipes );
+}
+foreach ( $processes as list( $process, $pipes ) ) {
+	$stdout = stream_get_contents( $pipes[1] );
+	$stderr = stream_get_contents( $pipes[2] );
+	fclose( $pipes[1] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Integration worker pipe cleanup.
+	fclose( $pipes[2] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Integration worker pipe cleanup.
+	$exit_code = proc_close( $process );
+	odph_api_assert( 0 === $exit_code, 'Every concurrent rate-limit worker must complete within the limit', array( $exit_code, $stdout, $stderr ) );
+}
+$parallel_hash  = hash( 'sha256', $parallel_bucket . '|' . intdiv( $parallel_time, MINUTE_IN_SECONDS ) );
+$parallel_count = ( new RateLimitRepository() )->count_for_hash( $parallel_hash );
+odph_api_assert( $parallel_workers === $parallel_count, 'Concurrent PHP workers must preserve every atomic increment' );
 
 $settings['api_rate_limit'] = 1000;
 update_option( 'odph_settings', $settings, false );
