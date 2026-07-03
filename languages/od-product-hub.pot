@@ -9,13 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-02T08:05:32+00:00\n"
+"POT-Creation-Date: 2026-07-02T22:53:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
 
 #. Plugin Name of the plugin
 #: od-product-hub.php
+#: includes/Privacy/PrivacyService.php:23
+#: includes/Privacy/PrivacyService.php:32
 msgid "OD Product Hub"
 msgstr ""
 
@@ -223,6 +225,7 @@ msgid "Search by email address"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:44
+#: includes/Privacy/PrivacyService.php:210
 msgid "Email address"
 msgstr ""
 
@@ -300,6 +303,7 @@ msgstr ""
 #: includes/Admin/LicensePage.php:63
 #: includes/Admin/ProductPage.php:27
 #: includes/Admin/ProductPage.php:28
+#: includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr ""
 
@@ -327,6 +331,8 @@ msgstr ""
 #: includes/Admin/LicensePage.php:37
 #: includes/Admin/LicensePage.php:63
 #: includes/Admin/ProductPage.php:28
+#: includes/Privacy/PrivacyService.php:217
+#: includes/Privacy/PrivacyService.php:227
 msgid "Product"
 msgstr ""
 
@@ -352,11 +358,13 @@ msgstr ""
 
 #: includes/Admin/CustomerPage.php:83
 #: includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
 msgid "Yes"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:83
 #: includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
 msgid "No"
 msgstr ""
 
@@ -373,6 +381,7 @@ msgid "← Back to customers"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:99
+#: includes/Privacy/PrivacyService.php:211
 msgid "Name"
 msgstr ""
 
@@ -410,6 +419,7 @@ msgstr ""
 #: includes/Admin/LogsPage.php:123
 #: includes/Admin/LogsPage.php:128
 #: includes/Admin/LogsPage.php:145
+#: includes/Privacy/PrivacyService.php:236
 msgid "Action"
 msgstr ""
 
@@ -422,6 +432,9 @@ msgstr ""
 #: includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:95
 #: includes/Admin/LogsPage.php:128
+#: includes/Privacy/PrivacyService.php:237
+#: includes/Privacy/PrivacyService.php:250
+#: includes/Privacy/PrivacyService.php:256
 msgid "Result"
 msgstr ""
 
@@ -429,6 +442,8 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:114
 #: includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:128
+#: includes/Privacy/PrivacyService.php:238
+#: includes/Privacy/PrivacyService.php:246
 msgid "Site URL"
 msgstr ""
 
@@ -436,6 +451,8 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:114
 #: includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:128
+#: includes/Privacy/PrivacyService.php:241
+#: includes/Privacy/PrivacyService.php:257
 msgid "Error code"
 msgstr ""
 
@@ -584,6 +601,8 @@ msgid "Verification logs"
 msgstr ""
 
 #: includes/Admin/LicensePage.php:77
+#: includes/Privacy/PrivacyService.php:239
+#: includes/Privacy/PrivacyService.php:248
 msgid "IP address"
 msgstr ""
 
@@ -1116,4 +1135,96 @@ msgstr ""
 
 #: includes/License/LicenseManager.php:100
 msgid "This operation is unavailable because the Stripe subscription is not active."
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:121
+msgid "Customer, subscription, license, and delivery records required for contracts, accounting, fraud prevention, and Stripe synchronization were retained. Data managed by Stripe must be requested separately."
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:180
+msgid "OD Product Hub customer data"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:181
+msgid "OD Product Hub subscription data"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:182
+msgid "OD Product Hub license data"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:183
+msgid "OD Product Hub API usage data"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:184
+msgid "OD Product Hub download data"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:185
+msgid "OD Product Hub email delivery data"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:212
+#: includes/Privacy/PrivacyService.php:223
+msgid "Created at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:213
+msgid "Updated at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:218
+msgid "Subscription status"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:219
+msgid "Current period start"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:220
+msgid "Current period end"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:221
+msgid "Cancel at period end"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:222
+msgid "Payment failed at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:228
+msgid "License key (masked)"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:230
+msgid "Issued at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:231
+msgid "Expires at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:232
+msgid "Last verified at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:240
+#: includes/Privacy/PrivacyService.php:249
+msgid "User-Agent"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:242
+#: includes/Privacy/PrivacyService.php:251
+#: includes/Privacy/PrivacyService.php:258
+msgid "Recorded at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:247
+msgid "Used at"
+msgstr ""
+
+#: includes/Privacy/PrivacyService.php:255
+msgid "Email type"
 msgstr ""

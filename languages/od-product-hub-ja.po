@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-02T08:03:24+00:00\n"
+"POT-Creation-Date: 2026-07-02T22:53:51+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,7 +17,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. Plugin Name of the plugin
-#: od-product-hub.php
+#: od-product-hub.php includes/Privacy/PrivacyService.php:23
+#: includes/Privacy/PrivacyService.php:32
 msgid "OD Product Hub"
 msgstr "OD Product Hub"
 
@@ -231,7 +232,7 @@ msgstr "サブスクリプション"
 msgid "Search by email address"
 msgstr "メールアドレスで検索"
 
-#: includes/Admin/CustomerPage.php:44
+#: includes/Admin/CustomerPage.php:44 includes/Privacy/PrivacyService.php:210
 msgid "Email address"
 msgstr "メールアドレス"
 
@@ -290,7 +291,7 @@ msgstr "詳細"
 #: includes/Admin/CustomerPage.php:106 includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31 includes/Admin/LicensePage.php:37
 #: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:27
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:28 includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr "状態"
 
@@ -311,6 +312,8 @@ msgstr "絞り込む"
 #: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
 #: includes/Admin/CustomerPage.php:110 includes/Admin/LicensePage.php:37
 #: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:28
+#: includes/Privacy/PrivacyService.php:217
+#: includes/Privacy/PrivacyService.php:227
 msgid "Product"
 msgstr "商品"
 
@@ -331,10 +334,12 @@ msgid "Payment failure"
 msgstr "支払い失敗"
 
 #: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
 msgid "Yes"
 msgstr "あり"
 
 #: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
+#: includes/Privacy/PrivacyService.php:221
 msgid "No"
 msgstr "なし"
 
@@ -350,7 +355,7 @@ msgstr "顧客詳細"
 msgid "← Back to customers"
 msgstr "← 顧客一覧へ戻る"
 
-#: includes/Admin/CustomerPage.php:99
+#: includes/Admin/CustomerPage.php:99 includes/Privacy/PrivacyService.php:211
 msgid "Name"
 msgstr "名前"
 
@@ -381,6 +386,7 @@ msgstr "最近のAPIログ"
 #: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:50
 #: includes/Admin/LicensePage.php:77 includes/Admin/LogsPage.php:123
 #: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
+#: includes/Privacy/PrivacyService.php:236
 msgid "Action"
 msgstr "操作"
 
@@ -389,18 +395,23 @@ msgstr "操作"
 #: includes/Admin/DashboardPage.php:50 includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:66 includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:95 includes/Admin/LogsPage.php:128
+#: includes/Privacy/PrivacyService.php:237
+#: includes/Privacy/PrivacyService.php:250
+#: includes/Privacy/PrivacyService.php:256
 msgid "Result"
 msgstr "結果"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:128 includes/Privacy/PrivacyService.php:238
+#: includes/Privacy/PrivacyService.php:246
 msgid "Site URL"
 msgstr "サイトURL"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:128 includes/Privacy/PrivacyService.php:241
+#: includes/Privacy/PrivacyService.php:257
 msgid "Error code"
 msgstr "エラーコード"
 
@@ -543,7 +554,8 @@ msgstr "キーを再発行"
 msgid "Verification logs"
 msgstr "認証ログ"
 
-#: includes/Admin/LicensePage.php:77
+#: includes/Admin/LicensePage.php:77 includes/Privacy/PrivacyService.php:239
+#: includes/Privacy/PrivacyService.php:248
 msgid "IP address"
 msgstr "IPアドレス"
 
@@ -629,8 +641,8 @@ msgid ""
 "This does not replay the masked payload. It resets the retry state so that "
 "the event can be resent from Stripe."
 msgstr ""
-"マスク済みpayloadを再生する操作ではありません。Stripeからイベントを再送できるよう、"
-"再試行状態をリセットします。"
+"マスク済みpayloadを再生する操作ではありません。Stripeからイベントを再送できる"
+"よう、再試行状態をリセットします。"
 
 #: includes/Admin/LogsPage.php:110
 msgid "Allow retry from Stripe"
@@ -1116,3 +1128,101 @@ msgstr "有効なサブスクリプションがありません。"
 msgid ""
 "This operation is unavailable because the Stripe subscription is not active."
 msgstr "Stripeサブスクリプションが有効でないため操作できません。"
+
+#: includes/Privacy/PrivacyService.php:121
+msgid ""
+"Customer, subscription, license, and delivery records required for "
+"contracts, accounting, fraud prevention, and Stripe synchronization were "
+"retained. Data managed by Stripe must be requested separately."
+msgstr ""
+"契約履行、会計記録、不正利用防止、Stripeとの同期に必要な顧客・契約・"
+"ライセンス・配信記録は保持しました。Stripeが管理するデータはStripe側で"
+"別途請求する必要があります。"
+
+#: includes/Privacy/PrivacyService.php:180
+msgid "OD Product Hub customer data"
+msgstr "OD Product Hub 顧客情報"
+
+#: includes/Privacy/PrivacyService.php:181
+msgid "OD Product Hub subscription data"
+msgstr "OD Product Hub 契約情報"
+
+#: includes/Privacy/PrivacyService.php:182
+msgid "OD Product Hub license data"
+msgstr "OD Product Hub ライセンス情報"
+
+#: includes/Privacy/PrivacyService.php:183
+msgid "OD Product Hub API usage data"
+msgstr "OD Product Hub API利用記録"
+
+#: includes/Privacy/PrivacyService.php:184
+msgid "OD Product Hub download data"
+msgstr "OD Product Hub ダウンロード記録"
+
+#: includes/Privacy/PrivacyService.php:185
+msgid "OD Product Hub email delivery data"
+msgstr "OD Product Hub メール配信記録"
+
+#: includes/Privacy/PrivacyService.php:212
+#: includes/Privacy/PrivacyService.php:223
+msgid "Created at"
+msgstr "登録日時"
+
+#: includes/Privacy/PrivacyService.php:213
+msgid "Updated at"
+msgstr "更新日時"
+
+#: includes/Privacy/PrivacyService.php:218
+msgid "Subscription status"
+msgstr "Stripe契約状態"
+
+#: includes/Privacy/PrivacyService.php:219
+msgid "Current period start"
+msgstr "期間開始"
+
+#: includes/Privacy/PrivacyService.php:220
+msgid "Current period end"
+msgstr "期間終了"
+
+#: includes/Privacy/PrivacyService.php:221
+msgid "Cancel at period end"
+msgstr "期間終了時に解約予定"
+
+#: includes/Privacy/PrivacyService.php:222
+msgid "Payment failed at"
+msgstr "支払い失敗日時"
+
+#: includes/Privacy/PrivacyService.php:228
+msgid "License key (masked)"
+msgstr "ライセンスキー（マスク済み）"
+
+#: includes/Privacy/PrivacyService.php:230
+msgid "Issued at"
+msgstr "発行日時"
+
+#: includes/Privacy/PrivacyService.php:231
+msgid "Expires at"
+msgstr "有効期限"
+
+#: includes/Privacy/PrivacyService.php:232
+msgid "Last verified at"
+msgstr "最終認証日時"
+
+#: includes/Privacy/PrivacyService.php:240
+#: includes/Privacy/PrivacyService.php:249
+msgid "User-Agent"
+msgstr "User-Agent"
+
+#: includes/Privacy/PrivacyService.php:242
+#: includes/Privacy/PrivacyService.php:251
+#: includes/Privacy/PrivacyService.php:258
+msgid "Recorded at"
+msgstr "記録日時"
+
+#: includes/Privacy/PrivacyService.php:247
+msgid "Used at"
+msgstr "利用日時"
+
+#: includes/Privacy/PrivacyService.php:255
+msgid "Email type"
+msgstr "メール種別"

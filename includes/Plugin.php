@@ -29,6 +29,7 @@ use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Log\ApiLogRepository;
 use OD_Product_Hub\Log\WebhookLogRepository;
 use OD_Product_Hub\Product\ProductRepository;
+use OD_Product_Hub\Privacy\PrivacyService;
 use OD_Product_Hub\Subscription\SubscriptionRepository;
 use OD_Product_Hub\Stripe\StripeClientFactory;
 use OD_Product_Hub\Webhook\PayloadRedactor;
@@ -53,6 +54,7 @@ final class Plugin {
 		( new WebhookController() )->register();
 		( new WebhookNotificationSubscriber() )->register();
 		( new Shortcodes() )->register();
+		( new PrivacyService() )->register();
 		add_action( 'odph_cleanup_logs', array( new LogCleanupService(), 'run_scheduled' ) );
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			ReleaseCommand::register();
