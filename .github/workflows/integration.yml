@@ -9,12 +9,19 @@ jobs:
   wordpress:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.5']
+    name: WordPress integration (PHP ${{ matrix.php }})
+    env:
+      WP_ENV_PHP_VERSION: ${{ matrix.php }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with: {node-version: '20', cache: npm}
       - uses: shivammathur/setup-php@v2
-        with: {php-version: '8.3', coverage: none, tools: composer}
+        with: {php-version: '${{ matrix.php }}', coverage: none, tools: composer}
       - run: npm ci --ignore-scripts
       - run: composer install --no-interaction --prefer-dist --no-progress
       - run: npm run env:start

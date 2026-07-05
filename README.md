@@ -1,6 +1,6 @@
 # OD Product Hub
 
-Stripe Checkout / Subscription と WordPress ユーザーを結び、プロダクト、顧客、契約、ライセンスキー、契約検証APIを一元管理する WordPress プラグインです。対象環境は WordPress 7.0、PHP 8.3 以上です。
+Stripe Checkout / Subscription と WordPress ユーザーを結び、プロダクト、顧客、契約、ライセンスキー、契約検証APIを一元管理する WordPress プラグインです。対象環境は WordPress 7.0、PHP 8.3 以上（CI検証範囲: PHP 8.3〜8.5）です。
 
 本プラグインは100% GPL方針のプロダクト販売を想定した契約検証基盤です。GPLコードの利用自体を法的・技術的に制限する目的ではありません。契約終了後も入手済みコードは利用でき、アップデート、サポート、契約者向け資料などのサービス提供可否を検証します。
 
