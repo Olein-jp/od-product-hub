@@ -7,6 +7,30 @@
 
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
+if ( ! function_exists( 'add_action' ) ) {
+	function add_action( string $hook, callable $callback ): void {
+		$GLOBALS['odph_test_actions'][ $hook ][] = $callback;
+	}
+}
+
+if ( ! function_exists( 'add_filter' ) ) {
+	function add_filter( string $hook, callable $callback ): void {
+		$GLOBALS['odph_test_filters'][ $hook ][] = $callback;
+	}
+}
+
+if ( ! function_exists( 'add_menu_page' ) ) {
+	function add_menu_page( mixed ...$args ): void {
+		$GLOBALS['odph_test_menu_pages'][] = $args;
+	}
+}
+
+if ( ! function_exists( 'add_submenu_page' ) ) {
+	function add_submenu_page( mixed ...$args ): void {
+		$GLOBALS['odph_test_submenu_pages'][] = $args;
+	}
+}
+
 if ( ! function_exists( 'get_option' ) ) {
 	/** @return mixed */
 	function get_option( string $option, mixed $default = false ): mixed {

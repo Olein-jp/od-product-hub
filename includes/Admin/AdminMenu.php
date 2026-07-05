@@ -8,30 +8,27 @@
 namespace OD_Product_Hub\Admin;
 
 final class AdminMenu {
-	public function __construct(
-		private readonly DashboardPage $dashboard,
-		private readonly ProductPage $products,
-		private readonly LicensePage $licenses,
-		private readonly CustomerPage $customers,
-		private readonly LogsPage $logs,
-		private readonly AdminActionHandler $actions,
-		private readonly AdminSettings $settings,
-		private readonly AdminSiteHealth $site_health
-	) {}
+	/** @var array<string, object> */
+	private array $services = array();
+
+	/**
+	 * @param array<string, \Closure(): object> $factories
+	 */
+	public function __construct( private readonly array $factories ) {}
 
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'menu' ) );
-		add_action( 'admin_init', array( $this->settings, 'register' ) );
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
-		add_action( 'admin_post_odph_save_product', array( $this->actions, 'save_product' ) );
-		add_action( 'admin_post_odph_product_status', array( $this->actions, 'change_product_status' ) );
-		add_action( 'admin_post_odph_license_action', array( $this->actions, 'license_action' ) );
-		add_action( 'admin_post_odph_test_stripe', array( $this->actions, 'test_stripe_connection' ) );
-		add_action( 'admin_post_odph_cleanup_logs', array( $this->actions, 'cleanup_logs' ) );
-		add_action( 'admin_post_odph_retry_webhook', array( $this->actions, 'retry_webhook' ) );
-		add_action( 'admin_notices', array( $this->site_health, 'configuration_notice' ) );
-		add_filter( 'site_status_tests', array( $this->site_health, 'tests' ) );
-		add_filter( 'debug_information', array( $this->site_health, 'debug_information' ) );
+		add_action( 'admin_post_odph_save_product', array( $this, 'save_product' ) );
+		add_action( 'admin_post_odph_product_status', array( $this, 'change_product_status' ) );
+		add_action( 'admin_post_odph_license_action', array( $this, 'license_action' ) );
+		add_action( 'admin_post_odph_test_stripe', array( $this, 'test_stripe_connection' ) );
+		add_action( 'admin_post_odph_cleanup_logs', array( $this, 'cleanup_logs' ) );
+		add_action( 'admin_post_odph_retry_webhook', array( $this, 'retry_webhook' ) );
+		add_action( 'admin_notices', array( $this, 'configuration_notice' ) );
+		add_filter( 'site_status_tests', array( $this, 'site_status_tests' ) );
+		add_filter( 'debug_information', array( $this, 'debug_information' ) );
 	}
 
 	public function assets(): void {
@@ -42,11 +39,94 @@ final class AdminMenu {
 	}
 
 	public function menu(): void {
-		add_menu_page( 'OD Product Hub', 'OD Product Hub', 'manage_options', 'od-product-hub', array( $this->dashboard, 'render' ), 'dashicons-products', 56 );
-		add_submenu_page( 'od-product-hub', __( 'Products', 'od-product-hub' ), __( 'Products', 'od-product-hub' ), 'manage_options', 'odph-products', array( $this->products, 'render' ) );
-		add_submenu_page( 'od-product-hub', __( 'Licenses', 'od-product-hub' ), __( 'Licenses', 'od-product-hub' ), 'manage_options', 'odph-licenses', array( $this->licenses, 'render' ) );
-		add_submenu_page( 'od-product-hub', __( 'Customers and subscriptions', 'od-product-hub' ), __( 'Customers and subscriptions', 'od-product-hub' ), 'manage_options', 'odph-customers', array( $this->customers, 'render' ) );
-		add_submenu_page( 'od-product-hub', __( 'Logs', 'od-product-hub' ), __( 'Logs', 'od-product-hub' ), 'manage_options', 'odph-logs', array( $this->logs, 'render' ) );
-		add_submenu_page( 'od-product-hub', __( 'Settings', 'od-product-hub' ), __( 'Settings', 'od-product-hub' ), 'manage_options', 'odph-settings', array( $this->settings, 'render' ) );
+		add_menu_page( 'OD Product Hub', 'OD Product Hub', 'manage_options', 'od-product-hub', array( $this, 'render_dashboard' ), 'dashicons-products', 56 );
+		add_submenu_page( 'od-product-hub', __( 'Products', 'od-product-hub' ), __( 'Products', 'od-product-hub' ), 'manage_options', 'odph-products', array( $this, 'render_products' ) );
+		add_submenu_page( 'od-product-hub', __( 'Licenses', 'od-product-hub' ), __( 'Licenses', 'od-product-hub' ), 'manage_options', 'odph-licenses', array( $this, 'render_licenses' ) );
+		add_submenu_page( 'od-product-hub', __( 'Customers and subscriptions', 'od-product-hub' ), __( 'Customers and subscriptions', 'od-product-hub' ), 'manage_options', 'odph-customers', array( $this, 'render_customers' ) );
+		add_submenu_page( 'od-product-hub', __( 'Logs', 'od-product-hub' ), __( 'Logs', 'od-product-hub' ), 'manage_options', 'odph-logs', array( $this, 'render_logs' ) );
+		add_submenu_page( 'od-product-hub', __( 'Settings', 'od-product-hub' ), __( 'Settings', 'od-product-hub' ), 'manage_options', 'odph-settings', array( $this, 'render_settings' ) );
+	}
+
+	public function render_dashboard(): void {
+		$this->service( 'dashboard', DashboardPage::class )->render();
+	}
+
+	public function render_products(): void {
+		$this->service( 'products', ProductPage::class )->render();
+	}
+
+	public function render_licenses(): void {
+		$this->service( 'licenses', LicensePage::class )->render();
+	}
+
+	public function render_customers(): void {
+		$this->service( 'customers', CustomerPage::class )->render();
+	}
+
+	public function render_logs(): void {
+		$this->service( 'logs', LogsPage::class )->render();
+	}
+
+	public function register_settings(): void {
+		$this->service( 'settings', AdminSettings::class )->register();
+	}
+
+	public function render_settings(): void {
+		$this->service( 'settings', AdminSettings::class )->render();
+	}
+
+	public function save_product(): void {
+		$this->service( 'actions', AdminActionHandler::class )->save_product();
+	}
+
+	public function change_product_status(): void {
+		$this->service( 'actions', AdminActionHandler::class )->change_product_status();
+	}
+
+	public function license_action(): void {
+		$this->service( 'actions', AdminActionHandler::class )->license_action();
+	}
+
+	public function test_stripe_connection(): void {
+		$this->service( 'actions', AdminActionHandler::class )->test_stripe_connection();
+	}
+
+	public function cleanup_logs(): void {
+		$this->service( 'actions', AdminActionHandler::class )->cleanup_logs();
+	}
+
+	public function retry_webhook(): void {
+		$this->service( 'actions', AdminActionHandler::class )->retry_webhook();
+	}
+
+	public function configuration_notice(): void {
+		$this->service( 'site_health', AdminSiteHealth::class )->configuration_notice();
+	}
+
+	/** @param array<string, mixed> $tests @return array<string, mixed> */
+	public function site_status_tests( array $tests ): array {
+		return $this->service( 'site_health', AdminSiteHealth::class )->tests( $tests );
+	}
+
+	/** @param array<string, mixed> $information @return array<string, mixed> */
+	public function debug_information( array $information ): array {
+		return $this->service( 'site_health', AdminSiteHealth::class )->debug_information( $information );
+	}
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $class Expected service class.
+	 * @return T
+	 */
+	private function service( string $name, string $class ): object {
+		if ( ! isset( $this->services[ $name ] ) ) {
+			$service = ( $this->factories[ $name ] )();
+			if ( ! $service instanceof $class ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal factory names and class names are diagnostic text, not HTML output.
+				throw new \LogicException( sprintf( 'Admin factory "%s" must return %s.', $name, $class ) );
+			}
+			$this->services[ $name ] = $service;
+		}
+		return $this->services[ $name ];
 	}
 }

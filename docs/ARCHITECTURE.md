@@ -24,6 +24,8 @@ RESTの正確な入出力は [API.md](API.md)、SDKの導入は [クライアン
 - `AdminSettings`: Settings APIへの登録、設定サニタイズ、設定画面の描画を担当します。
 - `AdminSiteHealth`: 設定警告とSite Health診断を担当します。
 
-RepositoryとServiceは各クラスのコンストラクタへ渡し、`Plugin` がcomposition rootとして既定実装を組み立てます。管理画面URL、`admin_post_*` hook、フォームaction、nonce名、`manage_options` の権限境界はこの分割の外部契約として維持します。
+`Plugin` はcomposition rootとして、共通ライフサイクル、フロントエンドと `admin-post`、RESTとStripe Webhook、管理画面、WP-CLIの登録経路を分離します。REST Controllerは `rest_api_init`、管理画面機能は `is_admin()` の経路、Release CommandはWP-CLIでのみ登録されます。フロント表示では管理画面のフックも登録しません。
+
+管理画面では、`AdminMenu` に明示的なFactoryを注入し、WordPress hookと既存slugだけを先に登録します。Repository、Service、各Page、`AdminActionHandler` は対象画面の描画、`admin-post` 処理、Site Health診断など、その依存が実際に必要になった時点で一度だけ生成します。静的なService Locatorやグローバルコンテナは使いません。管理画面URL、`admin_post_*` hook、フォームaction、nonce名、`manage_options` の権限境界はこの分割の外部契約として維持します。
 
 スキーマバージョン、段階的マイグレーション、各テーブルとインデックス、Repositoryの共通契約、UTC保存方針は [DATABASE.md](DATABASE.md) を参照してください。アプリケーション層から直接SQLを発行せず、すべて専用Repositoryを経由します。
