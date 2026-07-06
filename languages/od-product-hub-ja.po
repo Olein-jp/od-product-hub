@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-06T09:52:36+00:00\n"
+"POT-Creation-Date: 2026-07-06T10:10:02+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -47,7 +47,7 @@ msgstr "入力値が不正です。"
 msgid "The slug or Stripe ID is already in use."
 msgstr "スラッグまたはStripe IDが既に使用されています。"
 
-#: includes/Admin/AdminActionHandler.php:51 includes/Admin/ProductPage.php:68
+#: includes/Admin/AdminActionHandler.php:51
 msgid "Product not found."
 msgstr "商品が見つかりません。"
 
@@ -72,55 +72,165 @@ msgstr "ライセンス操作に失敗しました。"
 msgid "This webhook cannot be retried."
 msgstr "このWebhookは再試行できません。"
 
-#: includes/Admin/AdminMenu.php:44 includes/Admin/DashboardPage.php:20
+#. translators: %s: formatted number of items.
+#: includes/Admin/AdminListUi.php:37
+#, php-format
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+
+#: includes/Admin/AdminListUi.php:50
+msgid "Previous page"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:51
+#, fuzzy
+msgid "Next page"
+msgstr "固定ページを選択"
+
+#: includes/Admin/AdminListUi.php:54
+msgid "Pagination"
+msgstr ""
+
+#. translators: %s: item type.
+#: includes/Admin/AdminListUi.php:59
+#, php-format
+msgid "No matching %s were found. Clear or change the filters and try again."
+msgstr ""
+
+#. translators: %s: item type.
+#: includes/Admin/AdminListUi.php:60
+#, php-format
+msgid "No %s have been added yet."
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:66 includes/Admin/AdminSettings.php:172
+#: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:205
+#: includes/Frontend/Shortcodes.php:216
+msgid "Active"
+msgstr "有効"
+
+#: includes/Admin/AdminListUi.php:67 includes/Admin/AdminSettings.php:174
+#: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:206
+msgid "Inactive"
+msgstr "無効"
+
+#: includes/Admin/AdminListUi.php:68 includes/Admin/AdminSettings.php:177
+#: includes/Frontend/Shortcodes.php:209
+msgid "Suspended"
+msgstr "停止中"
+
+#: includes/Admin/AdminListUi.php:69 includes/Admin/AdminSettings.php:175
+#: includes/Frontend/Shortcodes.php:207
+msgid "Expired"
+msgstr "期限切れ"
+
+#: includes/Admin/AdminListUi.php:70 includes/Admin/AdminSettings.php:176
+msgid "Cancelled"
+msgstr "解約済み"
+
+#: includes/Admin/AdminListUi.php:71 includes/Frontend/Shortcodes.php:208
+#: includes/Frontend/Shortcodes.php:220
+msgid "Canceled"
+msgstr "解約済み"
+
+#: includes/Admin/AdminListUi.php:72 includes/Frontend/Shortcodes.php:217
+msgid "Trialing"
+msgstr "試用中"
+
+#: includes/Admin/AdminListUi.php:73 includes/Frontend/Shortcodes.php:218
+msgid "Past due"
+msgstr "支払い遅延"
+
+#: includes/Admin/AdminListUi.php:74 includes/Frontend/Shortcodes.php:219
+msgid "Unpaid"
+msgstr "未払い"
+
+#: includes/Admin/AdminListUi.php:75 includes/Frontend/Shortcodes.php:221
+msgid "Incomplete"
+msgstr "手続き未完了"
+
+#: includes/Admin/AdminListUi.php:76 includes/Frontend/Shortcodes.php:222
+msgid "Incomplete expired"
+msgstr "手続き期限切れ"
+
+#: includes/Admin/AdminListUi.php:77 includes/Frontend/Shortcodes.php:223
+msgid "Paused"
+msgstr "一時停止中"
+
+#: includes/Admin/AdminListUi.php:78
+msgid "Success"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:79
+msgid "Failure"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:80
+msgid "Failed"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:81
+msgid "Processed"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:82
+msgid "Pending"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:45 includes/Admin/DashboardPage.php:20
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
-#: includes/Admin/AdminMenu.php:45 includes/Admin/ProductPage.php:26
+#: includes/Admin/AdminMenu.php:47 includes/Admin/ProductPage.php:26
 #: includes/Admin/ProductPage.php:40
 msgid "Products"
 msgstr "商品"
 
-#: includes/Admin/AdminMenu.php:46 includes/Admin/CustomerPage.php:28
+#: includes/Admin/AdminMenu.php:48 includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr "顧客・契約"
 
-#: includes/Admin/AdminMenu.php:47 includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:31
+#: includes/Admin/AdminMenu.php:49 includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:32
 msgid "Licenses"
 msgstr "ライセンス"
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:50
 msgid "Logs"
 msgstr "ログ"
 
-#: includes/Admin/AdminMenu.php:49 includes/Admin/DashboardPage.php:72
+#: includes/Admin/AdminMenu.php:55 includes/Admin/DashboardPage.php:72
 msgid "Settings"
 msgstr "設定"
 
-#: includes/Admin/AdminMenu.php:61
+#: includes/Admin/AdminMenu.php:63
+msgid "Items per page"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:83
 msgid "Dashboard overview"
 msgstr "ダッシュボードの概要"
 
-#: includes/Admin/AdminMenu.php:62
+#: includes/Admin/AdminMenu.php:84
 msgid ""
 "Start with items that need attention, then use the metrics and recent "
 "activity to investigate details."
 msgstr ""
-"最初に要対応項目を確認し、次に主要指標と最近のアクティビティから詳細を"
-"調査してください。"
+"最初に要対応項目を確認し、次に主要指標と最近のアクティビティから詳細を調査し"
+"てください。"
 
-#: includes/Admin/AdminMenu.php:68 includes/Admin/DashboardPage.php:76
+#: includes/Admin/AdminMenu.php:90 includes/Admin/DashboardPage.php:76
 msgid "Site Health"
 msgstr "サイトヘルス"
 
-#: includes/Admin/AdminMenu.php:69
+#: includes/Admin/AdminMenu.php:91
 msgid ""
 "The dashboard summarizes operational checks. Open Site Health for complete "
 "diagnostics and remediation guidance."
 msgstr ""
-"ダッシュボードには運用チェックの概要が表示されます。完全な診断と復旧手順は"
-"サイトヘルスで確認してください。"
+"ダッシュボードには運用チェックの概要が表示されます。完全な診断と復旧手順はサ"
+"イトヘルスで確認してください。"
 
 #: includes/Admin/AdminSettings.php:46
 msgid "The sender email address is invalid. The previous value was preserved."
@@ -194,8 +304,8 @@ msgstr "固定ページを選択"
 #: includes/Admin/AdminSettings.php:143 includes/Admin/AdminSiteHealth.php:207
 msgid "Select a published page containing the odph_my_account shortcode."
 msgstr ""
-"要対応項目、主要指標、最近の運用アクティビティを確認します。"
-"odph_my_account ショートコードを含む公開済み固定ページを選択してください。"
+"要対応項目、主要指標、最近の運用アクティビティを確認します。odph_my_account "
+"ショートコードを含む公開済み固定ページを選択してください。"
 
 #: includes/Admin/AdminSettings.php:144
 msgid "Trusted proxies"
@@ -244,32 +354,9 @@ msgstr "アンインストール時に全データを削除する"
 msgid "Test Stripe connection"
 msgstr "Stripe接続をテスト"
 
-#: includes/Admin/AdminSettings.php:172 includes/Admin/ProductPage.php:28
-#: includes/Admin/ProductPage.php:63 includes/Frontend/Shortcodes.php:205
-#: includes/Frontend/Shortcodes.php:216
-msgid "Active"
-msgstr "有効"
-
 #: includes/Admin/AdminSettings.php:173
 msgid "Grace period (vendor Hub unavailable)"
 msgstr "猶予期間（販売元Hubへ接続できません）"
-
-#: includes/Admin/AdminSettings.php:174 includes/Admin/ProductPage.php:28
-#: includes/Admin/ProductPage.php:63 includes/Frontend/Shortcodes.php:206
-msgid "Inactive"
-msgstr "無効"
-
-#: includes/Admin/AdminSettings.php:175 includes/Frontend/Shortcodes.php:207
-msgid "Expired"
-msgstr "期限切れ"
-
-#: includes/Admin/AdminSettings.php:176
-msgid "Cancelled"
-msgstr "解約済み"
-
-#: includes/Admin/AdminSettings.php:177 includes/Frontend/Shortcodes.php:209
-msgid "Suspended"
-msgstr "停止中"
 
 #: includes/Admin/AdminSettings.php:178
 msgid "Vendor Hub unavailable or misconfigured"
@@ -404,13 +491,13 @@ msgid "Stripe configured"
 msgstr "Stripe設定済み"
 
 #: includes/Admin/AdminSiteHealth.php:59 includes/Admin/AdminSiteHealth.php:71
-#: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
+#: includes/Admin/CustomerPage.php:89 includes/Admin/CustomerPage.php:118
 #: includes/Privacy/PrivacyService.php:221
 msgid "Yes"
 msgstr "あり"
 
 #: includes/Admin/AdminSiteHealth.php:59 includes/Admin/AdminSiteHealth.php:71
-#: includes/Admin/CustomerPage.php:83 includes/Admin/CustomerPage.php:108
+#: includes/Admin/CustomerPage.php:89 includes/Admin/CustomerPage.php:118
 #: includes/Privacy/PrivacyService.php:221
 msgid "No"
 msgstr "なし"
@@ -657,167 +744,188 @@ msgstr "関連するOD Product Hub画面を開く"
 msgid "Customers"
 msgstr "顧客"
 
-#: includes/Admin/CustomerPage.php:30 includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:30 includes/Admin/CustomerPage.php:116
 msgid "Subscriptions"
 msgstr "サブスクリプション"
 
-#: includes/Admin/CustomerPage.php:44
+#: includes/Admin/CustomerPage.php:45
 msgid "Search by email address"
 msgstr "メールアドレスで検索"
 
-#: includes/Admin/CustomerPage.php:44 includes/Privacy/PrivacyService.php:210
+#: includes/Admin/CustomerPage.php:45 includes/Privacy/PrivacyService.php:210
 msgid "Email address"
 msgstr "メールアドレス"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:44 includes/Admin/LicensePage.php:36
+#: includes/Admin/CustomerPage.php:45 includes/Admin/LicensePage.php:37
 msgid "Search"
 msgstr "検索"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46 includes/Admin/CustomerPage.php:73
-#: includes/Admin/LicensePage.php:36 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:47 includes/Admin/CustomerPage.php:79
+#: includes/Admin/LicensePage.php:37 includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:131 includes/Admin/LogsPage.php:150
 #, php-format
 msgid "%d results"
 msgstr "全 %d 件"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46 includes/Admin/CustomerPage.php:74
-#: includes/Admin/LicensePage.php:37 includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:47 includes/Admin/CustomerPage.php:80
+#: includes/Admin/LicensePage.php:38 includes/Admin/LicensePage.php:68
 msgid "Customer"
 msgstr "顧客"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46 includes/Admin/CustomerPage.php:99
+#: includes/Admin/CustomerPage.php:47 includes/Admin/CustomerPage.php:109
 msgid "Email"
 msgstr "メール"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46 includes/Admin/CustomerPage.php:99
+#: includes/Admin/CustomerPage.php:47 includes/Admin/CustomerPage.php:109
 msgid "WordPress user"
 msgstr "WordPressユーザー"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46
+#: includes/Admin/CustomerPage.php:47
 msgid "Registered"
 msgstr "登録日時"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46 includes/Admin/LicensePage.php:37
-#: includes/Admin/LogsPage.php:71 includes/Admin/ProductPage.php:41
+#: includes/Admin/CustomerPage.php:47 includes/Admin/LicensePage.php:38
+#: includes/Admin/LogsPage.php:72
 msgid "Actions"
 msgstr "操作"
 
-#: includes/Admin/CustomerPage.php:56 includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:105 includes/Admin/ProductPage.php:65
+#: includes/Admin/CustomerPage.php:57 includes/Admin/CustomerPage.php:89
+#: includes/Admin/CustomerPage.php:115 includes/Admin/ProductPage.php:56
 msgid "(opens in a new tab)"
 msgstr "（新しいタブで開く）"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:56 includes/Admin/LicensePage.php:46
-#: includes/Admin/LogsPage.php:73 includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:57 includes/Admin/LicensePage.php:47
+#: includes/Admin/LogsPage.php:74 includes/Admin/LogsPage.php:150
 msgid "Details"
 msgstr "詳細"
 
-#: includes/Admin/CustomerPage.php:68 includes/Admin/CustomerPage.php:74
-#: includes/Admin/CustomerPage.php:106 includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:31 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:33
-#: includes/Admin/ProductPage.php:41 includes/Privacy/PrivacyService.php:229
+#: includes/Admin/CustomerPage.php:60
+#, fuzzy
+msgid "customers"
+msgstr "顧客"
+
+#: includes/Admin/CustomerPage.php:64
+msgid ""
+"Customers with account identifiers, registration date, and available actions."
+msgstr ""
+
+#: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:80
+#: includes/Admin/CustomerPage.php:116 includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:32 includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68 includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33 includes/Admin/ProductPage.php:43
+#: includes/Admin/ProductPage.php:56 includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr "状態"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:68 includes/Admin/LicensePage.php:31
-#: includes/Admin/LogsPage.php:66 includes/Admin/LogsPage.php:123
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/CustomerPage.php:74 includes/Admin/LicensePage.php:32
+#: includes/Admin/LogsPage.php:67 includes/Admin/LogsPage.php:126
+#: includes/Admin/LogsPage.php:131
 msgid "All"
 msgstr "すべて"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:73 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:79 includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:131 includes/Admin/LogsPage.php:150
 #: includes/Admin/ProductPage.php:28
 msgid "Filter"
 msgstr "絞り込む"
 
-#: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
-#: includes/Admin/CustomerPage.php:110 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:41
-#: includes/Privacy/PrivacyService.php:217
+#: includes/Admin/CustomerPage.php:80 includes/Admin/CustomerPage.php:116
+#: includes/Admin/CustomerPage.php:120 includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68 includes/Admin/ProductPage.php:43
+#: includes/Admin/ProductPage.php:56 includes/Privacy/PrivacyService.php:217
 #: includes/Privacy/PrivacyService.php:227
 msgid "Product"
 msgstr "商品"
 
-#: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80 includes/Admin/CustomerPage.php:116
 msgid "Period start"
 msgstr "期間開始"
 
-#: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80 includes/Admin/CustomerPage.php:116
 msgid "Period end"
 msgstr "期間終了"
 
-#: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80 includes/Admin/CustomerPage.php:116
 msgid "Scheduled cancellation"
 msgstr "解約予約"
 
-#: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80 includes/Admin/CustomerPage.php:116
 msgid "Payment failure"
 msgstr "支払い失敗"
 
 #: includes/Admin/CustomerPage.php:92
+#, fuzzy
+msgid "subscriptions"
+msgstr "サブスクリプション"
+
+#: includes/Admin/CustomerPage.php:96
+msgid ""
+"Subscriptions with product, customer, status, period, and payment state."
+msgstr ""
+
+#: includes/Admin/CustomerPage.php:102
 msgid "Customer not found."
 msgstr "顧客が見つかりません。"
 
-#: includes/Admin/CustomerPage.php:98
+#: includes/Admin/CustomerPage.php:108
 msgid "Customer details"
 msgstr "顧客詳細"
 
-#: includes/Admin/CustomerPage.php:98
+#: includes/Admin/CustomerPage.php:108
 msgid "← Back to customers"
 msgstr "← 顧客一覧へ戻る"
 
-#: includes/Admin/CustomerPage.php:99 includes/Privacy/PrivacyService.php:211
+#: includes/Admin/CustomerPage.php:109 includes/Privacy/PrivacyService.php:211
 msgid "Name"
 msgstr "名前"
 
-#: includes/Admin/CustomerPage.php:110
+#: includes/Admin/CustomerPage.php:120
 msgid "Key"
 msgstr "キー"
 
-#: includes/Admin/CustomerPage.php:110 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:120 includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 msgid "Issued"
 msgstr "発行日時"
 
-#: includes/Admin/CustomerPage.php:110 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:120 includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 msgid "Expires"
 msgstr "期限"
 
-#: includes/Admin/CustomerPage.php:110 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:120 includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 msgid "Last verified"
 msgstr "最終認証"
 
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:126
+#: includes/Admin/CustomerPage.php:124 includes/Admin/DashboardPage.php:126
 msgid "Recent API logs"
 msgstr "最近のAPIログ"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:126
-#: includes/Admin/LicensePage.php:77 includes/Admin/LogsPage.php:123
-#: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:124 includes/Admin/DashboardPage.php:126
+#: includes/Admin/LicensePage.php:82 includes/Admin/LogsPage.php:126
+#: includes/Admin/LogsPage.php:131 includes/Admin/LogsPage.php:150
 #: includes/Privacy/PrivacyService.php:236
 msgid "Action"
 msgstr "操作"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:114
-#: includes/Admin/DashboardPage.php:126 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:66 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:95 includes/Admin/LogsPage.php:128
+#: includes/Admin/CustomerPage.php:124 includes/Admin/DashboardPage.php:114
+#: includes/Admin/DashboardPage.php:126 includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:67 includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:97 includes/Admin/LogsPage.php:131
 #: includes/Privacy/PrivacyService.php:237
 #: includes/Privacy/PrivacyService.php:250
 #: includes/Privacy/PrivacyService.php:256
@@ -825,24 +933,24 @@ msgid "Result"
 msgstr "結果"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:128 includes/Privacy/PrivacyService.php:238
+#: includes/Admin/CustomerPage.php:124 includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:131 includes/Privacy/PrivacyService.php:238
 #: includes/Privacy/PrivacyService.php:246
 msgid "Site URL"
 msgstr "サイトURL"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:128 includes/Privacy/PrivacyService.php:241
+#: includes/Admin/CustomerPage.php:124 includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:131 includes/Privacy/PrivacyService.php:241
 #: includes/Privacy/PrivacyService.php:257
 msgid "Error code"
 msgstr "エラーコード"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:114
-#: includes/Admin/DashboardPage.php:126 includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:128
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:124 includes/Admin/DashboardPage.php:114
+#: includes/Admin/DashboardPage.php:126 includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:72 includes/Admin/LogsPage.php:131
+#: includes/Admin/LogsPage.php:150
 msgid "Date"
 msgstr "日時"
 
@@ -864,7 +972,8 @@ msgstr ""
 
 #: includes/Admin/DashboardPage.php:35
 msgid "Operational checks could not be loaded. Open Site Health and try again."
-msgstr "運用チェックを読み込めませんでした。サイトヘルスを開いて再度お試しください。"
+msgstr ""
+"運用チェックを読み込めませんでした。サイトヘルスを開いて再度お試しください。"
 
 #: includes/Admin/DashboardPage.php:40
 msgid "No items currently need attention."
@@ -939,8 +1048,8 @@ msgid "Event"
 msgstr "イベント"
 
 #. translators: %d: total number of results.
-#: includes/Admin/DashboardPage.php:114 includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:94
+#: includes/Admin/DashboardPage.php:114 includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:96
 msgid "Type"
 msgstr "種類"
 
@@ -953,7 +1062,7 @@ msgid "View all webhook logs"
 msgstr "Webhookログをすべて表示"
 
 #. translators: %d: total number of results.
-#: includes/Admin/DashboardPage.php:126 includes/Admin/LogsPage.php:128
+#: includes/Admin/DashboardPage.php:126 includes/Admin/LogsPage.php:131
 msgid "Site"
 msgstr "サイト"
 
@@ -961,77 +1070,86 @@ msgstr "サイト"
 msgid "View all API logs"
 msgstr "APIログをすべて表示"
 
-#: includes/Admin/LicensePage.php:31
+#: includes/Admin/LicensePage.php:32
 msgid "Search by license key"
 msgstr "ライセンスキーで検索"
 
-#: includes/Admin/LicensePage.php:31
+#: includes/Admin/LicensePage.php:32
 msgid "Complete license key"
 msgstr "完全なライセンスキー"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LicensePage.php:36
+#: includes/Admin/LicensePage.php:37
 msgid ""
 "Search uses the key hash and does not perform partial matching on plain-text "
 "keys."
 msgstr "検索はキーのハッシュを用い、平文の部分一致検索は行いません。"
 
-#: includes/Admin/LicensePage.php:37 includes/Admin/LicensePage.php:63
+#: includes/Admin/LicensePage.php:38 includes/Admin/LicensePage.php:68
 #: includes/Frontend/Shortcodes.php:133
 msgid "License key"
 msgstr "ライセンスキー"
 
-#: includes/Admin/LicensePage.php:56 includes/License/LicenseManager.php:86
+#: includes/Admin/LicensePage.php:50
+#, fuzzy
+msgid "licenses"
+msgstr "ライセンス"
+
+#: includes/Admin/LicensePage.php:55
+msgid "Licenses with customer, status, dates, and available actions."
+msgstr ""
+
+#: includes/Admin/LicensePage.php:61 includes/License/LicenseManager.php:86
 msgid "License not found."
 msgstr "ライセンスが見つかりません。"
 
-#: includes/Admin/LicensePage.php:59
+#: includes/Admin/LicensePage.php:64
 msgid "License details"
 msgstr "ライセンス詳細"
 
-#: includes/Admin/LicensePage.php:59
+#: includes/Admin/LicensePage.php:64
 msgid "← Back to licenses"
 msgstr "← ライセンス一覧へ戻る"
 
-#: includes/Admin/LicensePage.php:61
+#: includes/Admin/LicensePage.php:66
 msgid "The license operation completed."
 msgstr "ライセンス操作が完了しました。"
 
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/LicensePage.php:68
 msgid "The complete key is shown only on this details page."
 msgstr "全文はこの詳細画面でのみ表示されます。"
 
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/LicensePage.php:68
 msgid "Stripe subscription"
 msgstr "Stripe契約"
 
 #. translators: 1: Stripe subscription status, 2: period end date.
-#: includes/Admin/LicensePage.php:66
+#: includes/Admin/LicensePage.php:71
 #, php-format
 msgid "%2$s (period ends: %3$s)"
 msgstr "%2$s（期間終了: %3$s）"
 
-#: includes/Admin/LicensePage.php:70 includes/Admin/LogsPage.php:47
+#: includes/Admin/LicensePage.php:75 includes/Admin/LogsPage.php:47
 msgid "Administrative actions"
 msgstr "管理操作"
 
-#: includes/Admin/LicensePage.php:72
+#: includes/Admin/LicensePage.php:77
 msgid "Resume license"
 msgstr "ライセンスを再開"
 
-#: includes/Admin/LicensePage.php:74
+#: includes/Admin/LicensePage.php:79
 msgid "Suspend license"
 msgstr "ライセンスを停止"
 
-#: includes/Admin/LicensePage.php:76
+#: includes/Admin/LicensePage.php:81
 msgid "Reissue key"
 msgstr "キーを再発行"
 
-#: includes/Admin/LicensePage.php:77
+#: includes/Admin/LicensePage.php:82
 msgid "Verification logs"
 msgstr "認証ログ"
 
-#: includes/Admin/LicensePage.php:77 includes/Privacy/PrivacyService.php:239
+#: includes/Admin/LicensePage.php:82 includes/Privacy/PrivacyService.php:239
 #: includes/Privacy/PrivacyService.php:248
 msgid "IP address"
 msgstr "IPアドレス"
@@ -1044,76 +1162,82 @@ msgstr "運用ログ"
 msgid "Log type"
 msgstr "ログ種別"
 
-#: includes/Admin/LogsPage.php:66
+#: includes/Admin/LogsPage.php:67
 msgid "Webhook logs"
 msgstr "Webhookログ"
 
-#: includes/Admin/LogsPage.php:66
+#: includes/Admin/LogsPage.php:67
 msgid "Event ID or type"
 msgstr "イベントID・種類"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:93
+#: includes/Admin/LogsPage.php:72 includes/Admin/LogsPage.php:95
 msgid "Event ID"
 msgstr "イベントID"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71
+#: includes/Admin/LogsPage.php:72
 msgid "Attempts"
 msgstr "試行回数"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71
+#: includes/Admin/LogsPage.php:72
 msgid "Duplicates"
 msgstr "重複"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:98
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:72 includes/Admin/LogsPage.php:100
+#: includes/Admin/LogsPage.php:131
 msgid "Error"
 msgstr "エラー"
 
-#: includes/Admin/LogsPage.php:83
+#: includes/Admin/LogsPage.php:79
+msgid ""
+"Webhook events with processing result, attempts, errors, and available "
+"actions."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:85
 msgid "Webhook log not found."
 msgstr "Webhookログが見つかりません。"
 
-#: includes/Admin/LogsPage.php:89
+#: includes/Admin/LogsPage.php:91
 msgid "The event is ready for a new delivery from Stripe."
 msgstr "Stripeからイベントを再送できる状態になりました。"
 
-#: includes/Admin/LogsPage.php:91
+#: includes/Admin/LogsPage.php:93
 msgid "← Back to webhook logs"
 msgstr "← Webhookログ一覧へ戻る"
 
-#: includes/Admin/LogsPage.php:91
+#: includes/Admin/LogsPage.php:93
 msgid "Webhook log details"
 msgstr "Webhookログ詳細"
 
-#: includes/Admin/LogsPage.php:96
+#: includes/Admin/LogsPage.php:98
 msgid "Attempt count"
 msgstr "試行回数"
 
-#: includes/Admin/LogsPage.php:97
+#: includes/Admin/LogsPage.php:99
 msgid "Duplicate count"
 msgstr "重複回数"
 
-#: includes/Admin/LogsPage.php:99
+#: includes/Admin/LogsPage.php:101
 msgid "Last attempt"
 msgstr "最終試行"
 
-#: includes/Admin/LogsPage.php:100
+#: includes/Admin/LogsPage.php:102
 msgid "Received"
 msgstr "受信日時"
 
-#: includes/Admin/LogsPage.php:101
+#: includes/Admin/LogsPage.php:103
 msgid "Last received"
 msgstr "最終受信日時"
 
-#: includes/Admin/LogsPage.php:108
+#: includes/Admin/LogsPage.php:110
 msgid "Retry this event"
 msgstr "このイベントを再試行"
 
-#: includes/Admin/LogsPage.php:108
+#: includes/Admin/LogsPage.php:110
 msgid ""
 "This does not replay the masked payload. It resets the retry state so that "
 "the event can be resent from Stripe."
@@ -1121,66 +1245,74 @@ msgstr ""
 "マスク済みpayloadを再生する操作ではありません。Stripeからイベントを再送できる"
 "よう、再試行状態をリセットします。"
 
-#: includes/Admin/LogsPage.php:110
+#: includes/Admin/LogsPage.php:112
 msgid "Allow retry from Stripe"
 msgstr "Stripeからの再試行を許可"
 
-#: includes/Admin/LogsPage.php:113
+#: includes/Admin/LogsPage.php:115
 msgid "Masked payload"
 msgstr "マスク済みpayload"
 
-#: includes/Admin/LogsPage.php:113
+#: includes/Admin/LogsPage.php:115
 msgid ""
 "Email, address, and payment-related information is masked again when "
 "displayed."
 msgstr "表示時にもメール、住所、支払い関連情報を再マスクします。"
 
-#: includes/Admin/LogsPage.php:123
+#: includes/Admin/LogsPage.php:126
 msgid "API logs"
 msgstr "APIログ"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:131
 msgid "License"
 msgstr "ライセンス"
 
+#: includes/Admin/LogsPage.php:139
+msgid "API requests with result, site, error, license, and date."
+msgstr ""
+
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Administrative action logs"
 msgstr "管理操作ログ"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Object type"
 msgstr "対象種別"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "User ID"
 msgstr "ユーザーID"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "User"
 msgstr "ユーザー"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Object"
 msgstr "対象"
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Object ID"
 msgstr "対象ID"
 
+#: includes/Admin/LogsPage.php:157
+msgid "Administrative actions with user, object, details, and date."
+msgstr ""
+
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:158
+#: includes/Admin/LogsPage.php:164
 msgid "Manual log cleanup"
 msgstr "ログ保持期間の手動削除"
 
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:158
+#: includes/Admin/LogsPage.php:164
 #, php-format
 msgid ""
 "The current retention period is <strong>%d days</strong>. You can safely "
@@ -1189,19 +1321,20 @@ msgstr ""
 "現在の保持期間は<strong>%d日</strong>です。日次Cronと同じ処理を安全に再実行で"
 "きます。"
 
-#: includes/Admin/LogsPage.php:160
+#: includes/Admin/LogsPage.php:166
 msgid "Delete logs older than the retention period"
 msgstr "保持期間より古いログを削除"
 
 #. translators: %d: number of deleted log entries.
-#: includes/Admin/LogsPage.php:174
+#: includes/Admin/LogsPage.php:180
 #, php-format
 msgid "Deleted %d log entries."
 msgstr "ログを%d件削除しました。"
 
-#: includes/Admin/LogsPage.php:194
-msgid "No matching logs found."
-msgstr "該当するログはありません。"
+#: includes/Admin/LogsPage.php:189
+#, fuzzy
+msgid "logs"
+msgstr "APIログ"
 
 #: includes/Admin/ProductLicenseController.php:19
 msgid "The product license operation is invalid."
@@ -1247,7 +1380,8 @@ msgstr "サブスクリプション説明"
 msgid "Example: Renews monthly until canceled."
 msgstr "例: 解約するまで毎月自動更新されます。"
 
-#: includes/Admin/ProductPage.php:33 includes/Admin/ProductPage.php:41
+#: includes/Admin/ProductPage.php:33 includes/Admin/ProductPage.php:43
+#: includes/Admin/ProductPage.php:56
 msgid "Slug"
 msgstr "スラッグ"
 
@@ -1277,21 +1411,36 @@ msgstr "更新"
 msgid "Add"
 msgstr "追加"
 
-#: includes/Admin/ProductPage.php:41
+#: includes/Admin/ProductPage.php:42
+msgid ""
+"Products with identifiers, license format, status, and available actions."
+msgstr ""
+
+#: includes/Admin/ProductPage.php:43 includes/Admin/ProductPage.php:56
 msgid "License key format"
 msgstr "ライセンスキー形式"
 
-#: includes/Admin/ProductPage.php:65
+#: includes/Admin/ProductPage.php:55
+msgid "Edit"
+msgstr "編集"
+
+#: includes/Admin/ProductPage.php:55
 msgid "Deactivate"
 msgstr "停止"
 
-#: includes/Admin/ProductPage.php:65
+#: includes/Admin/ProductPage.php:55
 msgid "Reactivate"
 msgstr "再開"
 
-#: includes/Admin/ProductPage.php:65
-msgid "Edit"
-msgstr "編集"
+#: includes/Admin/ProductPage.php:56
+#, fuzzy
+msgid "Show more details"
+msgstr "顧客詳細"
+
+#: includes/Admin/ProductPage.php:59
+#, fuzzy
+msgid "products"
+msgstr "商品"
 
 #: includes/Database/DatabaseException.php:15
 msgid "The database operation failed. Please try again later."
@@ -1555,37 +1704,9 @@ msgstr ""
 msgid "Not set"
 msgstr "未設定"
 
-#: includes/Frontend/Shortcodes.php:208 includes/Frontend/Shortcodes.php:220
-msgid "Canceled"
-msgstr "解約済み"
-
 #: includes/Frontend/Shortcodes.php:211
 msgid "Unknown status"
 msgstr "状態不明"
-
-#: includes/Frontend/Shortcodes.php:217
-msgid "Trialing"
-msgstr "試用中"
-
-#: includes/Frontend/Shortcodes.php:218
-msgid "Past due"
-msgstr "支払い遅延"
-
-#: includes/Frontend/Shortcodes.php:219
-msgid "Unpaid"
-msgstr "未払い"
-
-#: includes/Frontend/Shortcodes.php:221
-msgid "Incomplete"
-msgstr "手続き未完了"
-
-#: includes/Frontend/Shortcodes.php:222
-msgid "Incomplete expired"
-msgstr "手続き期限切れ"
-
-#: includes/Frontend/Shortcodes.php:223
-msgid "Paused"
-msgstr "一時停止中"
 
 #: includes/Frontend/Shortcodes.php:225
 msgid "Synchronizing"
@@ -1709,6 +1830,9 @@ msgstr "利用日時"
 #: includes/Privacy/PrivacyService.php:255
 msgid "Email type"
 msgstr "メール種別"
+
+#~ msgid "No matching logs found."
+#~ msgstr "該当するログはありません。"
 
 #~ msgid ""
 #~ "Review the operational status of subscriptions, licenses, webhooks, and "

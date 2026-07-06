@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T09:52:36+00:00\n"
+"POT-Creation-Date: 2026-07-06T10:10:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -44,7 +44,6 @@ msgid "The slug or Stripe ID is already in use."
 msgstr ""
 
 #: includes/Admin/AdminActionHandler.php:51
-#: includes/Admin/ProductPage.php:68
 msgid "Product not found."
 msgstr ""
 
@@ -68,51 +67,175 @@ msgstr ""
 msgid "This webhook cannot be retried."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:44
+#. translators: %s: formatted number of items.
+#: includes/Admin/AdminListUi.php:37
+#, php-format
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Admin/AdminListUi.php:50
+msgid "Previous page"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:51
+msgid "Next page"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:54
+msgid "Pagination"
+msgstr ""
+
+#. translators: %s: item type.
+#: includes/Admin/AdminListUi.php:59
+#, php-format
+msgid "No matching %s were found. Clear or change the filters and try again."
+msgstr ""
+
+#. translators: %s: item type.
+#: includes/Admin/AdminListUi.php:60
+#, php-format
+msgid "No %s have been added yet."
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:66
+#: includes/Admin/AdminSettings.php:172
+#: includes/Admin/ProductPage.php:28
+#: includes/Frontend/Shortcodes.php:205
+#: includes/Frontend/Shortcodes.php:216
+msgid "Active"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:67
+#: includes/Admin/AdminSettings.php:174
+#: includes/Admin/ProductPage.php:28
+#: includes/Frontend/Shortcodes.php:206
+msgid "Inactive"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:68
+#: includes/Admin/AdminSettings.php:177
+#: includes/Frontend/Shortcodes.php:209
+msgid "Suspended"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:69
+#: includes/Admin/AdminSettings.php:175
+#: includes/Frontend/Shortcodes.php:207
+msgid "Expired"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:70
+#: includes/Admin/AdminSettings.php:176
+msgid "Cancelled"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:71
+#: includes/Frontend/Shortcodes.php:208
+#: includes/Frontend/Shortcodes.php:220
+msgid "Canceled"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:72
+#: includes/Frontend/Shortcodes.php:217
+msgid "Trialing"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:73
+#: includes/Frontend/Shortcodes.php:218
+msgid "Past due"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:74
+#: includes/Frontend/Shortcodes.php:219
+msgid "Unpaid"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:75
+#: includes/Frontend/Shortcodes.php:221
+msgid "Incomplete"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:76
+#: includes/Frontend/Shortcodes.php:222
+msgid "Incomplete expired"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:77
+#: includes/Frontend/Shortcodes.php:223
+msgid "Paused"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:78
+msgid "Success"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:79
+msgid "Failure"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:80
+msgid "Failed"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:81
+msgid "Processed"
+msgstr ""
+
+#: includes/Admin/AdminListUi.php:82
+msgid "Pending"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:45
 #: includes/Admin/DashboardPage.php:20
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:45
+#: includes/Admin/AdminMenu.php:47
 #: includes/Admin/ProductPage.php:26
 #: includes/Admin/ProductPage.php:40
 msgid "Products"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:46
+#: includes/Admin/AdminMenu.php:48
 #: includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:47
-#: includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:31
+#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:32
 msgid "Licenses"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:50
 msgid "Logs"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/AdminMenu.php:55
 #: includes/Admin/DashboardPage.php:72
 msgid "Settings"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:61
+#: includes/Admin/AdminMenu.php:63
+msgid "Items per page"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:83
 msgid "Dashboard overview"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:62
+#: includes/Admin/AdminMenu.php:84
 msgid "Start with items that need attention, then use the metrics and recent activity to investigate details."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:68
+#: includes/Admin/AdminMenu.php:90
 #: includes/Admin/DashboardPage.php:76
 msgid "Site Health"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:69
+#: includes/Admin/AdminMenu.php:91
 msgid "The dashboard summarizes operational checks. Open Site Health for complete diagnostics and remediation guidance."
 msgstr ""
 
@@ -229,37 +352,8 @@ msgstr ""
 msgid "Test Stripe connection"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:172
-#: includes/Admin/ProductPage.php:28
-#: includes/Admin/ProductPage.php:63
-#: includes/Frontend/Shortcodes.php:205
-#: includes/Frontend/Shortcodes.php:216
-msgid "Active"
-msgstr ""
-
 #: includes/Admin/AdminSettings.php:173
 msgid "Grace period (vendor Hub unavailable)"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:174
-#: includes/Admin/ProductPage.php:28
-#: includes/Admin/ProductPage.php:63
-#: includes/Frontend/Shortcodes.php:206
-msgid "Inactive"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:175
-#: includes/Frontend/Shortcodes.php:207
-msgid "Expired"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:176
-msgid "Cancelled"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:177
-#: includes/Frontend/Shortcodes.php:209
-msgid "Suspended"
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:178
@@ -376,16 +470,16 @@ msgstr ""
 
 #: includes/Admin/AdminSiteHealth.php:59
 #: includes/Admin/AdminSiteHealth.php:71
-#: includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:108
+#: includes/Admin/CustomerPage.php:89
+#: includes/Admin/CustomerPage.php:118
 #: includes/Privacy/PrivacyService.php:221
 msgid "Yes"
 msgstr ""
 
 #: includes/Admin/AdminSiteHealth.php:59
 #: includes/Admin/AdminSiteHealth.php:71
-#: includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:108
+#: includes/Admin/CustomerPage.php:89
+#: includes/Admin/CustomerPage.php:118
 #: includes/Privacy/PrivacyService.php:221
 msgid "No"
 msgstr ""
@@ -589,210 +683,228 @@ msgid "Customers"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:30
-#: includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:116
 msgid "Subscriptions"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:44
+#: includes/Admin/CustomerPage.php:45
 msgid "Search by email address"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:44
+#: includes/Admin/CustomerPage.php:45
 #: includes/Privacy/PrivacyService.php:210
 msgid "Email address"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:44
-#: includes/Admin/LicensePage.php:36
+#: includes/Admin/CustomerPage.php:45
+#: includes/Admin/LicensePage.php:37
 msgid "Search"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46
-#: includes/Admin/CustomerPage.php:73
-#: includes/Admin/LicensePage.php:36
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:128
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:47
+#: includes/Admin/CustomerPage.php:79
+#: includes/Admin/LicensePage.php:37
+#: includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:131
+#: includes/Admin/LogsPage.php:150
 #, php-format
 msgid "%d results"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46
-#: includes/Admin/CustomerPage.php:74
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:47
+#: includes/Admin/CustomerPage.php:80
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 msgid "Customer"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46
-#: includes/Admin/CustomerPage.php:99
+#: includes/Admin/CustomerPage.php:47
+#: includes/Admin/CustomerPage.php:109
 msgid "Email"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46
-#: includes/Admin/CustomerPage.php:99
+#: includes/Admin/CustomerPage.php:47
+#: includes/Admin/CustomerPage.php:109
 msgid "WordPress user"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46
+#: includes/Admin/CustomerPage.php:47
 msgid "Registered"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:46
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/ProductPage.php:41
+#: includes/Admin/CustomerPage.php:47
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LogsPage.php:72
 msgid "Actions"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:56
-#: includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:105
-#: includes/Admin/ProductPage.php:65
+#: includes/Admin/CustomerPage.php:57
+#: includes/Admin/CustomerPage.php:89
+#: includes/Admin/CustomerPage.php:115
+#: includes/Admin/ProductPage.php:56
 msgid "(opens in a new tab)"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:56
-#: includes/Admin/LicensePage.php:46
-#: includes/Admin/LogsPage.php:73
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:57
+#: includes/Admin/LicensePage.php:47
+#: includes/Admin/LogsPage.php:74
+#: includes/Admin/LogsPage.php:150
 msgid "Details"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:68
+#: includes/Admin/CustomerPage.php:60
+msgid "customers"
+msgstr ""
+
+#: includes/Admin/CustomerPage.php:64
+msgid "Customers with account identifiers, registration date, and available actions."
+msgstr ""
+
 #: includes/Admin/CustomerPage.php:74
-#: includes/Admin/CustomerPage.php:106
-#: includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:31
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:80
+#: includes/Admin/CustomerPage.php:116
+#: includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:32
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
+#: includes/Admin/ProductPage.php:28
 #: includes/Admin/ProductPage.php:33
-#: includes/Admin/ProductPage.php:41
+#: includes/Admin/ProductPage.php:43
+#: includes/Admin/ProductPage.php:56
 #: includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:68
-#: includes/Admin/LicensePage.php:31
-#: includes/Admin/LogsPage.php:66
-#: includes/Admin/LogsPage.php:123
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/CustomerPage.php:74
+#: includes/Admin/LicensePage.php:32
+#: includes/Admin/LogsPage.php:67
+#: includes/Admin/LogsPage.php:126
+#: includes/Admin/LogsPage.php:131
 msgid "All"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:73
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:128
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/CustomerPage.php:79
+#: includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:131
+#: includes/Admin/LogsPage.php:150
 #: includes/Admin/ProductPage.php:28
 msgid "Filter"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:74
-#: includes/Admin/CustomerPage.php:106
-#: includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
-#: includes/Admin/ProductPage.php:41
+#: includes/Admin/CustomerPage.php:80
+#: includes/Admin/CustomerPage.php:116
+#: includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
+#: includes/Admin/ProductPage.php:43
+#: includes/Admin/ProductPage.php:56
 #: includes/Privacy/PrivacyService.php:217
 #: includes/Privacy/PrivacyService.php:227
 msgid "Product"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:74
-#: includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80
+#: includes/Admin/CustomerPage.php:116
 msgid "Period start"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:74
-#: includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80
+#: includes/Admin/CustomerPage.php:116
 msgid "Period end"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:74
-#: includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80
+#: includes/Admin/CustomerPage.php:116
 msgid "Scheduled cancellation"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:74
-#: includes/Admin/CustomerPage.php:106
+#: includes/Admin/CustomerPage.php:80
+#: includes/Admin/CustomerPage.php:116
 msgid "Payment failure"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:92
+msgid "subscriptions"
+msgstr ""
+
+#: includes/Admin/CustomerPage.php:96
+msgid "Subscriptions with product, customer, status, period, and payment state."
+msgstr ""
+
+#: includes/Admin/CustomerPage.php:102
 msgid "Customer not found."
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:98
+#: includes/Admin/CustomerPage.php:108
 msgid "Customer details"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:98
+#: includes/Admin/CustomerPage.php:108
 msgid "← Back to customers"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:99
+#: includes/Admin/CustomerPage.php:109
 #: includes/Privacy/PrivacyService.php:211
 msgid "Name"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:110
+#: includes/Admin/CustomerPage.php:120
 msgid "Key"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 msgid "Issued"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 msgid "Expires"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/CustomerPage.php:120
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 msgid "Last verified"
 msgstr ""
 
-#: includes/Admin/CustomerPage.php:114
+#: includes/Admin/CustomerPage.php:124
 #: includes/Admin/DashboardPage.php:126
 msgid "Recent API logs"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114
+#: includes/Admin/CustomerPage.php:124
 #: includes/Admin/DashboardPage.php:126
-#: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:123
-#: includes/Admin/LogsPage.php:128
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:126
+#: includes/Admin/LogsPage.php:131
+#: includes/Admin/LogsPage.php:150
 #: includes/Privacy/PrivacyService.php:236
 msgid "Action"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114
+#: includes/Admin/CustomerPage.php:124
 #: includes/Admin/DashboardPage.php:114
 #: includes/Admin/DashboardPage.php:126
-#: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:66
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:95
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:67
+#: includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:97
+#: includes/Admin/LogsPage.php:131
 #: includes/Privacy/PrivacyService.php:237
 #: includes/Privacy/PrivacyService.php:250
 #: includes/Privacy/PrivacyService.php:256
@@ -800,31 +912,31 @@ msgid "Result"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114
-#: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/CustomerPage.php:124
+#: includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:131
 #: includes/Privacy/PrivacyService.php:238
 #: includes/Privacy/PrivacyService.php:246
 msgid "Site URL"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114
-#: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/CustomerPage.php:124
+#: includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:131
 #: includes/Privacy/PrivacyService.php:241
 #: includes/Privacy/PrivacyService.php:257
 msgid "Error code"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114
+#: includes/Admin/CustomerPage.php:124
 #: includes/Admin/DashboardPage.php:114
 #: includes/Admin/DashboardPage.php:126
-#: includes/Admin/LicensePage.php:77
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:128
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LicensePage.php:82
+#: includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:131
+#: includes/Admin/LogsPage.php:150
 msgid "Date"
 msgstr ""
 
@@ -919,8 +1031,8 @@ msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/DashboardPage.php:114
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:94
+#: includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:96
 msgid "Type"
 msgstr ""
 
@@ -935,7 +1047,7 @@ msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/DashboardPage.php:126
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:131
 msgid "Site"
 msgstr ""
 
@@ -943,78 +1055,86 @@ msgstr ""
 msgid "View all API logs"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:31
+#: includes/Admin/LicensePage.php:32
 msgid "Search by license key"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:31
+#: includes/Admin/LicensePage.php:32
 msgid "Complete license key"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LicensePage.php:36
+#: includes/Admin/LicensePage.php:37
 msgid "Search uses the key hash and does not perform partial matching on plain-text keys."
 msgstr ""
 
-#: includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/LicensePage.php:38
+#: includes/Admin/LicensePage.php:68
 #: includes/Frontend/Shortcodes.php:133
 msgid "License key"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:56
+#: includes/Admin/LicensePage.php:50
+msgid "licenses"
+msgstr ""
+
+#: includes/Admin/LicensePage.php:55
+msgid "Licenses with customer, status, dates, and available actions."
+msgstr ""
+
+#: includes/Admin/LicensePage.php:61
 #: includes/License/LicenseManager.php:86
 msgid "License not found."
 msgstr ""
 
-#: includes/Admin/LicensePage.php:59
+#: includes/Admin/LicensePage.php:64
 msgid "License details"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:59
+#: includes/Admin/LicensePage.php:64
 msgid "← Back to licenses"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:61
+#: includes/Admin/LicensePage.php:66
 msgid "The license operation completed."
 msgstr ""
 
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/LicensePage.php:68
 msgid "The complete key is shown only on this details page."
 msgstr ""
 
-#: includes/Admin/LicensePage.php:63
+#: includes/Admin/LicensePage.php:68
 msgid "Stripe subscription"
 msgstr ""
 
 #. translators: 1: Stripe subscription status, 2: period end date.
-#: includes/Admin/LicensePage.php:66
+#: includes/Admin/LicensePage.php:71
 #, php-format
 msgid "%2$s (period ends: %3$s)"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:70
+#: includes/Admin/LicensePage.php:75
 #: includes/Admin/LogsPage.php:47
 msgid "Administrative actions"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:72
+#: includes/Admin/LicensePage.php:77
 msgid "Resume license"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:74
+#: includes/Admin/LicensePage.php:79
 msgid "Suspend license"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:76
+#: includes/Admin/LicensePage.php:81
 msgid "Reissue key"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:77
+#: includes/Admin/LicensePage.php:82
 msgid "Verification logs"
 msgstr ""
 
-#: includes/Admin/LicensePage.php:77
+#: includes/Admin/LicensePage.php:82
 #: includes/Privacy/PrivacyService.php:239
 #: includes/Privacy/PrivacyService.php:248
 msgid "IP address"
@@ -1028,155 +1148,167 @@ msgstr ""
 msgid "Log type"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:66
+#: includes/Admin/LogsPage.php:67
 msgid "Webhook logs"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:66
+#: includes/Admin/LogsPage.php:67
 msgid "Event ID or type"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:93
+#: includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:95
 msgid "Event ID"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71
+#: includes/Admin/LogsPage.php:72
 msgid "Attempts"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71
+#: includes/Admin/LogsPage.php:72
 msgid "Duplicates"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:71
-#: includes/Admin/LogsPage.php:98
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:72
+#: includes/Admin/LogsPage.php:100
+#: includes/Admin/LogsPage.php:131
 msgid "Error"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:83
+#: includes/Admin/LogsPage.php:79
+msgid "Webhook events with processing result, attempts, errors, and available actions."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:85
 msgid "Webhook log not found."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:89
+#: includes/Admin/LogsPage.php:91
 msgid "The event is ready for a new delivery from Stripe."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:91
+#: includes/Admin/LogsPage.php:93
 msgid "← Back to webhook logs"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:91
+#: includes/Admin/LogsPage.php:93
 msgid "Webhook log details"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:96
+#: includes/Admin/LogsPage.php:98
 msgid "Attempt count"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:97
+#: includes/Admin/LogsPage.php:99
 msgid "Duplicate count"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:99
+#: includes/Admin/LogsPage.php:101
 msgid "Last attempt"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:100
+#: includes/Admin/LogsPage.php:102
 msgid "Received"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:101
+#: includes/Admin/LogsPage.php:103
 msgid "Last received"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:108
+#: includes/Admin/LogsPage.php:110
 msgid "Retry this event"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:108
+#: includes/Admin/LogsPage.php:110
 msgid "This does not replay the masked payload. It resets the retry state so that the event can be resent from Stripe."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:110
+#: includes/Admin/LogsPage.php:112
 msgid "Allow retry from Stripe"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:113
+#: includes/Admin/LogsPage.php:115
 msgid "Masked payload"
 msgstr ""
 
-#: includes/Admin/LogsPage.php:113
+#: includes/Admin/LogsPage.php:115
 msgid "Email, address, and payment-related information is masked again when displayed."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:123
+#: includes/Admin/LogsPage.php:126
 msgid "API logs"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:128
+#: includes/Admin/LogsPage.php:131
 msgid "License"
 msgstr ""
 
+#: includes/Admin/LogsPage.php:139
+msgid "API requests with result, site, error, license, and date."
+msgstr ""
+
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Administrative action logs"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Object type"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "User ID"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "User"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Object"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/LogsPage.php:145
+#: includes/Admin/LogsPage.php:150
 msgid "Object ID"
 msgstr ""
 
+#: includes/Admin/LogsPage.php:157
+msgid "Administrative actions with user, object, details, and date."
+msgstr ""
+
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:158
+#: includes/Admin/LogsPage.php:164
 msgid "Manual log cleanup"
 msgstr ""
 
 #. translators: %d: log retention period in days.
-#: includes/Admin/LogsPage.php:158
+#: includes/Admin/LogsPage.php:164
 #, php-format
 msgid "The current retention period is <strong>%d days</strong>. You can safely rerun the same cleanup performed by the daily cron task."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:160
+#: includes/Admin/LogsPage.php:166
 msgid "Delete logs older than the retention period"
 msgstr ""
 
 #. translators: %d: number of deleted log entries.
-#: includes/Admin/LogsPage.php:174
+#: includes/Admin/LogsPage.php:180
 #, php-format
 msgid "Deleted %d log entries."
 msgstr ""
 
-#: includes/Admin/LogsPage.php:194
-msgid "No matching logs found."
+#: includes/Admin/LogsPage.php:189
+msgid "logs"
 msgstr ""
 
 #: includes/Admin/ProductLicenseController.php:19
@@ -1225,7 +1357,8 @@ msgid "Example: Renews monthly until canceled."
 msgstr ""
 
 #: includes/Admin/ProductPage.php:33
-#: includes/Admin/ProductPage.php:41
+#: includes/Admin/ProductPage.php:43
+#: includes/Admin/ProductPage.php:56
 msgid "Slug"
 msgstr ""
 
@@ -1249,20 +1382,33 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:41
+#: includes/Admin/ProductPage.php:42
+msgid "Products with identifiers, license format, status, and available actions."
+msgstr ""
+
+#: includes/Admin/ProductPage.php:43
+#: includes/Admin/ProductPage.php:56
 msgid "License key format"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:65
+#: includes/Admin/ProductPage.php:55
+msgid "Edit"
+msgstr ""
+
+#: includes/Admin/ProductPage.php:55
 msgid "Deactivate"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:65
+#: includes/Admin/ProductPage.php:55
 msgid "Reactivate"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:65
-msgid "Edit"
+#: includes/Admin/ProductPage.php:56
+msgid "Show more details"
+msgstr ""
+
+#: includes/Admin/ProductPage.php:59
+msgid "products"
 msgstr ""
 
 #: includes/Database/DatabaseException.php:15
@@ -1494,37 +1640,8 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:208
-#: includes/Frontend/Shortcodes.php:220
-msgid "Canceled"
-msgstr ""
-
 #: includes/Frontend/Shortcodes.php:211
 msgid "Unknown status"
-msgstr ""
-
-#: includes/Frontend/Shortcodes.php:217
-msgid "Trialing"
-msgstr ""
-
-#: includes/Frontend/Shortcodes.php:218
-msgid "Past due"
-msgstr ""
-
-#: includes/Frontend/Shortcodes.php:219
-msgid "Unpaid"
-msgstr ""
-
-#: includes/Frontend/Shortcodes.php:221
-msgid "Incomplete"
-msgstr ""
-
-#: includes/Frontend/Shortcodes.php:222
-msgid "Incomplete expired"
-msgstr ""
-
-#: includes/Frontend/Shortcodes.php:223
-msgid "Paused"
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:225

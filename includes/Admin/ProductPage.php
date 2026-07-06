@@ -18,14 +18,14 @@ final class ProductPage {
 		$status        = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filtering.
 		$page          = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
 		$repository    = $this->products;
-		$result        = $repository->search_admin( $query, $status, $page );
+		$result        = $repository->search_admin( $query, $status, $page, AdminListUi::per_page( 'odph_products_per_page' ) );
 		$edit_id       = absint( $_GET['product_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only edit selection.
 		$product       = $edit_id ? $repository->find( $edit_id ) : null;
 		$prefix_locked = $product ? $repository->has_licenses( (int) $product->id ) : false;
 		echo '<div class="wrap">';
 		echo AdminUi::page_header( __( 'Products', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdminUi escapes all scalar content.
 		echo AdminUi::section_start( __( 'Search products', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdminUi escapes all scalar content.
-		echo '<form method="get"><input type="hidden" name="page" value="odph-products"><label class="screen-reader-text" for="product-search">' . esc_html__( 'Search products', 'od-product-hub' ) . '</label><input id="product-search" name="s" value="' . esc_attr( $query ) . '" placeholder="' . esc_attr__( 'Product name or slug', 'od-product-hub' ) . '"><select name="status"><option value="">' . esc_html__( 'All statuses', 'od-product-hub' ) . '</option><option value="active" ' . selected( $status, 'active', false ) . '>' . esc_html__( 'Active', 'od-product-hub' ) . '</option><option value="inactive" ' . selected( $status, 'inactive', false ) . '>' . esc_html__( 'Inactive', 'od-product-hub' ) . '</option></select> <button class="button">' . esc_html__( 'Filter', 'od-product-hub' ) . '</button></form>';
+		echo '<form class="odph-list-filters" method="get"><input type="hidden" name="page" value="odph-products"><label class="screen-reader-text" for="product-search">' . esc_html__( 'Search products', 'od-product-hub' ) . '</label><input type="search" id="product-search" name="s" value="' . esc_attr( $query ) . '" placeholder="' . esc_attr__( 'Product name or slug', 'od-product-hub' ) . '"><label for="product-status">' . esc_html__( 'Status', 'od-product-hub' ) . '</label><select id="product-status" name="status"><option value="">' . esc_html__( 'All statuses', 'od-product-hub' ) . '</option><option value="active" ' . selected( $status, 'active', false ) . '>' . esc_html__( 'Active', 'od-product-hub' ) . '</option><option value="inactive" ' . selected( $status, 'inactive', false ) . '>' . esc_html__( 'Inactive', 'od-product-hub' ) . '</option></select> <button class="button">' . esc_html__( 'Filter', 'od-product-hub' ) . '</button></form>';
 		echo AdminUi::section_end(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static closing tag from AdminUi.
 		echo AdminUi::section_start( $product ? __( 'Edit product', 'od-product-hub' ) : __( 'Add product', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdminUi escapes all scalar content.
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_save_product"><input type="hidden" name="product_id" value="' . esc_attr( (string) ( $product->id ?? 0 ) ) . '">';
@@ -38,7 +38,9 @@ final class ProductPage {
 		echo '</td></tr></table><p><button class="button button-primary">' . esc_html( $product ? __( 'Update', 'od-product-hub' ) : __( 'Add', 'od-product-hub' ) ) . '</button></p></form>';
 		echo AdminUi::section_end(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static closing tag from AdminUi.
 		echo AdminUi::section_start( __( 'Products', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- AdminUi escapes all scalar content.
-		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Product', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Slug', 'od-product-hub' ) . '</th><th>' . esc_html__( 'License key format', 'od-product-hub' ) . '</th><th>Product ID</th><th>Price ID</th><th>' . esc_html__( 'Status', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Actions', 'od-product-hub' ) . '</th></tr></thead><tbody>';
+		echo AdminListUi::summary( $result ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
+		echo AdminListUi::table_start( __( 'Products with identifiers, license format, status, and available actions.', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
+		echo '<thead><tr><th class="column-primary">' . esc_html__( 'Product', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Slug', 'od-product-hub' ) . '</th><th>' . esc_html__( 'License key format', 'od-product-hub' ) . '</th><th>Product ID</th><th>Price ID</th><th>' . esc_html__( 'Status', 'od-product-hub' ) . '</th></tr></thead><tbody>';
 		foreach ( $result->items as $p ) {
 			$edit_url     = add_query_arg(
 				array(
@@ -48,35 +50,16 @@ final class ProductPage {
 				admin_url( 'admin.php' )
 			);
 			$next         = 'active' === $p->status ? 'inactive' : 'active';
-			$status_url   = wp_nonce_url(
-				add_query_arg(
-					array(
-						'action'     => 'odph_product_status',
-						'product_id' => $p->id,
-						'status'     => $next,
-					),
-					admin_url( 'admin-post.php' )
-				),
-				'odph_product_status_' . $p->id
-			);
 			$key_format   = '' === (string) $p->license_key_prefix ? 'ABCD-EFGH-JKLM-NPQR' : (string) $p->license_key_prefix . '-ABCD-EFGH-JKLM-NPQR';
-			$status_label = 'active' === $p->status ? __( 'Active', 'od-product-hub' ) : __( 'Inactive', 'od-product-hub' );
-			$status_badge = wp_kses_post( AdminUi::status_badge( $status_label, 'active' === $p->status ? 'success' : 'neutral' ) );
-			printf( '<tr><td>%1$s</td><td><code>%2$s</code></td><td><code>%12$s</code></td><td><a href="https://dashboard.stripe.com/products/%3$s" target="_blank" rel="noopener noreferrer"><code>%4$s</code><span class="screen-reader-text">%10$s</span></a></td><td><code>%5$s</code></td><td>%6$s</td><td><a href="%7$s">%11$s</a> | <a href="%8$s">%9$s</a></td></tr>', esc_html( $p->name ), esc_html( $p->slug ), esc_attr( $p->stripe_product_id ), esc_html( $p->stripe_product_id ), esc_html( $p->stripe_price_id ), $status_badge, esc_url( $edit_url ), esc_url( $status_url ), esc_html( 'active' === $p->status ? __( 'Deactivate', 'od-product-hub' ) : __( 'Reactivate', 'od-product-hub' ) ), esc_html__( '(opens in a new tab)', 'od-product-hub' ), esc_html__( 'Edit', 'od-product-hub' ), esc_html( $key_format ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The status badge is allow-list sanitized with wp_kses_post.
+			$status_badge = wp_kses_post( AdminListUi::status( (string) $p->status ) );
+			$action       = '<div class="row-actions"><span><a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'od-product-hub' ) . '</a> | </span><span><form class="odph-inline-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_product_status"><input type="hidden" name="product_id" value="' . absint( $p->id ) . '"><input type="hidden" name="status" value="' . esc_attr( $next ) . '">' . wp_nonce_field( 'odph_product_status_' . $p->id, '_wpnonce', true, false ) . '<button type="submit">' . esc_html( 'active' === $p->status ? __( 'Deactivate', 'od-product-hub' ) : __( 'Reactivate', 'od-product-hub' ) ) . '</button></form></span></div>';
+			printf( '<tr><td class="column-primary" data-colname="%13$s"><strong>%1$s</strong>%12$s<button type="button" class="toggle-row"><span class="screen-reader-text">%14$s</span></button></td><td data-colname="%15$s"><code>%2$s</code></td><td data-colname="%16$s"><code>%11$s</code></td><td data-colname="Product ID"><a href="https://dashboard.stripe.com/products/%3$s" target="_blank" rel="noopener noreferrer"><code>%4$s</code><span class="screen-reader-text">%9$s</span></a></td><td data-colname="Price ID"><code>%5$s</code></td><td data-colname="%17$s">%6$s</td></tr>', esc_html( $p->name ), esc_html( $p->slug ), esc_attr( $p->stripe_product_id ), esc_html( $p->stripe_product_id ), esc_html( $p->stripe_price_id ), $status_badge, '', '', esc_html__( '(opens in a new tab)', 'od-product-hub' ), '', esc_html( $key_format ), $action, esc_attr__( 'Product', 'od-product-hub' ), esc_attr__( 'Show more details', 'od-product-hub' ), esc_attr__( 'Slug', 'od-product-hub' ), esc_attr__( 'License key format', 'od-product-hub' ), esc_attr__( 'Status', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Dynamic HTML is escaped or nonce-generated.
 		}
 		if ( ! $result->items ) {
-			echo '<tr><td colspan="7">' . wp_kses_post( AdminUi::empty_state( __( 'Product not found.', 'od-product-hub' ) ) ) . '</td></tr>';
+			echo AdminListUi::empty_row( 6, '' !== $query || '' !== $status, __( 'products', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
 		}
-		echo '</tbody></table>';
-		echo wp_kses_post(
-			paginate_links(
-				array(
-					'base'    => add_query_arg( 'paged', '%#%' ),
-					'current' => $result->page,
-					'total'   => max( 1, $result->total_pages ),
-				)
-			)
-		);
+		echo '</tbody>' . AdminListUi::table_end(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static helper output.
+		echo AdminListUi::pagination( $result ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
 		echo AdminUi::section_end(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static closing tag from AdminUi.
 		echo '</div>';
 	}

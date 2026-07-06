@@ -38,9 +38,10 @@ final class CustomerPage {
 	}
 
 	private function customers_table(): void {
+		ob_start();
 		$query  = sanitize_email( wp_unslash( $_GET['s'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filtering.
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$result = $this->customers->search_admin( $query, $page );
+		$result = $this->customers->search_admin( $query, $page, AdminListUi::per_page( 'odph_customers_per_page' ) );
 		echo '<form method="get"><input type="hidden" name="page" value="odph-customers"><label class="screen-reader-text" for="customer-search">' . esc_html__( 'Search by email address', 'od-product-hub' ) . '</label><input type="search" id="customer-search" name="s" value="' . esc_attr( $query ) . '" placeholder="' . esc_attr__( 'Email address', 'od-product-hub' ) . '"> <button class="button">' . esc_html__( 'Search', 'od-product-hub' ) . '</button></form>';
 		/* translators: %d: total number of results. */
 		echo '<p>' . esc_html( sprintf( __( '%d results', 'od-product-hub' ), $result->total ) ) . '</p><table class="widefat striped"><thead><tr><th>' . esc_html__( 'Customer', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Email', 'od-product-hub' ) . '</th><th>' . esc_html__( 'WordPress user', 'od-product-hub' ) . '</th><th>Stripe Customer</th><th>' . esc_html__( 'Registered', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Actions', 'od-product-hub' ) . '</th></tr></thead><tbody>';
@@ -55,16 +56,21 @@ final class CustomerPage {
 			$user_url   = get_edit_user_link( (int) $customer->wp_user_id );
 			printf( '<tr><td>%1$s</td><td><a href="mailto:%2$s">%2$s</a></td><td>%3$s</td><td><a href="https://dashboard.stripe.com/customers/%4$s" target="_blank" rel="noopener noreferrer"><code>%4$s</code><span class="screen-reader-text">%7$s</span></a></td><td>%5$s</td><td><a href="%6$s">%8$s</a></td></tr>', esc_html( (string) $customer->name ), esc_attr( (string) $customer->email ), $user_url ? '<a href="' . esc_url( $user_url ) . '">#' . esc_html( (string) $customer->wp_user_id ) . '</a>' : '—', esc_attr( (string) $customer->stripe_customer_id ), esc_html( (string) UtcDateTime::to_site( (string) $customer->created_at ) ), esc_url( $detail_url ), esc_html__( '(opens in a new tab)', 'od-product-hub' ), esc_html__( 'Details', 'od-product-hub' ) );
 		}
+		if ( ! $result->items ) {
+			echo AdminListUi::empty_row( 6, '' !== $query, __( 'customers', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
+		}
 		echo '</tbody></table>';
-		$this->pagination( $result->page, $result->total_pages );
+		echo AdminListUi::pagination( $result ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
+		echo AdminListUi::normalize_markup( (string) ob_get_clean(), __( 'Customers with account identifiers, registration date, and available actions.', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Existing output is escaped before normalization.
 	}
 
 	private function subscriptions_table(): void {
+		ob_start();
 		$allowed = array( 'active', 'trialing', 'past_due', 'unpaid', 'canceled', 'incomplete', 'incomplete_expired', 'paused' );
 		$status  = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filtering.
 		$status  = in_array( $status, $allowed, true ) ? $status : '';
 		$page    = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$result  = $this->subscriptions->search_admin( $status, $page );
+		$result  = $this->subscriptions->search_admin( $status, $page, AdminListUi::per_page( 'odph_customers_per_page' ) );
 		echo '<form method="get"><input type="hidden" name="page" value="odph-customers"><input type="hidden" name="tab" value="subscriptions"><label for="subscription-status">' . esc_html__( 'Status', 'od-product-hub' ) . '</label> <select id="subscription-status" name="status"><option value="">' . esc_html__( 'All', 'od-product-hub' ) . '</option>';
 		foreach ( $allowed as $option ) {
 			printf( '<option value="%1$s" %2$s>%1$s</option>', esc_attr( $option ), selected( $status, $option, false ) );
@@ -82,8 +88,12 @@ final class CustomerPage {
 			);
 			printf( '<tr><td>%1$s</td><td><a href="%2$s">%3$s<br>%4$s</a></td><td><a href="https://dashboard.stripe.com/subscriptions/%5$s" target="_blank" rel="noopener noreferrer"><code>%5$s</code><span class="screen-reader-text">%11$s</span></a></td><td>%6$s</td><td>%7$s</td><td>%8$s</td><td>%9$s</td><td>%10$s</td></tr>', esc_html( (string) $subscription->product_name ), esc_url( $customer_url ), esc_html( (string) $subscription->customer_name ), esc_html( (string) $subscription->customer_email ), esc_attr( (string) $subscription->stripe_subscription_id ), esc_html( (string) $subscription->stripe_status ), esc_html( $this->site_date( $subscription->current_period_start ) ), esc_html( $this->site_date( $subscription->current_period_end ) ), $subscription->cancel_at_period_end ? esc_html__( 'Yes', 'od-product-hub' ) : esc_html__( 'No', 'od-product-hub' ), esc_html( $this->site_date( $subscription->payment_failed_at ) ), esc_html__( '(opens in a new tab)', 'od-product-hub' ) );
 		}
+		if ( ! $result->items ) {
+			echo AdminListUi::empty_row( 8, '' !== $status, __( 'subscriptions', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
+		}
 		echo '</tbody></table>';
-		$this->pagination( $result->page, $result->total_pages );
+		echo AdminListUi::pagination( $result ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
+		echo AdminListUi::normalize_markup( (string) ob_get_clean(), __( 'Subscriptions with product, customer, status, period, and payment state.', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Existing output is escaped before normalization.
 	}
 
 	private function customer_detail( int $customer_id ): void {
@@ -120,20 +130,5 @@ final class CustomerPage {
 
 	private function site_date( mixed $value ): string {
 		return $value ? (string) UtcDateTime::to_site( (string) $value ) : '—';
-	}
-
-	private function pagination( int $current, int $total ): void {
-		if ( $total < 2 ) {
-			return;
-		}
-		echo wp_kses_post(
-			paginate_links(
-				array(
-					'base'    => add_query_arg( 'paged', '%#%' ),
-					'current' => $current,
-					'total'   => $total,
-				)
-			)
-		);
 	}
 }

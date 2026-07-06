@@ -61,6 +61,17 @@
 .odph-dashboard-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: var(--odph-space-5); margin-top: var(--odph-space-5); }
 .odph-dashboard-panel h3 { margin-top: 0; }
 .odph-table-scroll { max-width: 100%; overflow-x: auto; }
+.odph-list-filters { display: flex; flex-wrap: wrap; gap: var(--odph-space-2); align-items: end; margin: var(--odph-space-3) 0; }
+.odph-list-filters label:not(.screen-reader-text) { font-weight: 600; }
+.odph-list-summary { color: var(--odph-color-muted); }
+.odph-list-table { max-width: 72rem; }
+.odph-list-table .column-primary { overflow-wrap: anywhere; }
+.odph-list-table .row-actions { position: static; }
+.odph-list-table .odph-inline-form { display: inline; }
+.odph-list-table .odph-inline-form button { padding: 0; color: var(--odph-color-accent); background: transparent; border: 0; cursor: pointer; text-decoration: underline; }
+.odph-list-table .odph-inline-form button:focus-visible { box-shadow: var(--odph-focus); outline: 2px solid transparent; }
+.odph-list-table .odph-empty-state { max-width: none; }
+.odph-list-table + .tablenav .page-numbers { display: flex; gap: var(--odph-space-1); margin: 0; }
 .odph-log-payload { max-height: 560px; overflow: auto; padding: var(--odph-space-4); color: #f0f0f1; background: #1d2327; white-space: pre-wrap; overflow-wrap: anywhere; }
 .nav-tab-wrapper + form, .nav-tab-wrapper + h2 { margin-top: 20px; }
 
@@ -78,4 +89,10 @@
 	.odph-dashboard-columns section { margin-bottom: var(--odph-space-5); }
 	.odph-attention-item { grid-template-columns: 1fr; }
 	.odph-action-group .button { width: 100%; text-align: center; }
+	.odph-list-filters > * { box-sizing: border-box; width: 100%; max-width: 100%; }
+	.odph-list-table .wp-list-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
+	.odph-list-table .wp-list-table tr { display: block; }
+	.odph-list-table .wp-list-table td { display: none; padding-inline: 10px; }
+	.odph-list-table .wp-list-table td.column-primary, .odph-list-table .wp-list-table .no-items td { display: block; }
+	.odph-list-table .wp-list-table .toggle-row:focus::before { box-shadow: var(--odph-focus); }
 }

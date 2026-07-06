@@ -59,10 +59,11 @@ final class LogsPage {
 			$this->webhook_detail( $log_id );
 			return;
 		}
+		ob_start();
 		$query  = sanitize_text_field( wp_unslash( $_GET['s'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only search.
 		$result = sanitize_key( wp_unslash( $_GET['result'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$rows   = $this->webhook_logs->search_admin( $query, $result, $page );
+		$rows   = $this->webhook_logs->search_admin( $query, $result, $page, AdminListUi::per_page( 'odph_logs_per_page' ) );
 		echo '<h2>' . esc_html__( 'Webhook logs', 'od-product-hub' ) . '</h2><form method="get"><input type="hidden" name="page" value="odph-logs"><input type="hidden" name="tab" value="webhook"><label for="webhook-search">' . esc_html__( 'Event ID or type', 'od-product-hub' ) . '</label> <input id="webhook-search" name="s" value="' . esc_attr( $query ) . '"> <label for="webhook-result">' . esc_html__( 'Result', 'od-product-hub' ) . '</label> <select id="webhook-result" name="result"><option value="">' . esc_html__( 'All', 'od-product-hub' ) . '</option>';
 		foreach ( array( 'processing', 'success', 'error', 'exhausted', 'signature_error', 'unsupported' ) as $option ) {
 			printf( '<option value="%1$s" %2$s>%1$s</option>', esc_attr( $option ), selected( $result, $option, false ) );
@@ -75,6 +76,7 @@ final class LogsPage {
 		$this->empty_row( $rows, 8 );
 		echo '</tbody></table>';
 		$this->pagination( $rows );
+		echo AdminListUi::normalize_markup( (string) ob_get_clean(), __( 'Webhook events with processing result, attempts, errors, and available actions.', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Existing output is escaped before normalization.
 	}
 
 	private function webhook_detail( int $id ): void {
@@ -114,12 +116,13 @@ final class LogsPage {
 	}
 
 	private function api(): void {
+		ob_start();
 		$action = sanitize_key( wp_unslash( $_GET['action_filter'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$result = sanitize_key( wp_unslash( $_GET['result'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$error  = sanitize_key( wp_unslash( $_GET['error_code'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$site   = esc_url_raw( wp_unslash( $_GET['site_url'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$rows   = $this->api_logs->search_admin( $action, $result, $error, $site, $page );
+		$rows   = $this->api_logs->search_admin( $action, $result, $error, $site, $page, AdminListUi::per_page( 'odph_logs_per_page' ) );
 		echo '<h2>' . esc_html__( 'API logs', 'od-product-hub' ) . '</h2><form method="get"><input type="hidden" name="page" value="odph-logs"><input type="hidden" name="tab" value="api"><label for="api-action">' . esc_html__( 'Action', 'od-product-hub' ) . '</label> <select id="api-action" name="action_filter"><option value="">' . esc_html__( 'All', 'od-product-hub' ) . '</option>';
 		foreach ( array( 'activate', 'verify', 'deactivate' ) as $option ) {
 			printf( '<option value="%1$s" %2$s>%1$s</option>', esc_attr( $option ), selected( $action, $option, false ) );
@@ -133,14 +136,16 @@ final class LogsPage {
 		$this->empty_row( $rows, 7 );
 		echo '</tbody></table>';
 		$this->pagination( $rows );
+		echo AdminListUi::normalize_markup( (string) ob_get_clean(), __( 'API requests with result, site, error, license, and date.', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Existing output is escaped before normalization.
 	}
 
 	private function admin(): void {
+		ob_start();
 		$action = sanitize_key( wp_unslash( $_GET['action_filter'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$type   = sanitize_key( wp_unslash( $_GET['object_type'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$user   = absint( $_GET['user_id'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter.
 		$page   = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
-		$rows   = $this->admin_logs->search_admin( $action, $type, $user, $page );
+		$rows   = $this->admin_logs->search_admin( $action, $type, $user, $page, AdminListUi::per_page( 'odph_logs_per_page' ) );
 		/* translators: %d: total number of results. */
 		echo '<h2>' . esc_html__( 'Administrative action logs', 'od-product-hub' ) . '</h2><form method="get"><input type="hidden" name="page" value="odph-logs"><input type="hidden" name="tab" value="admin"><label for="admin-action">' . esc_html__( 'Action', 'od-product-hub' ) . '</label> <input id="admin-action" name="action_filter" value="' . esc_attr( $action ) . '"> <label for="admin-object">' . esc_html__( 'Object type', 'od-product-hub' ) . '</label> <input id="admin-object" name="object_type" value="' . esc_attr( $type ) . '"> <label for="admin-user">' . esc_html__( 'User ID', 'od-product-hub' ) . '</label> <input id="admin-user" type="number" min="1" name="user_id" value="' . esc_attr( $user ? (string) $user : '' ) . '"> <button class="button">' . esc_html__( 'Filter', 'od-product-hub' ) . '</button></form><p>' . esc_html( sprintf( __( '%d results', 'od-product-hub' ), $rows->total ) ) . '</p><table class="widefat striped"><thead><tr><th>' . esc_html__( 'User', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Action', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Object', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Object ID', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Details', 'od-product-hub' ) . '</th><th>' . esc_html__( 'Date', 'od-product-hub' ) . '</th></tr></thead><tbody>';
 		foreach ( $rows->items as $row ) {
@@ -149,6 +154,7 @@ final class LogsPage {
 		$this->empty_row( $rows, 6 );
 		echo '</tbody></table>';
 		$this->pagination( $rows );
+		echo AdminListUi::normalize_markup( (string) ob_get_clean(), __( 'Administrative actions with user, object, details, and date.', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Existing output is escaped before normalization.
 	}
 
 	private function cleanup_form(): void {
@@ -175,23 +181,12 @@ final class LogsPage {
 	}
 
 	private function pagination( RepositoryPage $rows ): void {
-		if ( $rows->total_pages < 2 ) {
-			return;
-		}
-		echo wp_kses_post(
-			paginate_links(
-				array(
-					'base'    => add_query_arg( 'paged', '%#%' ),
-					'current' => $rows->page,
-					'total'   => $rows->total_pages,
-				)
-			)
-		);
+		echo AdminListUi::pagination( $rows ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
 	}
 
 	private function empty_row( RepositoryPage $rows, int $columns ): void {
 		if ( ! $rows->items ) {
-			echo '<tr><td colspan="' . esc_attr( (string) $columns ) . '">' . esc_html__( 'No matching logs found.', 'od-product-hub' ) . '</td></tr>';
+			echo AdminListUi::empty_row( $columns, true, __( 'logs', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
 		}
 	}
 

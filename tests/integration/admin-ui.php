@@ -6,6 +6,7 @@
  */
 
 use OD_Product_Hub\Admin\AdminMenu;
+use OD_Product_Hub\Admin\AdminListUi;
 use OD_Product_Hub\Admin\AdminSiteHealth;
 use OD_Product_Hub\Admin\DashboardPage;
 use OD_Product_Hub\Admin\DashboardService;
@@ -64,5 +65,14 @@ $product_html = (string) ob_get_clean();
 odph_admin_ui_assert( 1 === substr_count( $product_html, '<h1>' ), 'The products screen must render exactly one primary heading.' );
 odph_admin_ui_assert( 3 === substr_count( $product_html, 'class="odph-section"' ), 'The products screen must use shared sections for search, editing, and the list.' );
 odph_admin_ui_assert( str_contains( $product_html, 'odph-status-badge' ) || str_contains( $product_html, 'odph-empty-state' ), 'The products screen must render a shared status badge or empty state.' );
+odph_admin_ui_assert( str_contains( $product_html, '<caption class="screen-reader-text">' ), 'The products list must include an accessible table caption.' );
+odph_admin_ui_assert( str_contains( $product_html, 'wp-list-table widefat fixed striped table-view-list' ), 'The products list must follow WordPress list-table markup.' );
+odph_admin_ui_assert( str_contains( $product_html, 'class="column-primary"' ), 'The products list must identify its primary responsive column.' );
+odph_admin_ui_assert( str_contains( $product_html, 'method="post"' ) && str_contains( $product_html, 'odph_product_status' ), 'Product status changes must use a nonce-protected POST form.' );
+
+$empty_html = AdminListUi::empty_row( 3, true, 'items' );
+odph_admin_ui_assert( str_contains( $empty_html, 'No matching items' ), 'Filtered zero-result states must be distinct from an empty collection.' );
+odph_admin_ui_assert( 100 === ( new AdminMenu( array() ) )->save_screen_option( false, 'odph_products_per_page', 999 ), 'List screen page-size preferences must be allow-listed and bounded.' );
+odph_admin_ui_assert( false === ( new AdminMenu( array() ) )->save_screen_option( false, 'unrelated_option', 50 ), 'Unrelated screen options must be left untouched.' );
 
 WP_CLI::success( 'Shared administration UI integration checks passed.' );

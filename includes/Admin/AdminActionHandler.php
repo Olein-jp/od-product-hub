@@ -98,8 +98,8 @@ final class AdminActionHandler {
 
 	public function change_product_status(): void {
 		AdminAccess::guard();
-		$id     = absint( $_GET['product_id'] ?? 0 );
-		$status = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) );
+		$id     = absint( $_POST['product_id'] ?? 0 );
+		$status = sanitize_key( wp_unslash( $_POST['status'] ?? '' ) );
 		check_admin_referer( 'odph_product_status_' . $id );
 		if ( ! in_array( $status, array( 'active', 'inactive' ), true ) || ! $this->products->find( $id ) ) {
 			wp_die( esc_html__( 'The product or status is invalid.', 'od-product-hub' ), '', array( 'response' => 400 ) );

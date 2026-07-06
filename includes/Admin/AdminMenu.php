@@ -30,6 +30,7 @@ final class AdminMenu {
 		add_action( 'admin_notices', array( $this, 'configuration_notice' ) );
 		add_filter( 'site_status_tests', array( $this, 'site_status_tests' ) );
 		add_filter( 'debug_information', array( $this, 'debug_information' ) );
+		add_filter( 'set-screen-option', array( $this, 'save_screen_option' ), 10, 3 );
 	}
 
 	public function assets(): void {
@@ -42,12 +43,33 @@ final class AdminMenu {
 	public function menu(): void {
 		$dashboard_hook = add_menu_page( 'OD Product Hub', 'OD Product Hub', 'manage_options', 'od-product-hub', array( $this, 'render_dashboard' ), 'dashicons-products', 56 );
 		add_submenu_page( 'od-product-hub', __( 'Dashboard', 'od-product-hub' ), __( 'Dashboard', 'od-product-hub' ), 'manage_options', 'od-product-hub', array( $this, 'render_dashboard' ) );
-		add_submenu_page( 'od-product-hub', __( 'Products', 'od-product-hub' ), __( 'Products', 'od-product-hub' ), 'manage_options', 'odph-products', array( $this, 'render_products' ) );
-		add_submenu_page( 'od-product-hub', __( 'Customers and subscriptions', 'od-product-hub' ), __( 'Customers and subscriptions', 'od-product-hub' ), 'manage_options', 'odph-customers', array( $this, 'render_customers' ) );
-		add_submenu_page( 'od-product-hub', __( 'Licenses', 'od-product-hub' ), __( 'Licenses', 'od-product-hub' ), 'manage_options', 'odph-licenses', array( $this, 'render_licenses' ) );
-		add_submenu_page( 'od-product-hub', __( 'Logs', 'od-product-hub' ), __( 'Logs', 'od-product-hub' ), 'manage_options', 'odph-logs', array( $this, 'render_logs' ) );
+		$list_screens = array(
+			add_submenu_page( 'od-product-hub', __( 'Products', 'od-product-hub' ), __( 'Products', 'od-product-hub' ), 'manage_options', 'odph-products', array( $this, 'render_products' ) ) => 'odph_products_per_page',
+			add_submenu_page( 'od-product-hub', __( 'Customers and subscriptions', 'od-product-hub' ), __( 'Customers and subscriptions', 'od-product-hub' ), 'manage_options', 'odph-customers', array( $this, 'render_customers' ) ) => 'odph_customers_per_page',
+			add_submenu_page( 'od-product-hub', __( 'Licenses', 'od-product-hub' ), __( 'Licenses', 'od-product-hub' ), 'manage_options', 'odph-licenses', array( $this, 'render_licenses' ) ) => 'odph_licenses_per_page',
+			add_submenu_page( 'od-product-hub', __( 'Logs', 'od-product-hub' ), __( 'Logs', 'od-product-hub' ), 'manage_options', 'odph-logs', array( $this, 'render_logs' ) ) => 'odph_logs_per_page',
+		);
+		foreach ( $list_screens as $hook => $option ) {
+			add_action( 'load-' . $hook, fn() => $this->list_screen_options( $option ) );
+		}
 		add_submenu_page( 'od-product-hub', __( 'Settings', 'od-product-hub' ), __( 'Settings', 'od-product-hub' ), 'manage_options', 'odph-settings', array( $this, 'render_settings' ) );
 		add_action( 'load-' . $dashboard_hook, array( $this, 'dashboard_help' ) );
+	}
+
+	public function list_screen_options( string $option ): void {
+		add_screen_option(
+			'per_page',
+			array(
+				'label'   => __( 'Items per page', 'od-product-hub' ),
+				'default' => 20,
+				'option'  => $option,
+			)
+		);
+	}
+
+	public function save_screen_option( mixed $status, string $option, mixed $value ): mixed {
+		$allowed = array( 'odph_products_per_page', 'odph_customers_per_page', 'odph_licenses_per_page', 'odph_logs_per_page' );
+		return in_array( $option, $allowed, true ) ? max( 1, min( 100, absint( $value ) ) ) : $status;
 	}
 
 	public function dashboard_help(): void {

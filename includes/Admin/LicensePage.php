@@ -22,11 +22,12 @@ final class LicensePage {
 			$this->license_detail( $license_id );
 			return;
 		}
+		ob_start();
 		$key     = strtoupper( sanitize_text_field( wp_unslash( $_GET['license_key'] ?? '' ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only exact-key search.
 		$status  = sanitize_key( wp_unslash( $_GET['status'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only status filter.
 		$page    = max( 1, absint( $_GET['paged'] ?? 1 ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only pagination.
 		$hash    = '' === $key ? null : ( LicenseGenerator::is_valid( $key ) ? LicenseGenerator::hash( $key ) : str_repeat( '0', 64 ) );
-		$result  = $this->licenses->search_admin( $hash, $status, $page );
+		$result  = $this->licenses->search_admin( $hash, $status, $page, AdminListUi::per_page( 'odph_licenses_per_page' ) );
 		$allowed = array( 'active', 'inactive', 'expired', 'cancelled', 'suspended' );
 		echo '<div class="wrap"><h1>' . esc_html__( 'Licenses', 'od-product-hub' ) . '</h1><form method="get"><input type="hidden" name="page" value="odph-licenses"><label class="screen-reader-text" for="license-search">' . esc_html__( 'Search by license key', 'od-product-hub' ) . '</label><input id="license-search" class="regular-text" name="license_key" value="' . esc_attr( $key ) . '" placeholder="' . esc_attr__( 'Complete license key', 'od-product-hub' ) . '"> <label for="license-status">' . esc_html__( 'Status', 'od-product-hub' ) . '</label> <select id="license-status" name="status"><option value="">' . esc_html__( 'All', 'od-product-hub' ) . '</option>';
 		foreach ( $allowed as $option ) {
@@ -45,9 +46,13 @@ final class LicensePage {
 			);
 			printf( '<tr><td>%1$s</td><td>%2$s</td><td><code>%3$s</code></td><td>%4$s</td><td>%5$s</td><td>%6$s</td><td>%7$s</td><td><a href="%8$s">%9$s</a></td></tr>', esc_html( (string) $license->product_name ), esc_html( (string) $license->customer_email ), esc_html( LicenseGenerator::mask( (string) $license->license_key ) ), esc_html( (string) $license->status ), esc_html( $this->site_date( $license->issued_at ) ), esc_html( $this->site_date( $license->expires_at ) ), esc_html( $this->site_date( $license->last_verified_at ) ), esc_url( $detail_url ), esc_html__( 'Details', 'od-product-hub' ) );
 		}
+		if ( ! $result->items ) {
+			echo AdminListUi::empty_row( 8, '' !== $key || '' !== $status, __( 'licenses', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
+		}
 		echo '</tbody></table>';
-		$this->pagination( $result->page, $result->total_pages );
+		echo AdminListUi::pagination( $result ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Helper escapes output.
 		echo '</div>';
+		echo AdminListUi::normalize_markup( (string) ob_get_clean(), __( 'Licenses with customer, status, dates, and available actions.', 'od-product-hub' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Existing output is escaped before normalization.
 	}
 
 	private function license_detail( int $license_id ): void {
@@ -90,20 +95,5 @@ final class LicensePage {
 
 	private function site_date( mixed $value ): string {
 		return $value ? (string) UtcDateTime::to_site( (string) $value ) : '—';
-	}
-
-	private function pagination( int $current, int $total ): void {
-		if ( $total < 2 ) {
-			return;
-		}
-		echo wp_kses_post(
-			paginate_links(
-				array(
-					'base'    => add_query_arg( 'paged', '%#%' ),
-					'current' => $current,
-					'total'   => $total,
-				)
-			)
-		);
 	}
 }
