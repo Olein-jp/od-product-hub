@@ -12,12 +12,12 @@ final class ApiSchema {
 	public static function license_args(): array {
 		return array(
 			'license_key'    => array(
-				'description' => 'Uppercase OD Product Hub license key.',
+				'description' => 'Uppercase license key with an optional product prefix.',
 				'required'    => true,
 				'type'        => 'string',
-				'pattern'     => '^ODPH-[A-HJ-NP-Z2-9]{4}(?:-[A-HJ-NP-Z2-9]{4}){3}$',
-				'minLength'   => 24,
-				'maxLength'   => 24,
+				'pattern'     => '^(?:[A-Z0-9]{3,12}-)?[A-HJ-NP-Z2-9]{4}(?:-[A-HJ-NP-Z2-9]{4}){3}$',
+				'minLength'   => 19,
+				'maxLength'   => 32,
 			),
 			'product_slug'   => self::product_slug( true ),
 			'site_url'       => array(

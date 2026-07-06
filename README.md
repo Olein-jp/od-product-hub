@@ -65,7 +65,7 @@ msgfmt --check --check-format \
 ## 初期設定
 
 1. 管理画面の「OD Product Hub → 設定」でStripeキー、Webhook Secret、完了/キャンセルURLを設定します。
-2. 商品管理で `prod_...` と recurring `price_...` を登録します。
+2. 商品管理で `prod_...` と recurring `price_...` を登録します。ライセンスキー接頭辞は任意で、新規商品の既定値は空欄です。
 3. StripeのWebhook URLに `/wp-json/od-product-hub/v1/stripe/webhook` を登録します。
 4. 購入ページへ `[odph_checkout product="商品スラッグ"]`、マイページへ `[odph_my_account]` を配置し、設定画面でマイページを指定します。
 
@@ -82,7 +82,7 @@ stripe trigger checkout.session.completed
 
 ```json
 {
-  "license_key": "ODPH-ABCD-EFGH-JKLM-NPQR",
+  "license_key": "ABCD-EFGH-JKLM-NPQR",
   "product_slug": "example-plugin",
   "site_url": "https://example.com",
   "plugin_version": "1.0.0",
@@ -92,6 +92,8 @@ stripe trigger checkout.session.completed
 ```
 
 詳細は [docs/API.md](docs/API.md) と [docs/STRIPE_SETUP.md](docs/STRIPE_SETUP.md) を参照してください。利用側では [クライアントSDK](packages/client-sdk/README.md) が24時間キャッシュと、一時的な通信障害に対する72時間の猶予を実装しています。
+
+ライセンスキーは既定で `ABCD-EFGH-JKLM-NPQR`、商品に接頭辞を設定した場合は `MYAPP-ABCD-EFGH-JKLM-NPQR` 形式です。既発行の `ODPH-...` キーも引き続き利用できます。接頭辞は識別・ブランド表示用であり、秘密情報ではなく認証強度も高めません。
 
 実Stripeイベントの最終確認は、テストモード限定の [docs/STRIPE_CLI_TEST.md](docs/STRIPE_CLI_TEST.md) に従ってください。
 

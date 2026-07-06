@@ -13,12 +13,12 @@ use OD_Product_Hub\Log\AdminLogRepository;
 use OD_Product_Hub\Subscription\SubscriptionRepository;
 
 final class LicenseManager {
-	/** @var callable(): string */
+	/** @var callable(string): string */
 	private $key_factory;
 
-	/** @param null|callable(): string $key_factory */
+	/** @param null|callable(string): string $key_factory */
 	public function __construct( ?callable $key_factory = null ) {
-		$this->key_factory = $key_factory ?? static fn(): string => ( new LicenseGenerator() )->generate();
+		$this->key_factory = $key_factory ?? static fn( string $prefix ): string => ( new LicenseGenerator() )->generate( $prefix );
 	}
 
 	public function suspend( int $license_id, int $user_id ): void {
@@ -46,8 +46,9 @@ final class LicenseManager {
 	}
 
 	public function reissue( int $license_id, int $user_id ): string {
+		$license = $this->license( $license_id );
 		for ( $attempt = 0; $attempt < 10; $attempt++ ) {
-			$key = ( $this->key_factory )();
+			$key = ( $this->key_factory )( (string) $license->license_key_prefix );
 			if ( ! LicenseGenerator::is_valid( $key ) ) {
 				throw new \RuntimeException( esc_html__( 'Could not generate a new license key.', 'od-product-hub' ) );
 			}

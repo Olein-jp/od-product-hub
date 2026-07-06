@@ -46,8 +46,12 @@ final class AdminActionHandler {
 			}
 			$action = $id ? 'product_updated' : 'product_created';
 			if ( $id ) {
-				if ( ! $this->products->find( $id ) ) {
+				$product = $this->products->find( $id );
+				if ( ! $product ) {
 					wp_die( esc_html__( 'Product not found.', 'od-product-hub' ), '', array( 'response' => 404 ) );
+				}
+				if ( $this->products->has_licenses( $id ) && (string) $product->license_key_prefix !== $data['license_key_prefix'] ) {
+					wp_die( esc_html__( 'The license key prefix cannot be changed after a license has been issued.', 'od-product-hub' ), '', array( 'response' => 409 ) );
 				}
 				$this->products->update( $id, $data );
 			} else {
@@ -75,7 +79,8 @@ final class AdminActionHandler {
 		$slug       = sanitize_key( wp_unslash( $input['slug'] ?? '' ) );
 		$product_id = sanitize_text_field( wp_unslash( $input['stripe_product_id'] ?? '' ) );
 		$price_id   = sanitize_text_field( wp_unslash( $input['stripe_price_id'] ?? '' ) );
-		if ( ! $name || ! preg_match( '/^[a-z0-9_-]+$/', $slug ) || ! preg_match( '/^prod_[A-Za-z0-9]+$/', $product_id ) || ! preg_match( '/^price_[A-Za-z0-9]+$/', $price_id ) ) {
+		$prefix     = \OD_Product_Hub\License\LicenseGenerator::normalize_prefix( sanitize_text_field( wp_unslash( $input['license_key_prefix'] ?? '' ) ) );
+		if ( ! $name || ! preg_match( '/^[a-z0-9_-]+$/', $slug ) || ! preg_match( '/^prod_[A-Za-z0-9]+$/', $product_id ) || ! preg_match( '/^price_[A-Za-z0-9]+$/', $price_id ) || ! \OD_Product_Hub\License\LicenseGenerator::is_valid_prefix( $prefix ) ) {
 			return null;
 		}
 		return array(
@@ -84,6 +89,7 @@ final class AdminActionHandler {
 			'description'         => sanitize_textarea_field( wp_unslash( $input['description'] ?? '' ) ),
 			'price_description'   => sanitize_text_field( wp_unslash( $input['price_description'] ?? '' ) ),
 			'billing_description' => sanitize_textarea_field( wp_unslash( $input['billing_description'] ?? '' ) ),
+			'license_key_prefix'  => $prefix,
 			'stripe_product_id'   => $product_id,
 			'stripe_price_id'     => $price_id,
 			'status'              => in_array( $input['status'] ?? '', array( 'active', 'inactive' ), true ) ? (string) $input['status'] : 'active',

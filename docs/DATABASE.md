@@ -34,7 +34,7 @@ DBの詳細エラーはサーバーログだけへ記録し、呼び出し側に
 
 カラム構成は次のとおりです（全テーブルの `id` は unsigned bigint の自動採番です）。
 
-- `products`: `name`, `slug`, `description`, `stripe_product_id`, `stripe_price_id`, `status`, `created_at`, `updated_at`
+- `products`: `name`, `slug`, `description`, `price_description`, `billing_description`, `license_key_prefix`, `stripe_product_id`, `stripe_price_id`, `status`, `created_at`, `updated_at`
 - `customers`: `wp_user_id`, `stripe_customer_id`, `email`, `name`, `created_at`, `updated_at`
 - `subscriptions`: `customer_id`, `product_id`, `stripe_subscription_id`, `stripe_status`, `current_period_start`, `current_period_end`, `cancel_at_period_end`, `payment_failed_at`, `created_at`, `updated_at`
 - `licenses`: `product_id`, `customer_id`, `subscription_id`, `license_key`, `license_key_hash`, `status`, `issued_at`, `expires_at`, `last_verified_at`, `created_at`, `updated_at`

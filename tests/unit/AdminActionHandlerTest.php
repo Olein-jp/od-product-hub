@@ -26,6 +26,7 @@ final class AdminActionHandlerTest extends TestCase {
 				'description'         => '<b>Description</b>',
 				'price_description'   => 'Monthly',
 				'billing_description' => 'Recurring',
+				'license_key_prefix'  => ' myapp2 ',
 				'status'              => 'deleted',
 			)
 		);
@@ -35,6 +36,21 @@ final class AdminActionHandlerTest extends TestCase {
 		self::assertSame( 'example_plugin', $data['slug'] );
 		self::assertSame( 'Description', $data['description'] );
 		self::assertSame( 'active', $data['status'] );
+		self::assertSame( 'MYAPP2', $data['license_key_prefix'] );
+	}
+
+	public function test_product_input_rejects_invalid_license_key_prefix(): void {
+		$data = $this->handler()->normalize_product_input(
+			array(
+				'name'               => 'Product',
+				'slug'               => 'example-plugin',
+				'stripe_product_id'  => 'prod_ABC123',
+				'stripe_price_id'    => 'price_XYZ789',
+				'license_key_prefix' => 'MY-APP',
+			)
+		);
+
+		self::assertNull( $data );
 	}
 
 	public function test_product_input_rejects_invalid_stripe_identifiers(): void {

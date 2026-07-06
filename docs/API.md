@@ -16,7 +16,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 
 | 項目 | 必須 | 制約 |
 | --- | --- | --- |
-| `license_key` | はい | `ODPH-XXXX-XXXX-XXXX-XXXX`、大文字、曖昧文字 `I/O/0/1` なし |
+| `license_key` | はい | `XXXX-XXXX-XXXX-XXXX` または `PREFIX-XXXX-XXXX-XXXX-XXXX`、大文字、曖昧文字 `I/O/0/1` なし。接頭辞は英大文字・数字3〜12文字 |
 | `product_slug` | はい | 小文字英数字と単語間のハイフン、最大191文字 |
 | `site_url` | いいえ | HTTP/HTTPS、最大255文字、URL内のユーザー名・パスワードは禁止 |
 | `plugin_version` | いいえ | 数字をドットで区切ったバージョン、最大32文字 |
@@ -30,7 +30,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 
 ```json
 {
-  "license_key": "ODPH-ABCD-EFGH-JKLM-NPQR",
+  "license_key": "ABCD-EFGH-JKLM-NPQR",
   "product_slug": "example-plugin",
   "site_url": "https://client.example.com/",
   "plugin_version": "1.2.3",
@@ -48,7 +48,7 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
   "success": true,
   "status": "active",
   "license": {
-    "key_masked": "ODPH-ABCD-****-****-NPQR",
+    "key_masked": "ABCD-****-****-NPQR",
     "expires_at": null,
     "last_verified_at": "2026-06-30T00:00:00+00:00"
   },
@@ -67,6 +67,8 @@ Base URLは `/wp-json/od-product-hub/v1`、本文はJSONです。本番環境で
 ```
 
 `deactivate` は同じ安全な契約情報に `"deactivated": true` を加え、`status` は `active` のまま返します。これはサイト解除の記録であり、キー自体の無効化ではありません。
+
+新規商品の既定形式には接頭辞がありません。商品単位の任意接頭辞（例: `MYAPP-...`）と既発行の `ODPH-...` は同じAPIで利用できます。接頭辞は識別・ブランド表示用であり、秘密情報やセキュリティ境界ではありません。最終的な契約判定は、正規化した完全なキーの保存済みSHA-256ハッシュと `product_slug` の組み合わせで行います。
 
 ## 更新確認レスポンス
 

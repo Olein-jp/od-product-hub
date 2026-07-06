@@ -90,6 +90,7 @@ final class Installer {
 			'1.6.0' => array( self::class, 'reconcile_repository_schema' ),
 			'1.7.0' => array( self::class, 'reconcile_repository_schema' ),
 			'1.8.0' => array( self::class, 'reconcile_repository_schema' ),
+			'1.9.0' => array( self::class, 'add_product_license_key_prefix' ),
 		);
 	}
 
@@ -98,6 +99,23 @@ final class Installer {
 	}
 
 	public static function reconcile_repository_schema(): void {
+		self::apply_schema();
+	}
+
+	public static function add_product_license_key_prefix(): void {
+		global $wpdb;
+		$table  = $wpdb->prefix . 'odph_products';
+		$column = $wpdb->get_var( $wpdb->prepare( 'SHOW COLUMNS FROM %i LIKE %s', $table, 'license_key_prefix' ) );
+		if ( null === $column ) {
+			$result = $wpdb->query( $wpdb->prepare( "ALTER TABLE %i ADD license_key_prefix varchar(12) NOT NULL DEFAULT '' AFTER billing_description", $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange -- Versioned product schema migration.
+			if ( false === $result ) {
+				throw DatabaseException::from_last_error( 'add product license key prefix' );
+			}
+			$result = $wpdb->query( $wpdb->prepare( "UPDATE %i SET license_key_prefix = 'ODPH' WHERE license_key_prefix = ''", $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Existing products retain their legacy key format exactly once when the column is introduced.
+			if ( false === $result ) {
+				throw DatabaseException::from_last_error( 'backfill product license key prefix' );
+			}
+		}
 		self::apply_schema();
 	}
 

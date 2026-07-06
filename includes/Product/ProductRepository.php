@@ -18,7 +18,7 @@ final class ProductRepository extends AbstractRepository {
 	}
 
 	protected function writable_columns(): array {
-		return array( 'name', 'slug', 'description', 'price_description', 'billing_description', 'stripe_product_id', 'stripe_price_id', 'status', 'created_at', 'updated_at' );
+		return array( 'name', 'slug', 'description', 'price_description', 'billing_description', 'license_key_prefix', 'stripe_product_id', 'stripe_price_id', 'status', 'created_at', 'updated_at' );
 	}
 
 	public function find_by_slug( string $slug ): ?object {
@@ -31,6 +31,13 @@ final class ProductRepository extends AbstractRepository {
 
 	public function find_by_stripe_product_id( string $product_id ): ?object {
 		return $this->find_one_by( 'stripe_product_id', $product_id );
+	}
+
+	public function has_licenses( int $product_id ): bool {
+		global $wpdb;
+		$count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE product_id = %d', $wpdb->prefix . 'odph_licenses', $product_id ) );
+		$this->assert_read( 'count product licenses' );
+		return 0 < (int) $count;
 	}
 
 	public function search_admin( string $query, string $status, int $page = 1, int $per_page = 20 ): RepositoryPage {

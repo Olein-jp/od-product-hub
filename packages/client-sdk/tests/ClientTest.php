@@ -83,6 +83,19 @@ final class ClientTest extends TestCase {
 		self::assertCount( 2, $transport->requests );
 	}
 
+	public function test_all_supported_key_forms_are_normalized_without_a_fixed_prefix_assumption(): void {
+		foreach ( array( ' abcd-efgh-jklm-npqr ', ' myapp-abcd-efgh-jklm-npqr ', ' odph-abcd-efgh-jklm-npqr ' ) as $key ) {
+			$transport = new FakeTransport( array( $this->active_response(), $this->active_response(), array( 'success' => true, 'status' => 'active' ) ) );
+			$client    = $this->client( $transport );
+			$client->activate( $key );
+			$client->verify( $key, true );
+			$client->deactivate( $key );
+			self::assertSame( strtoupper( trim( $key ) ), $transport->requests[0]['payload']['license_key'] );
+			self::assertSame( strtoupper( trim( $key ) ), $transport->requests[1]['payload']['license_key'] );
+			self::assertSame( strtoupper( trim( $key ) ), $transport->requests[2]['payload']['license_key'] );
+		}
+	}
+
 	private function client( FakeTransport $transport, ?FakeClock $clock = null ): Client {
 		return new Client(
 			new Config( 'https://hub.example.test', 'example-plugin', '1.0.0', 'https://site.example.test' ),

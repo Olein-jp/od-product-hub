@@ -48,6 +48,27 @@ foreach ( Schema::table_suffixes() as $suffix ) {
 }
 $webhook_columns = $wpdb->get_col( 'SHOW COLUMNS FROM ' . $wpdb->prefix . 'odph_webhook_logs' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery -- Fixed integration-test table name.
 odph_test_assert( in_array( 'attempt_count', $webhook_columns, true ) && in_array( 'last_attempt_at', $webhook_columns, true ), 'Webhook retry migration must create attempt tracking columns' );
+$products_table = $wpdb->prefix . 'odph_products';
+$wpdb->insert(
+	$products_table,
+	array(
+		'name'              => 'Legacy Product',
+		'slug'              => 'legacy-product',
+		'stripe_product_id' => 'prod_legacy',
+		'stripe_price_id'   => 'price_legacy',
+		'status'            => 'active',
+		'created_at'        => UtcDateTime::now(),
+		'updated_at'        => UtcDateTime::now(),
+	)
+); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Integration fixture for the pre-1.9 schema.
+$wpdb->query( "ALTER TABLE {$products_table} DROP COLUMN license_key_prefix" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.SchemaChange -- Fixed integration-test table simulates the previous schema.
+update_option( 'odph_schema_version', '1.8.0', false );
+Installer::migrate();
+$legacy_prefix = $wpdb->get_var( $wpdb->prepare( 'SELECT license_key_prefix FROM %i WHERE slug = %s', $products_table, 'legacy-product' ) );
+odph_test_assert( 'ODPH' === $legacy_prefix, 'The 1.9 migration must preserve the legacy format for existing products', $legacy_prefix );
+Installer::migrate();
+odph_test_assert( 'ODPH' === $wpdb->get_var( $wpdb->prepare( 'SELECT license_key_prefix FROM %i WHERE slug = %s', $products_table, 'legacy-product' ) ), 'Re-running migrations must not overwrite the migrated prefix' );
+$wpdb->delete( $products_table, array( 'slug' => 'legacy-product' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Remove the isolated migration fixture before repository pagination checks.
 $rate_limits = new RateLimitRepository();
 $bucket_hash = hash( 'sha256', 'database-integration-bucket' );
 odph_test_assert( 1 === $rate_limits->increment( $bucket_hash, gmdate( 'Y-m-d H:i:s', time() + 120 ) ), 'First atomic rate-limit increment must return one' );
@@ -64,7 +85,7 @@ $webhook_repository      = new WebhookLogRepository();
 $api_repository          = new ApiLogRepository();
 $admin_repository        = new AdminLogRepository();
 
-$product_id      = $product_repository->create(
+$product_id = $product_repository->create(
 	array(
 		'name'              => 'Integration Product',
 		'slug'              => 'integration-product',
@@ -74,6 +95,7 @@ $product_id      = $product_repository->create(
 		'status'            => 'active',
 	)
 );
+odph_test_assert( '' === (string) $product_repository->find( $product_id )->license_key_prefix, 'New products must default to no license key prefix' );
 $sync_service    = new CustomerSyncService();
 $customer_id     = $sync_service->upsert_customer( 'cus_integration', 1, 'integration@example.test', 'Integration Customer' );
 $subscription    = (object) array(
@@ -95,7 +117,35 @@ $license_id      = $license_repository->create(
 		'issued_at'        => UtcDateTime::now(),
 	)
 );
-$webhook_id      = $webhook_repository->create(
+odph_test_assert( $product_repository->has_licenses( $product_id ), 'Products with an issued license must be detected before prefix changes' );
+$prefixed_product_id      = $product_repository->create(
+	array(
+		'name'               => 'Prefixed Product',
+		'slug'               => 'prefixed-product',
+		'license_key_prefix' => 'MYAPP',
+		'stripe_product_id'  => 'prod_prefixed',
+		'stripe_price_id'    => 'price_prefixed',
+		'status'             => 'active',
+	)
+);
+$prefixed_subscription_id = $subscription_repository->create(
+	array(
+		'customer_id'            => $customer_id,
+		'product_id'             => $prefixed_product_id,
+		'stripe_subscription_id' => 'sub_prefixed',
+		'stripe_status'          => 'active',
+		'current_period_end'     => gmdate( 'Y-m-d H:i:s', time() + DAY_IN_SECONDS ),
+	)
+);
+$prefixed_key             = $license_repository->issue( $prefixed_product_id, $customer_id, $prefixed_subscription_id, null, 'MYAPP' );
+odph_test_assert( 1 === preg_match( '/^MYAPP-[A-HJ-NP-Z2-9]{4}(?:-[A-HJ-NP-Z2-9]{4}){3}$/', $prefixed_key ), 'Issuance must use the product prefix', $prefixed_key );
+$prefixed_license = $license_repository->search( array( 'subscription_id' => $prefixed_subscription_id ), 1, 1 )->items[0];
+$reissued_key     = ( new LicenseManager() )->reissue( (int) $prefixed_license->id, 1 );
+odph_test_assert( 1 === preg_match( '/^MYAPP-[A-HJ-NP-Z2-9]{4}(?:-[A-HJ-NP-Z2-9]{4}){3}$/', $reissued_key ), 'Reissue must retain the product prefix', $reissued_key );
+$license_repository->delete( (int) $prefixed_license->id );
+$subscription_repository->delete( $prefixed_subscription_id );
+$product_repository->delete( $prefixed_product_id );
+$webhook_id = $webhook_repository->create(
 	array(
 		'stripe_event_id' => 'evt_integration',
 		'event_type'      => 'test.event',
@@ -103,7 +153,7 @@ $webhook_id      = $webhook_repository->create(
 		'result'          => 'success',
 	)
 );
-$api_id          = $api_repository->create(
+$api_id     = $api_repository->create(
 	array(
 		'license_id' => $license_id,
 		'product_id' => $product_id,
@@ -111,7 +161,7 @@ $api_id          = $api_repository->create(
 		'result'     => 'success',
 	)
 );
-$admin_id        = $admin_repository->create(
+$admin_id   = $admin_repository->create(
 	array(
 		'user_id'     => 1,
 		'action'      => 'integration_test',

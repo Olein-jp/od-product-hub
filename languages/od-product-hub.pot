@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-03T02:16:51+00:00\n"
+"POT-Creation-Date: 2026-07-06T04:41:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -43,47 +43,51 @@ msgstr ""
 msgid "The slug or Stripe ID is already in use."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:50
+#: includes/Admin/AdminActionHandler.php:51
 msgid "Product not found."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:99
+#: includes/Admin/AdminActionHandler.php:54
+msgid "The license key prefix cannot be changed after a license has been issued."
+msgstr ""
+
+#: includes/Admin/AdminActionHandler.php:105
 msgid "The product or status is invalid."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:120
+#: includes/Admin/AdminActionHandler.php:126
 msgid "The license operation is invalid."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:135
+#: includes/Admin/AdminActionHandler.php:141
 msgid "The license operation failed."
 msgstr ""
 
-#: includes/Admin/AdminActionHandler.php:173
+#: includes/Admin/AdminActionHandler.php:179
 msgid "This webhook cannot be retried."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:46
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/AdminMenu.php:43
+#: includes/Admin/ProductPage.php:25
 msgid "Products"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:47
+#: includes/Admin/AdminMenu.php:44
 #: includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31
 msgid "Licenses"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:45
 #: includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/AdminMenu.php:46
 msgid "Logs"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:50
+#: includes/Admin/AdminMenu.php:47
 msgid "Settings"
 msgstr ""
 
@@ -502,14 +506,14 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:46
 #: includes/Admin/LicensePage.php:37
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:34
 msgid "Actions"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:56
 #: includes/Admin/CustomerPage.php:83
 #: includes/Admin/CustomerPage.php:105
-#: includes/Admin/ProductPage.php:49
+#: includes/Admin/ProductPage.php:56
 msgid "(opens in a new tab)"
 msgstr ""
 
@@ -528,8 +532,8 @@ msgstr ""
 #: includes/Admin/LicensePage.php:31
 #: includes/Admin/LicensePage.php:37
 #: includes/Admin/LicensePage.php:63
-#: includes/Admin/ProductPage.php:27
 #: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:34
 #: includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr ""
@@ -548,7 +552,7 @@ msgstr ""
 #: includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:128
 #: includes/Admin/LogsPage.php:145
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "Filter"
 msgstr ""
 
@@ -557,7 +561,7 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:37
 #: includes/Admin/LicensePage.php:63
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:34
 #: includes/Privacy/PrivacyService.php:217
 #: includes/Privacy/PrivacyService.php:227
 msgid "Product"
@@ -764,7 +768,7 @@ msgid "License key"
 msgstr ""
 
 #: includes/Admin/LicensePage.php:56
-#: includes/License/LicenseManager.php:85
+#: includes/License/LicenseManager.php:86
 msgid "License not found."
 msgstr ""
 
@@ -980,72 +984,88 @@ msgstr ""
 msgid "No matching logs found."
 msgstr ""
 
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "Search products"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "Product name or slug"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "All statuses"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:26
 msgid "Edit product"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:26
 msgid "Add product"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:27
-msgid "Update"
-msgstr ""
-
-#: includes/Admin/ProductPage.php:27
-msgid "Add"
-msgstr ""
-
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Product name"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Description"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Price description"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Example: $19.80 per month, including tax"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Subscription description"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Example: Renews monthly until canceled."
 msgstr ""
 
-#: includes/Admin/ProductPage.php:27
 #: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:34
 msgid "Slug"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:49
+#: includes/Admin/ProductPage.php:29
+msgid "License key prefix"
+msgstr ""
+
+#: includes/Admin/ProductPage.php:29
+msgid "Optional. Leave blank for ABCD-EFGH-JKLM-NPQR, or enter 3-12 letters and numbers for MYAPP-ABCD-EFGH-JKLM-NPQR."
+msgstr ""
+
+#: includes/Admin/ProductPage.php:31
+msgid "This prefix is locked because licenses have already been issued for this product."
+msgstr ""
+
+#: includes/Admin/ProductPage.php:33
+msgid "Update"
+msgstr ""
+
+#: includes/Admin/ProductPage.php:33
+msgid "Add"
+msgstr ""
+
+#: includes/Admin/ProductPage.php:34
+msgid "License key format"
+msgstr ""
+
+#: includes/Admin/ProductPage.php:56
 msgid "Deactivate"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:49
+#: includes/Admin/ProductPage.php:56
 msgid "Reactivate"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:49
+#: includes/Admin/ProductPage.php:56
 msgid "Edit"
 msgstr ""
 
@@ -1336,19 +1356,19 @@ msgstr ""
 msgid "Only suspended licenses can be resumed."
 msgstr ""
 
-#: includes/License/LicenseManager.php:52
+#: includes/License/LicenseManager.php:53
 msgid "Could not generate a new license key."
 msgstr ""
 
-#: includes/License/LicenseManager.php:79
+#: includes/License/LicenseManager.php:80
 msgid "Could not reissue the license key."
 msgstr ""
 
-#: includes/License/LicenseManager.php:92
+#: includes/License/LicenseManager.php:93
 msgid "No active subscription is available."
 msgstr ""
 
-#: includes/License/LicenseManager.php:100
+#: includes/License/LicenseManager.php:101
 msgid "This operation is unavailable because the Stripe subscription is not active."
 msgstr ""
 

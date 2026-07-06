@@ -339,6 +339,20 @@ odph_api_assert(
 	'Deactivate must create a log entry'
 );
 
+foreach ( array( 'ABCD-EFGH-JKLM-NPQR', 'MYAPP-ABCD-EFGH-JKLM-NPQR', 'ODPH-ABCD-EFGH-JKLM-NPQR' ) as $supported_key ) {
+	$licenses->update(
+		$license_id,
+		array(
+			'license_key'      => $supported_key,
+			'license_key_hash' => LicenseGenerator::hash( $supported_key ),
+		)
+	);
+	foreach ( array( 'activate', 'verify', 'deactivate' ) as $api_action ) {
+		$response = odph_api_dispatch( $wp_rest_server, 'POST', '/od-product-hub/v1/' . $api_action, odph_api_license_params( $supported_key ) );
+		odph_api_assert( 200 === $response->get_status() && true === $response->get_data()['success'], 'All supported key forms must work for ' . $api_action, $response->get_data() );
+	}
+}
+
 $state_cases = array(
 	array( 'suspended', 'active', null, null, 'suspended', 'license_suspended' ),
 	array( 'expired', 'active', null, null, 'expired', 'license_expired' ),

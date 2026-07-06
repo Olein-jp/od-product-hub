@@ -77,7 +77,7 @@ add_action(
 			array(
 				'sanitize_callback' => static function ( mixed $value ): string {
 					$key = strtoupper( sanitize_text_field( (string) $value ) );
-					return preg_match( '/^ODPH-[A-Z2-9]{4}(?:-[A-Z2-9]{4}){3}$/', $key ) ? $key : '';
+					return strlen( $key ) >= 19 && strlen( $key ) <= 32 && preg_match( '/^[A-Z0-9-]+$/', $key ) ? $key : '';
 				},
 			)
 		);

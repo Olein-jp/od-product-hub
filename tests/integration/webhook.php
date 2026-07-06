@@ -154,6 +154,8 @@ odph_webhook_assert( null !== $checkout_customer, 'Checkout handler must upsert 
 $checkout_subscription = $subscriptions->find_by_stripe_id( 'sub_handler' );
 odph_webhook_assert( null !== $checkout_subscription, 'Checkout handler must upsert its subscription' );
 odph_webhook_assert( $licenses->exists_for_subscription( (int) $checkout_subscription->id ), 'Checkout handler must issue one license' );
+$checkout_license = $licenses->search( array( 'subscription_id' => $checkout_subscription->id ), 1, 1 )->items[0] ?? null;
+odph_webhook_assert( is_object( $checkout_license ) && 1 === preg_match( '/^[A-HJ-NP-Z2-9]{4}(?:-[A-HJ-NP-Z2-9]{4}){3}$/', (string) $checkout_license->license_key ), 'A new product with no prefix must issue an unprefixed key' );
 $checkout_handler->handle( 'checkout.session.completed', (object) array( 'id' => 'cs_handler' ) );
 odph_webhook_assert( 1 === $licenses->search( array( 'subscription_id' => $checkout_subscription->id ), 1, 10 )->total, 'Repeated checkout handling must not duplicate a license' );
 

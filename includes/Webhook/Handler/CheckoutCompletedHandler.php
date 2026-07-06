@@ -65,7 +65,7 @@ final class CheckoutCompletedHandler implements WebhookHandler {
 		);
 		$subscription_id = ( new CustomerSyncService() )->upsert_subscription( $customer_id, (int) $product->id, $session->subscription );
 		if ( ! ( new LicenseRepository() )->exists_for_subscription( $subscription_id ) ) {
-			$key = ( new LicenseRepository() )->issue( (int) $product->id, $customer_id, $subscription_id, UtcDateTime::from_timestamp( $session->subscription->current_period_end ?? null ) );
+			$key = ( new LicenseRepository() )->issue( (int) $product->id, $customer_id, $subscription_id, UtcDateTime::from_timestamp( $session->subscription->current_period_end ?? null ), (string) $product->license_key_prefix );
 			do_action( 'odph_webhook_purchase_completed', $email, $key, $created, (int) $user->ID );
 		}
 	}

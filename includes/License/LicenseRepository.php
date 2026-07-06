@@ -139,7 +139,7 @@ final class LicenseRepository extends AbstractRepository {
 		global $wpdb;
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
-				'SELECT l.*, p.name AS product_name, p.slug AS product_slug, c.email AS customer_email, c.name AS customer_name,
+				'SELECT l.*, p.name AS product_name, p.slug AS product_slug, p.license_key_prefix, c.email AS customer_email, c.name AS customer_name,
 				s.stripe_subscription_id, s.stripe_status, s.current_period_end, s.payment_failed_at
 				FROM %i l INNER JOIN %i p ON p.id = l.product_id INNER JOIN %i c ON c.id = l.customer_id
 				LEFT JOIN %i s ON s.id = l.subscription_id WHERE l.id = %d LIMIT 1',
@@ -171,10 +171,10 @@ final class LicenseRepository extends AbstractRepository {
 		return is_array( $rows ) ? array_values( array_filter( $rows, 'is_object' ) ) : array();
 	}
 
-	public function issue( int $product_id, int $customer_id, int $subscription_id, ?string $expires_at = null ): string {
+	public function issue( int $product_id, int $customer_id, int $subscription_id, ?string $expires_at = null, string $prefix = '' ): string {
 		$generator = new LicenseGenerator();
 		for ( $attempt = 0; $attempt < 10; $attempt++ ) {
-			$key = $generator->generate();
+			$key = $generator->generate( $prefix );
 			try {
 				$this->create(
 					array(

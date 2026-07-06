@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-03T02:16:51+00:00\n"
+"POT-Creation-Date: 2026-07-06T04:41:22+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -47,44 +47,49 @@ msgstr "入力値が不正です。"
 msgid "The slug or Stripe ID is already in use."
 msgstr "スラッグまたはStripe IDが既に使用されています。"
 
-#: includes/Admin/AdminActionHandler.php:50
+#: includes/Admin/AdminActionHandler.php:51
 msgid "Product not found."
 msgstr "商品が見つかりません。"
 
-#: includes/Admin/AdminActionHandler.php:99
+#: includes/Admin/AdminActionHandler.php:54
+msgid ""
+"The license key prefix cannot be changed after a license has been issued."
+msgstr "ライセンス発行後はライセンスキー接頭辞を変更できません。"
+
+#: includes/Admin/AdminActionHandler.php:105
 msgid "The product or status is invalid."
 msgstr "商品または状態が不正です。"
 
-#: includes/Admin/AdminActionHandler.php:120
+#: includes/Admin/AdminActionHandler.php:126
 msgid "The license operation is invalid."
 msgstr "ライセンス操作が不正です。"
 
-#: includes/Admin/AdminActionHandler.php:135
+#: includes/Admin/AdminActionHandler.php:141
 msgid "The license operation failed."
 msgstr "ライセンス操作に失敗しました。"
 
-#: includes/Admin/AdminActionHandler.php:173
+#: includes/Admin/AdminActionHandler.php:179
 msgid "This webhook cannot be retried."
 msgstr "このWebhookは再試行できません。"
 
-#: includes/Admin/AdminMenu.php:46 includes/Admin/ProductPage.php:24
+#: includes/Admin/AdminMenu.php:43 includes/Admin/ProductPage.php:25
 msgid "Products"
 msgstr "商品"
 
-#: includes/Admin/AdminMenu.php:47 includes/Admin/CustomerPage.php:110
+#: includes/Admin/AdminMenu.php:44 includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31
 msgid "Licenses"
 msgstr "ライセンス"
 
-#: includes/Admin/AdminMenu.php:48 includes/Admin/CustomerPage.php:28
+#: includes/Admin/AdminMenu.php:45 includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr "顧客・契約"
 
-#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/AdminMenu.php:46
 msgid "Logs"
 msgstr "ログ"
 
-#: includes/Admin/AdminMenu.php:50
+#: includes/Admin/AdminMenu.php:47
 msgid "Settings"
 msgstr "設定"
 
@@ -412,8 +417,8 @@ msgid ""
 "Withdraw the affected release, confirm private storage availability, and "
 "publish a newly verified build."
 msgstr ""
-"対象リリースを停止し、非公開ストレージを確認してから、検証済みの新しい"
-"ビルドを公開してください。"
+"対象リリースを停止し、非公開ストレージを確認してから、検証済みの新しいビルド"
+"を公開してください。"
 
 #: includes/Admin/AdminSiteHealth.php:164
 msgid "A published release failed integrity verification"
@@ -539,12 +544,12 @@ msgstr "登録日時"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:46 includes/Admin/LicensePage.php:37
-#: includes/Admin/LogsPage.php:71 includes/Admin/ProductPage.php:28
+#: includes/Admin/LogsPage.php:71 includes/Admin/ProductPage.php:34
 msgid "Actions"
 msgstr "操作"
 
 #: includes/Admin/CustomerPage.php:56 includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:105 includes/Admin/ProductPage.php:49
+#: includes/Admin/CustomerPage.php:105 includes/Admin/ProductPage.php:56
 msgid "(opens in a new tab)"
 msgstr "（新しいタブで開く）"
 
@@ -557,8 +562,8 @@ msgstr "詳細"
 #: includes/Admin/CustomerPage.php:68 includes/Admin/CustomerPage.php:74
 #: includes/Admin/CustomerPage.php:106 includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:27
-#: includes/Admin/ProductPage.php:28 includes/Privacy/PrivacyService.php:229
+#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:34 includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr "状態"
 
@@ -572,13 +577,13 @@ msgstr "すべて"
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:73 includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "Filter"
 msgstr "絞り込む"
 
 #: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
 #: includes/Admin/CustomerPage.php:110 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:28
+#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:34
 #: includes/Privacy/PrivacyService.php:217
 #: includes/Privacy/PrivacyService.php:227
 msgid "Product"
@@ -761,7 +766,7 @@ msgstr "検索はキーのハッシュを用い、平文の部分一致検索は
 msgid "License key"
 msgstr "ライセンスキー"
 
-#: includes/Admin/LicensePage.php:56 includes/License/LicenseManager.php:85
+#: includes/Admin/LicensePage.php:56 includes/License/LicenseManager.php:86
 msgid "License not found."
 msgstr "ライセンスが見つかりません。"
 
@@ -983,71 +988,93 @@ msgstr "ログを%d件削除しました。"
 msgid "No matching logs found."
 msgstr "該当するログはありません。"
 
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "Search products"
 msgstr "商品を検索"
 
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "Product name or slug"
 msgstr "商品名・スラッグ"
 
-#: includes/Admin/ProductPage.php:24
+#: includes/Admin/ProductPage.php:25
 msgid "All statuses"
 msgstr "すべての状態"
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:26
 msgid "Edit product"
 msgstr "商品を編集"
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:26
 msgid "Add product"
 msgstr "商品を追加"
 
-#: includes/Admin/ProductPage.php:27
-msgid "Update"
-msgstr "更新"
-
-#: includes/Admin/ProductPage.php:27
-msgid "Add"
-msgstr "追加"
-
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Product name"
 msgstr "商品名"
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Description"
 msgstr "説明"
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Price description"
 msgstr "価格説明"
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Example: $19.80 per month, including tax"
 msgstr "例: 月額1,980円（税込）"
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Subscription description"
 msgstr "サブスクリプション説明"
 
-#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Example: Renews monthly until canceled."
 msgstr "例: 解約するまで毎月自動更新されます。"
 
-#: includes/Admin/ProductPage.php:27 includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:28 includes/Admin/ProductPage.php:34
 msgid "Slug"
 msgstr "スラッグ"
 
-#: includes/Admin/ProductPage.php:49
+#: includes/Admin/ProductPage.php:29
+msgid "License key prefix"
+msgstr "ライセンスキー接頭辞"
+
+#: includes/Admin/ProductPage.php:29
+msgid ""
+"Optional. Leave blank for ABCD-EFGH-JKLM-NPQR, or enter 3-12 letters and "
+"numbers for MYAPP-ABCD-EFGH-JKLM-NPQR."
+msgstr ""
+"任意項目です。空欄の場合は ABCD-EFGH-JKLM-NPQR、3〜12文字の英字と数字を"
+"入力した場合は MYAPP-ABCD-EFGH-JKLM-NPQR 形式になります。"
+
+#: includes/Admin/ProductPage.php:31
+msgid ""
+"This prefix is locked because licenses have already been issued for this "
+"product."
+msgstr "この商品ではライセンスが発行済みのため、接頭辞は変更できません。"
+
+#: includes/Admin/ProductPage.php:33
+msgid "Update"
+msgstr "更新"
+
+#: includes/Admin/ProductPage.php:33
+msgid "Add"
+msgstr "追加"
+
+#: includes/Admin/ProductPage.php:34
+msgid "License key format"
+msgstr "ライセンスキー形式"
+
+#: includes/Admin/ProductPage.php:56
 msgid "Deactivate"
 msgstr "停止"
 
-#: includes/Admin/ProductPage.php:49
+#: includes/Admin/ProductPage.php:56
 msgid "Reactivate"
 msgstr "再開"
 
-#: includes/Admin/ProductPage.php:49
+#: includes/Admin/ProductPage.php:56
 msgid "Edit"
 msgstr "編集"
 
@@ -1369,19 +1396,19 @@ msgstr "同期中"
 msgid "Only suspended licenses can be resumed."
 msgstr "停止中のライセンスだけを再開できます。"
 
-#: includes/License/LicenseManager.php:52
+#: includes/License/LicenseManager.php:53
 msgid "Could not generate a new license key."
 msgstr "新しいライセンスキーの生成に失敗しました。"
 
-#: includes/License/LicenseManager.php:79
+#: includes/License/LicenseManager.php:80
 msgid "Could not reissue the license key."
 msgstr "ライセンスキーを再発行できませんでした。"
 
-#: includes/License/LicenseManager.php:92
+#: includes/License/LicenseManager.php:93
 msgid "No active subscription is available."
 msgstr "有効なサブスクリプションがありません。"
 
-#: includes/License/LicenseManager.php:100
+#: includes/License/LicenseManager.php:101
 msgid ""
 "This operation is unavailable because the Stripe subscription is not active."
 msgstr "Stripeサブスクリプションが有効でないため操作できません。"
