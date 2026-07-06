@@ -134,3 +134,21 @@ if ( ! function_exists( '__' ) ) {
 		return $text;
 	}
 }
+
+if ( ! function_exists( 'esc_html' ) ) {
+	function esc_html( mixed $value ): string {
+		return htmlspecialchars( (string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( 'esc_attr' ) ) {
+	function esc_attr( mixed $value ): string {
+		return esc_html( $value );
+	}
+}
+
+if ( ! function_exists( 'esc_url' ) ) {
+	function esc_url( mixed $value ): string {
+		return filter_var( (string) $value, FILTER_VALIDATE_URL ) ? esc_attr( $value ) : '';
+	}
+}

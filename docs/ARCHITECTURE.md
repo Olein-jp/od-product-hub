@@ -29,6 +29,7 @@ RESTの正確な入出力は [API.md](API.md)、SDKの導入は [クライアン
 - `AdminActionHandler`: `admin-post.php` の商品保存・状態変更、ライセンス操作、ログ削除、Stripe接続確認を担当します。
 - `AdminSettings`: Settings APIへの登録、設定サニタイズ、設定画面の描画を担当します。
 - `AdminSiteHealth`: 設定警告とSite Health診断を担当します。
+- `AdminUi`: WordPress標準管理画面に整合するページヘッダー、セクション、カード、状態、通知、空状態、操作群の小さなViewプリミティブを提供します。設計契約は [ADMIN_UI.md](ADMIN_UI.md) を参照してください。
 
 `Plugin` はcomposition rootとして、共通ライフサイクル、フロントエンドと `admin-post`、RESTとStripe Webhook、管理画面、WP-CLIの登録経路を分離します。REST Controllerは `rest_api_init`、管理画面機能は `is_admin()` の経路、Release CommandはWP-CLIでのみ登録されます。フロント表示では管理画面のフックも登録しません。
 
