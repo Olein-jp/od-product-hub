@@ -41,7 +41,16 @@ odph_admin_bootstrap_assert( odph_admin_bootstrap_has_class_callback( 'admin_pos
 odph_admin_bootstrap_assert( odph_admin_bootstrap_has_class_callback( 'site_status_tests', AdminMenu::class ), 'Site Health proxies must remain registered.' );
 odph_admin_bootstrap_assert( odph_admin_bootstrap_has_class_callback( 'wp_privacy_personal_data_exporters', PrivacyService::class ), 'Privacy Tools hooks must remain registered in the admin context.' );
 
-do_action( 'admin_menu' );
+if ( ! isset( $GLOBALS['admin_page_hooks']['od-product-hub'] ) ) {
+	do_action( 'admin_menu' );
+}
 odph_admin_bootstrap_assert( isset( $GLOBALS['admin_page_hooks']['od-product-hub'] ), 'The existing top-level admin menu slug must remain registered.' );
+global $submenu;
+$odph_submenu = $submenu['od-product-hub'] ?? array();
+$odph_slugs   = array_values( array_unique( array_column( $odph_submenu, 2 ) ) );
+odph_admin_bootstrap_assert( array( 'od-product-hub', 'odph-products', 'odph-customers', 'odph-licenses', 'odph-logs', 'odph-settings' ) === $odph_slugs, 'The admin menu must expose the dashboard and five task-oriented screens in order.' );
+foreach ( $odph_submenu as $item ) {
+	odph_admin_bootstrap_assert( 'manage_options' === $item[1], 'Every OD Product Hub menu screen must require manage_options.' );
+}
 
 WP_CLI::success( 'Admin-context bootstrap registration checks passed.' );

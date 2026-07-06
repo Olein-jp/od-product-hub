@@ -34,7 +34,12 @@ final class AdminMenuTest extends TestCase {
 		self::assertArrayHasKey( 'admin_post_odph_save_product', $GLOBALS['odph_test_actions'] );
 		self::assertArrayHasKey( 'site_status_tests', $GLOBALS['odph_test_filters'] );
 		self::assertCount( 1, $GLOBALS['odph_test_menu_pages'] );
-		self::assertCount( 5, $GLOBALS['odph_test_submenu_pages'] );
+		self::assertCount( 6, $GLOBALS['odph_test_submenu_pages'] );
 		self::assertSame( array( $menu, 'render_dashboard' ), $GLOBALS['odph_test_menu_pages'][0][4] );
+		self::assertSame( 'od-product-hub', $GLOBALS['odph_test_submenu_pages'][0][4] );
+		self::assertSame( 'odph-products', $GLOBALS['odph_test_submenu_pages'][1][4] );
+		self::assertSame( 'odph-customers', $GLOBALS['odph_test_submenu_pages'][2][4] );
+		self::assertSame( 'odph-licenses', $GLOBALS['odph_test_submenu_pages'][3][4] );
+		self::assertArrayHasKey( 'load-toplevel_page_od-product-hub', $GLOBALS['odph_test_actions'] );
 	}
 }

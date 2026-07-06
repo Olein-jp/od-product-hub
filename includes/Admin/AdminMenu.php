@@ -40,12 +40,35 @@ final class AdminMenu {
 	}
 
 	public function menu(): void {
-		add_menu_page( 'OD Product Hub', 'OD Product Hub', 'manage_options', 'od-product-hub', array( $this, 'render_dashboard' ), 'dashicons-products', 56 );
+		$dashboard_hook = add_menu_page( 'OD Product Hub', 'OD Product Hub', 'manage_options', 'od-product-hub', array( $this, 'render_dashboard' ), 'dashicons-products', 56 );
+		add_submenu_page( 'od-product-hub', __( 'Dashboard', 'od-product-hub' ), __( 'Dashboard', 'od-product-hub' ), 'manage_options', 'od-product-hub', array( $this, 'render_dashboard' ) );
 		add_submenu_page( 'od-product-hub', __( 'Products', 'od-product-hub' ), __( 'Products', 'od-product-hub' ), 'manage_options', 'odph-products', array( $this, 'render_products' ) );
-		add_submenu_page( 'od-product-hub', __( 'Licenses', 'od-product-hub' ), __( 'Licenses', 'od-product-hub' ), 'manage_options', 'odph-licenses', array( $this, 'render_licenses' ) );
 		add_submenu_page( 'od-product-hub', __( 'Customers and subscriptions', 'od-product-hub' ), __( 'Customers and subscriptions', 'od-product-hub' ), 'manage_options', 'odph-customers', array( $this, 'render_customers' ) );
+		add_submenu_page( 'od-product-hub', __( 'Licenses', 'od-product-hub' ), __( 'Licenses', 'od-product-hub' ), 'manage_options', 'odph-licenses', array( $this, 'render_licenses' ) );
 		add_submenu_page( 'od-product-hub', __( 'Logs', 'od-product-hub' ), __( 'Logs', 'od-product-hub' ), 'manage_options', 'odph-logs', array( $this, 'render_logs' ) );
 		add_submenu_page( 'od-product-hub', __( 'Settings', 'od-product-hub' ), __( 'Settings', 'od-product-hub' ), 'manage_options', 'odph-settings', array( $this, 'render_settings' ) );
+		add_action( 'load-' . $dashboard_hook, array( $this, 'dashboard_help' ) );
+	}
+
+	public function dashboard_help(): void {
+		$screen = get_current_screen();
+		if ( ! $screen ) {
+			return;
+		}
+		$screen->add_help_tab(
+			array(
+				'id'      => 'odph-dashboard-overview',
+				'title'   => __( 'Dashboard overview', 'od-product-hub' ),
+				'content' => '<p>' . esc_html__( 'Start with items that need attention, then use the metrics and recent activity to investigate details.', 'od-product-hub' ) . '</p>',
+			)
+		);
+		$screen->add_help_tab(
+			array(
+				'id'      => 'odph-dashboard-site-health',
+				'title'   => __( 'Site Health', 'od-product-hub' ),
+				'content' => '<p>' . esc_html__( 'The dashboard summarizes operational checks. Open Site Health for complete diagnostics and remediation guidance.', 'od-product-hub' ) . '</p>',
+			)
+		);
 	}
 
 	public function render_dashboard(): void {

@@ -6,6 +6,7 @@
  */
 
 use OD_Product_Hub\Admin\AdminMenu;
+use OD_Product_Hub\Admin\AdminSiteHealth;
 use OD_Product_Hub\Admin\DashboardPage;
 use OD_Product_Hub\Admin\DashboardService;
 use OD_Product_Hub\Admin\ProductPage;
@@ -32,6 +33,10 @@ wp_set_current_user( (int) $administrator->ID );
 set_current_screen( 'toplevel_page_od-product-hub' );
 ( new AdminMenu( array() ) )->assets();
 odph_admin_ui_assert( wp_style_is( 'odph-admin', 'enqueued' ), 'The shared admin stylesheet must be enqueued on OD Product Hub screens.' );
+$site_health = new AdminSiteHealth();
+ob_start();
+$site_health->configuration_notice();
+odph_admin_ui_assert( '' === (string) ob_get_clean(), 'The legacy configuration notice must not duplicate dashboard attention items.' );
 
 $dashboard = new DashboardPage(
 	new DashboardService(
@@ -39,13 +44,17 @@ $dashboard = new DashboardPage(
 		new WebhookLogRepository(),
 		new LicenseRepository(),
 		new ApiLogRepository()
-	)
+	),
+	$site_health
 );
 ob_start();
 $dashboard->render();
 $dashboard_html = (string) ob_get_clean();
 odph_admin_ui_assert( 1 === substr_count( $dashboard_html, '<h1>' ), 'The dashboard must render exactly one primary heading.' );
 odph_admin_ui_assert( 5 === substr_count( $dashboard_html, 'odph-card-link' ), 'The dashboard must render all operational metrics with the shared card primitive.' );
+odph_admin_ui_assert( str_contains( $dashboard_html, 'odph-attention-list' ) || str_contains( $dashboard_html, 'notice-success' ), 'The dashboard must prioritize actionable Site Health summaries.' );
+odph_admin_ui_assert( str_contains( $dashboard_html, 'odph-action-group' ), 'The dashboard must expose a labeled quick-action group.' );
+odph_admin_ui_assert( false !== strpos( $dashboard_html, 'odph-dashboard-attention' ) && strpos( $dashboard_html, 'odph-dashboard-attention' ) < strpos( $dashboard_html, 'odph-cards' ), 'Items that need attention must appear before metrics in the DOM.' );
 odph_admin_ui_assert( str_contains( $dashboard_html, 'odph-empty-state' ) || str_contains( $dashboard_html, '<tbody><tr>' ), 'The dashboard must render recent activity or its accessible empty state.' );
 
 $_GET = array();

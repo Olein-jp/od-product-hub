@@ -20,8 +20,9 @@ if ( ! function_exists( 'add_filter' ) ) {
 }
 
 if ( ! function_exists( 'add_menu_page' ) ) {
-	function add_menu_page( mixed ...$args ): void {
+	function add_menu_page( mixed ...$args ): string {
 		$GLOBALS['odph_test_menu_pages'][] = $args;
+		return 'toplevel_page_' . (string) ( $args[3] ?? '' );
 	}
 }
 

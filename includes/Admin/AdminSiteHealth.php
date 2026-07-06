@@ -16,7 +16,7 @@ final class AdminSiteHealth {
 	private const STALE_CLEANUP_SECONDS = 172800;
 
 	public function configuration_notice(): void {
-		if ( ! current_user_can( 'manage_options' ) || ! str_starts_with( (string) get_current_screen()?->id, 'toplevel_page_od-product-hub' ) ) {
+		if ( ! current_user_can( 'manage_options' ) || ! str_contains( (string) get_current_screen()?->id, 'odph-settings' ) ) {
 			return;
 		}
 		$result = $this->stripe_https_status();
@@ -86,6 +86,18 @@ final class AdminSiteHealth {
 	/** @return array<string, mixed> */
 	public function configuration_status(): array {
 		return $this->stripe_https_status();
+	}
+
+	/** @return list<array<string, mixed>> */
+	public function dashboard_results(): array {
+		$results = array();
+		foreach ( array( 'stripe_https_status', 'webhook_status', 'cron_status', 'update_delivery_status', 'customer_pages_status' ) as $method ) {
+			$result = $this->{$method}();
+			if ( 'good' !== (string) ( $result['status'] ?? '' ) ) {
+				$results[] = $result;
+			}
+		}
+		return $results;
 	}
 
 	/** @return array<string, mixed> */
@@ -225,7 +237,8 @@ final class AdminSiteHealth {
 
 	/** @return array<string, mixed> */
 	private function result( string $status, string $label, string $description, string $test, string $settings_page = '' ): array {
-		$actions = '' === $settings_page ? '' : sprintf( '<p><a href="%s">%s</a></p>', esc_url( admin_url( 'admin.php?page=' . $settings_page ) ), esc_html__( 'Open the relevant OD Product Hub screen', 'od-product-hub' ) );
+		$action_url = '' === $settings_page ? '' : admin_url( 'admin.php?page=' . $settings_page );
+		$actions    = '' === $action_url ? '' : sprintf( '<p><a href="%s">%s</a></p>', esc_url( $action_url ), esc_html__( 'Open the relevant OD Product Hub screen', 'od-product-hub' ) );
 		return array(
 			'label'       => $label,
 			'status'      => $status,
@@ -235,6 +248,7 @@ final class AdminSiteHealth {
 			),
 			'description' => $description,
 			'actions'     => $actions,
+			'action_url'  => $action_url,
 			'test'        => $test,
 		);
 	}

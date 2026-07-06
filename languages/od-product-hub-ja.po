@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-06T06:05:31+00:00\n"
+"POT-Creation-Date: 2026-07-06T09:52:36+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -47,7 +47,7 @@ msgstr "入力値が不正です。"
 msgid "The slug or Stripe ID is already in use."
 msgstr "スラッグまたはStripe IDが既に使用されています。"
 
-#: includes/Admin/AdminActionHandler.php:51
+#: includes/Admin/AdminActionHandler.php:51 includes/Admin/ProductPage.php:68
 msgid "Product not found."
 msgstr "商品が見つかりません。"
 
@@ -72,26 +72,55 @@ msgstr "ライセンス操作に失敗しました。"
 msgid "This webhook cannot be retried."
 msgstr "このWebhookは再試行できません。"
 
-#: includes/Admin/AdminMenu.php:44 includes/Admin/ProductPage.php:25
+#: includes/Admin/AdminMenu.php:44 includes/Admin/DashboardPage.php:20
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#: includes/Admin/AdminMenu.php:45 includes/Admin/ProductPage.php:26
+#: includes/Admin/ProductPage.php:40
 msgid "Products"
 msgstr "商品"
-
-#: includes/Admin/AdminMenu.php:45 includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:31
-msgid "Licenses"
-msgstr "ライセンス"
 
 #: includes/Admin/AdminMenu.php:46 includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr "顧客・契約"
 
-#: includes/Admin/AdminMenu.php:47
+#: includes/Admin/AdminMenu.php:47 includes/Admin/CustomerPage.php:110
+#: includes/Admin/LicensePage.php:31
+msgid "Licenses"
+msgstr "ライセンス"
+
+#: includes/Admin/AdminMenu.php:48
 msgid "Logs"
 msgstr "ログ"
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:49 includes/Admin/DashboardPage.php:72
 msgid "Settings"
 msgstr "設定"
+
+#: includes/Admin/AdminMenu.php:61
+msgid "Dashboard overview"
+msgstr "ダッシュボードの概要"
+
+#: includes/Admin/AdminMenu.php:62
+msgid ""
+"Start with items that need attention, then use the metrics and recent "
+"activity to investigate details."
+msgstr ""
+"最初に要対応項目を確認し、次に主要指標と最近のアクティビティから詳細を"
+"調査してください。"
+
+#: includes/Admin/AdminMenu.php:68 includes/Admin/DashboardPage.php:76
+msgid "Site Health"
+msgstr "サイトヘルス"
+
+#: includes/Admin/AdminMenu.php:69
+msgid ""
+"The dashboard summarizes operational checks. Open Site Health for complete "
+"diagnostics and remediation guidance."
+msgstr ""
+"ダッシュボードには運用チェックの概要が表示されます。完全な診断と復旧手順は"
+"サイトヘルスで確認してください。"
 
 #: includes/Admin/AdminSettings.php:46
 msgid "The sender email address is invalid. The previous value was preserved."
@@ -162,9 +191,10 @@ msgstr "マイページ"
 msgid "Select a page"
 msgstr "固定ページを選択"
 
-#: includes/Admin/AdminSettings.php:143 includes/Admin/AdminSiteHealth.php:195
+#: includes/Admin/AdminSettings.php:143 includes/Admin/AdminSiteHealth.php:207
 msgid "Select a published page containing the odph_my_account shortcode."
 msgstr ""
+"要対応項目、主要指標、最近の運用アクティビティを確認します。"
 "odph_my_account ショートコードを含む公開済み固定ページを選択してください。"
 
 #: includes/Admin/AdminSettings.php:144
@@ -214,7 +244,8 @@ msgstr "アンインストール時に全データを削除する"
 msgid "Test Stripe connection"
 msgstr "Stripe接続をテスト"
 
-#: includes/Admin/AdminSettings.php:172 includes/Frontend/Shortcodes.php:205
+#: includes/Admin/AdminSettings.php:172 includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:63 includes/Frontend/Shortcodes.php:205
 #: includes/Frontend/Shortcodes.php:216
 msgid "Active"
 msgstr "有効"
@@ -223,7 +254,8 @@ msgstr "有効"
 msgid "Grace period (vendor Hub unavailable)"
 msgstr "猶予期間（販売元Hubへ接続できません）"
 
-#: includes/Admin/AdminSettings.php:174 includes/Frontend/Shortcodes.php:206
+#: includes/Admin/AdminSettings.php:174 includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:63 includes/Frontend/Shortcodes.php:206
 msgid "Inactive"
 msgstr "無効"
 
@@ -292,8 +324,8 @@ msgid ""
 "The vendor Hub is unavailable. The last active verification is temporarily "
 "accepted during the grace period."
 msgstr ""
-"販売元Hubへ接続できません。最後の有効な確認結果を猶予期間中のみ一時的に"
-"受け入れています。"
+"販売元Hubへ接続できません。最後の有効な確認結果を猶予期間中のみ一時的に受け入"
+"れています。"
 
 #: includes/Admin/AdminSettings.php:198
 msgid ""
@@ -403,39 +435,39 @@ msgstr "次回のログ削除"
 msgid "Last successful log cleanup"
 msgstr "ログ削除の最終成功日時"
 
-#: includes/Admin/AdminSiteHealth.php:99
+#: includes/Admin/AdminSiteHealth.php:111
 msgid "Stripe or HTTPS configuration is incomplete"
 msgstr "StripeまたはHTTPSの設定が不完全です"
 
-#: includes/Admin/AdminSiteHealth.php:99
+#: includes/Admin/AdminSiteHealth.php:111
 msgid "Configure all three Stripe keys and enable HTTPS in production."
 msgstr "Stripeの3つのキーを設定し、本番環境ではHTTPSを有効にしてください。"
 
-#: includes/Admin/AdminSiteHealth.php:102
+#: includes/Admin/AdminSiteHealth.php:114
 msgid "Run the Stripe connection test"
 msgstr "Stripe接続試験を実行してください"
 
-#: includes/Admin/AdminSiteHealth.php:102
+#: includes/Admin/AdminSiteHealth.php:114
 msgid ""
 "The keys are configured, but a successful manual connection test has not "
 "been recorded."
 msgstr "キーは設定されていますが、手動接続試験の成功が記録されていません。"
 
 #. translators: %s: UTC date and time of the last successful Stripe connection test.
-#: includes/Admin/AdminSiteHealth.php:105
+#: includes/Admin/AdminSiteHealth.php:117
 #, php-format
 msgid "The last successful manual Stripe test was recorded at %s."
 msgstr "手動Stripe接続試験の最終成功日時は%sです。"
 
-#: includes/Admin/AdminSiteHealth.php:106
+#: includes/Admin/AdminSiteHealth.php:118
 msgid "Stripe and HTTPS are ready"
 msgstr "StripeとHTTPSは正常です"
 
-#: includes/Admin/AdminSiteHealth.php:113
+#: includes/Admin/AdminSiteHealth.php:125
 msgid "Webhook processing appears to be stuck"
 msgstr "Webhook処理が停止している可能性があります"
 
-#: includes/Admin/AdminSiteHealth.php:113
+#: includes/Admin/AdminSiteHealth.php:125
 msgid ""
 "A Webhook has remained in processing for more than five minutes. Inspect the "
 "Webhook log and resend the event after resolving the cause."
@@ -444,7 +476,7 @@ msgstr ""
 "らイベントを再送してください。"
 
 #. translators: %d: number of consecutive Webhook failures.
-#: includes/Admin/AdminSiteHealth.php:117
+#: includes/Admin/AdminSiteHealth.php:129
 #, php-format
 msgid ""
 "%d consecutive Webhook failures were detected. Inspect the latest errors and "
@@ -453,33 +485,33 @@ msgstr ""
 "Webhookの失敗を%d件連続で検出しました。直近のエラーとStripeの配信履歴を確認し"
 "てください。"
 
-#: includes/Admin/AdminSiteHealth.php:118
+#: includes/Admin/AdminSiteHealth.php:130
 msgid "Webhook processing is failing repeatedly"
 msgstr "Webhook処理が連続して失敗しています"
 
-#: includes/Admin/AdminSiteHealth.php:121
+#: includes/Admin/AdminSiteHealth.php:133
 msgid "No successful Webhook has been recorded"
 msgstr "成功したWebhookが記録されていません"
 
-#: includes/Admin/AdminSiteHealth.php:121
+#: includes/Admin/AdminSiteHealth.php:133
 msgid "Send a Stripe test event and confirm that it completes successfully."
 msgstr "Stripeのテストイベントを送信し、正常に完了することを確認してください。"
 
 #. translators: %s: UTC date and time of the latest successful Webhook.
-#: includes/Admin/AdminSiteHealth.php:124
+#: includes/Admin/AdminSiteHealth.php:136
 #, php-format
 msgid "The latest successful Webhook was recorded at %s."
 msgstr "Webhookの最終成功日時は%sです。"
 
-#: includes/Admin/AdminSiteHealth.php:125
+#: includes/Admin/AdminSiteHealth.php:137
 msgid "Webhook processing is healthy"
 msgstr "Webhook処理は正常です"
 
-#: includes/Admin/AdminSiteHealth.php:134
+#: includes/Admin/AdminSiteHealth.php:146
 msgid "The log cleanup schedule is missing"
 msgstr "ログ削除Cronが登録されていません"
 
-#: includes/Admin/AdminSiteHealth.php:134
+#: includes/Admin/AdminSiteHealth.php:146
 msgid ""
 "Deactivate and reactivate the plugin, or load an OD Product Hub screen to "
 "repair the daily Cron event."
@@ -487,18 +519,18 @@ msgstr ""
 "プラグインを無効化して再度有効化するか、OD Product Hub画面を読み込み、日次"
 "Cronイベントを修復してください。"
 
-#: includes/Admin/AdminSiteHealth.php:137
+#: includes/Admin/AdminSiteHealth.php:149
 msgid "Log cleanup has not succeeded recently"
 msgstr "ログ削除が最近成功していません"
 
-#: includes/Admin/AdminSiteHealth.php:137
+#: includes/Admin/AdminSiteHealth.php:149
 msgid "Run cleanup manually and verify that WP-Cron is invoked by the server."
 msgstr ""
 "手動でログ削除を実行し、サーバーからWP-Cronが呼び出されていることを確認してく"
 "ださい。"
 
 #. translators: %s: UTC date and time of the next scheduled log cleanup.
-#: includes/Admin/AdminSiteHealth.php:140
+#: includes/Admin/AdminSiteHealth.php:152
 #, php-format
 msgid ""
 "The daily cleanup is scheduled for %s. No successful run has been recorded "
@@ -506,30 +538,30 @@ msgid ""
 msgstr "日次ログ削除は%sに実行予定です。成功した実行はまだ記録されていません。"
 
 #. translators: 1: UTC date and time of the next cleanup, 2: UTC date and time of the last successful cleanup.
-#: includes/Admin/AdminSiteHealth.php:143
+#: includes/Admin/AdminSiteHealth.php:155
 #, php-format
 msgid ""
 "The next daily cleanup is scheduled for %1$s and the last successful run was "
 "at %2$s."
 msgstr "次回の日次ログ削除は%1$sに実行予定で、最終成功日時は%2$sです。"
 
-#: includes/Admin/AdminSiteHealth.php:145
+#: includes/Admin/AdminSiteHealth.php:157
 msgid "Log retention is scheduled"
 msgstr "ログ保持処理は登録済みです"
 
-#: includes/Admin/AdminSiteHealth.php:151
+#: includes/Admin/AdminSiteHealth.php:163
 msgid "Update delivery PHP extensions are missing"
 msgstr "更新配布に必要なPHP拡張が不足しています"
 
-#: includes/Admin/AdminSiteHealth.php:151
+#: includes/Admin/AdminSiteHealth.php:163
 msgid "Enable both Sodium and Zip before publishing or serving releases."
 msgstr "リリースの公開・配信前にSodiumとZipを有効化してください。"
 
-#: includes/Admin/AdminSiteHealth.php:155
+#: includes/Admin/AdminSiteHealth.php:167
 msgid "Release storage is not writable"
 msgstr "リリースストレージへ書き込めません"
 
-#: includes/Admin/AdminSiteHealth.php:155
+#: includes/Admin/AdminSiteHealth.php:167
 msgid ""
 "Configure a writable private release storage directory. The actual path is "
 "intentionally omitted."
@@ -537,11 +569,11 @@ msgstr ""
 "書き込み可能な秘密リリースストレージを設定してください。実パスは意図的に表示"
 "していません。"
 
-#: includes/Admin/AdminSiteHealth.php:161
+#: includes/Admin/AdminSiteHealth.php:173
 msgid "A published release package is missing"
 msgstr "公開済みリリースのパッケージが見つかりません"
 
-#: includes/Admin/AdminSiteHealth.php:161
+#: includes/Admin/AdminSiteHealth.php:173
 msgid ""
 "Withdraw the affected release, confirm private storage availability, and "
 "publish a newly verified build."
@@ -549,11 +581,11 @@ msgstr ""
 "対象リリースを停止し、非公開ストレージを確認してから、検証済みの新しいビルド"
 "を公開してください。"
 
-#: includes/Admin/AdminSiteHealth.php:164
+#: includes/Admin/AdminSiteHealth.php:176
 msgid "A published release failed integrity verification"
 msgstr "公開済みリリースの整合性検証に失敗しました"
 
-#: includes/Admin/AdminSiteHealth.php:164
+#: includes/Admin/AdminSiteHealth.php:176
 msgid ""
 "Withdraw the affected release, isolate its package, and publish a newly "
 "verified build."
@@ -561,11 +593,11 @@ msgstr ""
 "対象リリースを停止してパッケージを隔離し、新しく検証したビルドを公開してくだ"
 "さい。"
 
-#: includes/Admin/AdminSiteHealth.php:168
+#: includes/Admin/AdminSiteHealth.php:180
 msgid "Move release storage outside the Web root"
 msgstr "リリースストレージをWebルート外へ移動してください"
 
-#: includes/Admin/AdminSiteHealth.php:168
+#: includes/Admin/AdminSiteHealth.php:180
 msgid ""
 "The storage is writable, but production releases should use "
 "ODPH_RELEASE_STORAGE_PATH outside the Web root."
@@ -573,22 +605,22 @@ msgstr ""
 "ストレージは書き込み可能ですが、本番ではODPH_RELEASE_STORAGE_PATHを使ってWeb"
 "ルート外に配置してください。"
 
-#: includes/Admin/AdminSiteHealth.php:170
+#: includes/Admin/AdminSiteHealth.php:182
 msgid "Update delivery dependencies are ready"
 msgstr "更新配布の依存機能は正常です"
 
-#: includes/Admin/AdminSiteHealth.php:170
+#: includes/Admin/AdminSiteHealth.php:182
 msgid ""
 "Sodium, Zip, private storage, and published release signatures passed "
 "validation."
 msgstr ""
 "Sodium、Zip、秘密ストレージ、公開済みリリースの署名は検証に成功しました。"
 
-#: includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSiteHealth.php:202
 msgid "Checkout result pages are incomplete"
 msgstr "購入結果ページの設定が不完全です"
 
-#: includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSiteHealth.php:202
 msgid ""
 "Use published pages for the success and cancel URLs and place the "
 "corresponding OD Product Hub shortcode on each page."
@@ -596,28 +628,28 @@ msgstr ""
 "購入完了・キャンセルURLには公開済み固定ページを使用し、それぞれ対応するOD "
 "Product Hubショートコードを配置してください。"
 
-#: includes/Admin/AdminSiteHealth.php:195
+#: includes/Admin/AdminSiteHealth.php:207
 msgid "The account page is incomplete"
 msgstr "マイページの設定が不完全です"
 
-#: includes/Admin/AdminSiteHealth.php:197
+#: includes/Admin/AdminSiteHealth.php:209
 msgid "Checkout and account pages are ready"
 msgstr "購入・マイページは正常です"
 
-#: includes/Admin/AdminSiteHealth.php:197
+#: includes/Admin/AdminSiteHealth.php:209
 msgid "The configured pages are published and contain the required shortcodes."
 msgstr ""
 "設定された固定ページは公開済みで、必要なショートコードが配置されています。"
 
-#: includes/Admin/AdminSiteHealth.php:219
+#: includes/Admin/AdminSiteHealth.php:231
 msgid "Not recorded"
 msgstr "未記録"
 
-#: includes/Admin/AdminSiteHealth.php:223
+#: includes/Admin/AdminSiteHealth.php:235
 msgid "Not scheduled"
 msgstr "未登録"
 
-#: includes/Admin/AdminSiteHealth.php:228
+#: includes/Admin/AdminSiteHealth.php:241
 msgid "Open the relevant OD Product Hub screen"
 msgstr "関連するOD Product Hub画面を開く"
 
@@ -673,12 +705,12 @@ msgstr "登録日時"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:46 includes/Admin/LicensePage.php:37
-#: includes/Admin/LogsPage.php:71 includes/Admin/ProductPage.php:34
+#: includes/Admin/LogsPage.php:71 includes/Admin/ProductPage.php:41
 msgid "Actions"
 msgstr "操作"
 
 #: includes/Admin/CustomerPage.php:56 includes/Admin/CustomerPage.php:83
-#: includes/Admin/CustomerPage.php:105 includes/Admin/ProductPage.php:56
+#: includes/Admin/CustomerPage.php:105 includes/Admin/ProductPage.php:65
 msgid "(opens in a new tab)"
 msgstr "（新しいタブで開く）"
 
@@ -691,8 +723,8 @@ msgstr "詳細"
 #: includes/Admin/CustomerPage.php:68 includes/Admin/CustomerPage.php:74
 #: includes/Admin/CustomerPage.php:106 includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:31 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:28
-#: includes/Admin/ProductPage.php:34 includes/Privacy/PrivacyService.php:229
+#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:33
+#: includes/Admin/ProductPage.php:41 includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr "状態"
 
@@ -706,13 +738,13 @@ msgstr "すべて"
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:73 includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:28
 msgid "Filter"
 msgstr "絞り込む"
 
 #: includes/Admin/CustomerPage.php:74 includes/Admin/CustomerPage.php:106
 #: includes/Admin/CustomerPage.php:110 includes/Admin/LicensePage.php:37
-#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:34
+#: includes/Admin/LicensePage.php:63 includes/Admin/ProductPage.php:41
 #: includes/Privacy/PrivacyService.php:217
 #: includes/Privacy/PrivacyService.php:227
 msgid "Product"
@@ -769,12 +801,12 @@ msgstr "期限"
 msgid "Last verified"
 msgstr "最終認証"
 
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:50
+#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:126
 msgid "Recent API logs"
 msgstr "最近のAPIログ"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:50
+#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:126
 #: includes/Admin/LicensePage.php:77 includes/Admin/LogsPage.php:123
 #: includes/Admin/LogsPage.php:128 includes/Admin/LogsPage.php:145
 #: includes/Privacy/PrivacyService.php:236
@@ -782,8 +814,8 @@ msgid "Action"
 msgstr "操作"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:38
-#: includes/Admin/DashboardPage.php:50 includes/Admin/LicensePage.php:77
+#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:114
+#: includes/Admin/DashboardPage.php:126 includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:66 includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:95 includes/Admin/LogsPage.php:128
 #: includes/Privacy/PrivacyService.php:237
@@ -807,71 +839,125 @@ msgid "Error code"
 msgstr "エラーコード"
 
 #. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:38
-#: includes/Admin/DashboardPage.php:50 includes/Admin/LicensePage.php:77
+#: includes/Admin/CustomerPage.php:114 includes/Admin/DashboardPage.php:114
+#: includes/Admin/DashboardPage.php:126 includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:71 includes/Admin/LogsPage.php:128
 #: includes/Admin/LogsPage.php:145
 msgid "Date"
 msgstr "日時"
 
 #: includes/Admin/DashboardPage.php:20
+msgid ""
+"Review items that need attention, key metrics, and recent operational "
+"activity."
+msgstr "要対応項目、主要指標、最近の運用アクティビティを確認します。"
+
+#: includes/Admin/DashboardPage.php:30
+msgid "Needs attention"
+msgstr "要対応"
+
+#: includes/Admin/DashboardPage.php:30
+msgid ""
+"Resolve critical items first. Open Site Health for complete diagnostics."
+msgstr ""
+"重大な項目から解決してください。完全な診断はサイトヘルスで確認できます。"
+
+#: includes/Admin/DashboardPage.php:35
+msgid "Operational checks could not be loaded. Open Site Health and try again."
+msgstr "運用チェックを読み込めませんでした。サイトヘルスを開いて再度お試しください。"
+
+#: includes/Admin/DashboardPage.php:40
+msgid "No items currently need attention."
+msgstr "現在、対応が必要な項目はありません。"
+
+#: includes/Admin/DashboardPage.php:47
+msgid "Critical"
+msgstr "重大"
+
+#: includes/Admin/DashboardPage.php:47
+msgid "Recommended"
+msgstr "推奨"
+
+#: includes/Admin/DashboardPage.php:50
+msgid "Open the relevant screen"
+msgstr "関連画面を開く"
+
+#: includes/Admin/DashboardPage.php:52
+msgid "Open Site Health"
+msgstr "サイトヘルスを開く"
+
+#: includes/Admin/DashboardPage.php:63
+msgid "Quick actions"
+msgstr "クイックアクション"
+
+#: includes/Admin/DashboardPage.php:67 includes/Admin/ProductPage.php:30
+msgid "Add product"
+msgstr "商品を追加"
+
+#: includes/Admin/DashboardPage.php:80
+msgid "Dashboard actions"
+msgstr "ダッシュボード操作"
+
+#: includes/Admin/DashboardPage.php:89
 msgid "Active licenses"
 msgstr "有効ライセンス"
 
-#: includes/Admin/DashboardPage.php:21
+#: includes/Admin/DashboardPage.php:90
 msgid "Suspended licenses"
 msgstr "停止ライセンス"
 
-#: includes/Admin/DashboardPage.php:22
+#: includes/Admin/DashboardPage.php:91
 msgid "Payment failures"
 msgstr "支払い失敗"
 
-#: includes/Admin/DashboardPage.php:23
+#: includes/Admin/DashboardPage.php:92
 msgid "New subscriptions this month"
 msgstr "今月の新規契約"
 
-#: includes/Admin/DashboardPage.php:24
+#: includes/Admin/DashboardPage.php:93
 msgid "Webhook errors"
 msgstr "Webhookエラー"
 
-#: includes/Admin/DashboardPage.php:26
-msgid ""
-"Review the operational status of subscriptions, licenses, webhooks, and the "
-"API."
-msgstr "契約、ライセンス、Webhook、APIの運用状態を確認できます。"
+#: includes/Admin/DashboardPage.php:95
+msgid "Key metrics"
+msgstr "主要指標"
 
-#: includes/Admin/DashboardPage.php:28
+#: includes/Admin/DashboardPage.php:98
 msgid "View details"
 msgstr "詳細を確認"
 
-#: includes/Admin/DashboardPage.php:38
+#: includes/Admin/DashboardPage.php:105
+msgid "Recent activity"
+msgstr "最近のアクティビティ"
+
+#: includes/Admin/DashboardPage.php:114
 msgid "Recent webhook logs"
 msgstr "最近のWebhookログ"
 
-#: includes/Admin/DashboardPage.php:38
+#: includes/Admin/DashboardPage.php:114
 msgid "Event"
 msgstr "イベント"
 
 #. translators: %d: total number of results.
-#: includes/Admin/DashboardPage.php:38 includes/Admin/LogsPage.php:71
+#: includes/Admin/DashboardPage.php:114 includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:94
 msgid "Type"
 msgstr "種類"
 
-#: includes/Admin/DashboardPage.php:43 includes/Admin/DashboardPage.php:55
+#: includes/Admin/DashboardPage.php:119 includes/Admin/DashboardPage.php:131
 msgid "No logs are available yet."
 msgstr "ログはまだありません。"
 
-#: includes/Admin/DashboardPage.php:45
+#: includes/Admin/DashboardPage.php:121
 msgid "View all webhook logs"
 msgstr "Webhookログをすべて表示"
 
 #. translators: %d: total number of results.
-#: includes/Admin/DashboardPage.php:50 includes/Admin/LogsPage.php:128
+#: includes/Admin/DashboardPage.php:126 includes/Admin/LogsPage.php:128
 msgid "Site"
 msgstr "サイト"
 
-#: includes/Admin/DashboardPage.php:57
+#: includes/Admin/DashboardPage.php:133
 msgid "View all API logs"
 msgstr "APIログをすべて表示"
 
@@ -1121,59 +1207,55 @@ msgstr "該当するログはありません。"
 msgid "The product license operation is invalid."
 msgstr "製品ライセンス操作が不正です。"
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:27 includes/Admin/ProductPage.php:28
 msgid "Search products"
 msgstr "商品を検索"
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:28
 msgid "Product name or slug"
 msgstr "商品名・スラッグ"
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:28
 msgid "All statuses"
 msgstr "すべての状態"
 
-#: includes/Admin/ProductPage.php:26
+#: includes/Admin/ProductPage.php:30
 msgid "Edit product"
 msgstr "商品を編集"
 
-#: includes/Admin/ProductPage.php:26
-msgid "Add product"
-msgstr "商品を追加"
-
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Product name"
 msgstr "商品名"
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Description"
 msgstr "説明"
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Price description"
 msgstr "価格説明"
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Example: $19.80 per month, including tax"
 msgstr "例: 月額1,980円（税込）"
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Subscription description"
 msgstr "サブスクリプション説明"
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Example: Renews monthly until canceled."
 msgstr "例: 解約するまで毎月自動更新されます。"
 
-#: includes/Admin/ProductPage.php:28 includes/Admin/ProductPage.php:34
+#: includes/Admin/ProductPage.php:33 includes/Admin/ProductPage.php:41
 msgid "Slug"
 msgstr "スラッグ"
 
-#: includes/Admin/ProductPage.php:29
+#: includes/Admin/ProductPage.php:34
 msgid "License key prefix"
 msgstr "ライセンスキー接頭辞"
 
-#: includes/Admin/ProductPage.php:29
+#: includes/Admin/ProductPage.php:34
 msgid ""
 "Optional. Leave blank for ABCD-EFGH-JKLM-NPQR, or enter 3-12 letters and "
 "numbers for MYAPP-ABCD-EFGH-JKLM-NPQR."
@@ -1181,33 +1263,33 @@ msgstr ""
 "任意項目です。空欄の場合は ABCD-EFGH-JKLM-NPQR、3〜12文字の英字と数字を入力し"
 "た場合は MYAPP-ABCD-EFGH-JKLM-NPQR 形式になります。"
 
-#: includes/Admin/ProductPage.php:31
+#: includes/Admin/ProductPage.php:36
 msgid ""
 "This prefix is locked because licenses have already been issued for this "
 "product."
 msgstr "この商品ではライセンスが発行済みのため、接頭辞は変更できません。"
 
-#: includes/Admin/ProductPage.php:33
+#: includes/Admin/ProductPage.php:38
 msgid "Update"
 msgstr "更新"
 
-#: includes/Admin/ProductPage.php:33
+#: includes/Admin/ProductPage.php:38
 msgid "Add"
 msgstr "追加"
 
-#: includes/Admin/ProductPage.php:34
+#: includes/Admin/ProductPage.php:41
 msgid "License key format"
 msgstr "ライセンスキー形式"
 
-#: includes/Admin/ProductPage.php:56
+#: includes/Admin/ProductPage.php:65
 msgid "Deactivate"
 msgstr "停止"
 
-#: includes/Admin/ProductPage.php:56
+#: includes/Admin/ProductPage.php:65
 msgid "Reactivate"
 msgstr "再開"
 
-#: includes/Admin/ProductPage.php:56
+#: includes/Admin/ProductPage.php:65
 msgid "Edit"
 msgstr "編集"
 
@@ -1627,6 +1709,11 @@ msgstr "利用日時"
 #: includes/Privacy/PrivacyService.php:255
 msgid "Email type"
 msgstr "メール種別"
+
+#~ msgid ""
+#~ "Review the operational status of subscriptions, licenses, webhooks, and "
+#~ "the API."
+#~ msgstr "契約、ライセンス、Webhook、APIの運用状態を確認できます。"
 
 #~ msgid "OD Product Hub production configuration"
 #~ msgstr "OD Product Hub の本番設定"

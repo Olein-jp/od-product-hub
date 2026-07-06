@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T06:05:31+00:00\n"
+"POT-Creation-Date: 2026-07-06T09:52:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -44,6 +44,7 @@ msgid "The slug or Stripe ID is already in use."
 msgstr ""
 
 #: includes/Admin/AdminActionHandler.php:51
+#: includes/Admin/ProductPage.php:68
 msgid "Product not found."
 msgstr ""
 
@@ -68,14 +69,14 @@ msgid "This webhook cannot be retried."
 msgstr ""
 
 #: includes/Admin/AdminMenu.php:44
-#: includes/Admin/ProductPage.php:25
-msgid "Products"
+#: includes/Admin/DashboardPage.php:20
+msgid "Dashboard"
 msgstr ""
 
 #: includes/Admin/AdminMenu.php:45
-#: includes/Admin/CustomerPage.php:110
-#: includes/Admin/LicensePage.php:31
-msgid "Licenses"
+#: includes/Admin/ProductPage.php:26
+#: includes/Admin/ProductPage.php:40
+msgid "Products"
 msgstr ""
 
 #: includes/Admin/AdminMenu.php:46
@@ -84,11 +85,35 @@ msgid "Customers and subscriptions"
 msgstr ""
 
 #: includes/Admin/AdminMenu.php:47
-msgid "Logs"
+#: includes/Admin/CustomerPage.php:110
+#: includes/Admin/LicensePage.php:31
+msgid "Licenses"
 msgstr ""
 
 #: includes/Admin/AdminMenu.php:48
+msgid "Logs"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/DashboardPage.php:72
 msgid "Settings"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:61
+msgid "Dashboard overview"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:62
+msgid "Start with items that need attention, then use the metrics and recent activity to investigate details."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:68
+#: includes/Admin/DashboardPage.php:76
+msgid "Site Health"
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:69
+msgid "The dashboard summarizes operational checks. Open Site Health for complete diagnostics and remediation guidance."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:46
@@ -160,7 +185,7 @@ msgid "Select a page"
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:143
-#: includes/Admin/AdminSiteHealth.php:195
+#: includes/Admin/AdminSiteHealth.php:207
 msgid "Select a published page containing the odph_my_account shortcode."
 msgstr ""
 
@@ -205,6 +230,8 @@ msgid "Test Stripe connection"
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:172
+#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:63
 #: includes/Frontend/Shortcodes.php:205
 #: includes/Frontend/Shortcodes.php:216
 msgid "Active"
@@ -215,6 +242,8 @@ msgid "Grace period (vendor Hub unavailable)"
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:174
+#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:63
 #: includes/Frontend/Shortcodes.php:206
 msgid "Inactive"
 msgstr ""
@@ -381,177 +410,177 @@ msgstr ""
 msgid "Last successful log cleanup"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:99
+#: includes/Admin/AdminSiteHealth.php:111
 msgid "Stripe or HTTPS configuration is incomplete"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:99
+#: includes/Admin/AdminSiteHealth.php:111
 msgid "Configure all three Stripe keys and enable HTTPS in production."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:102
+#: includes/Admin/AdminSiteHealth.php:114
 msgid "Run the Stripe connection test"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:102
+#: includes/Admin/AdminSiteHealth.php:114
 msgid "The keys are configured, but a successful manual connection test has not been recorded."
 msgstr ""
 
 #. translators: %s: UTC date and time of the last successful Stripe connection test.
-#: includes/Admin/AdminSiteHealth.php:105
+#: includes/Admin/AdminSiteHealth.php:117
 #, php-format
 msgid "The last successful manual Stripe test was recorded at %s."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:106
+#: includes/Admin/AdminSiteHealth.php:118
 msgid "Stripe and HTTPS are ready"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:113
+#: includes/Admin/AdminSiteHealth.php:125
 msgid "Webhook processing appears to be stuck"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:113
+#: includes/Admin/AdminSiteHealth.php:125
 msgid "A Webhook has remained in processing for more than five minutes. Inspect the Webhook log and resend the event after resolving the cause."
 msgstr ""
 
 #. translators: %d: number of consecutive Webhook failures.
-#: includes/Admin/AdminSiteHealth.php:117
+#: includes/Admin/AdminSiteHealth.php:129
 #, php-format
 msgid "%d consecutive Webhook failures were detected. Inspect the latest errors and Stripe delivery history."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:118
+#: includes/Admin/AdminSiteHealth.php:130
 msgid "Webhook processing is failing repeatedly"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:121
+#: includes/Admin/AdminSiteHealth.php:133
 msgid "No successful Webhook has been recorded"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:121
+#: includes/Admin/AdminSiteHealth.php:133
 msgid "Send a Stripe test event and confirm that it completes successfully."
 msgstr ""
 
 #. translators: %s: UTC date and time of the latest successful Webhook.
-#: includes/Admin/AdminSiteHealth.php:124
+#: includes/Admin/AdminSiteHealth.php:136
 #, php-format
 msgid "The latest successful Webhook was recorded at %s."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:125
+#: includes/Admin/AdminSiteHealth.php:137
 msgid "Webhook processing is healthy"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:134
+#: includes/Admin/AdminSiteHealth.php:146
 msgid "The log cleanup schedule is missing"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:134
+#: includes/Admin/AdminSiteHealth.php:146
 msgid "Deactivate and reactivate the plugin, or load an OD Product Hub screen to repair the daily Cron event."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:137
+#: includes/Admin/AdminSiteHealth.php:149
 msgid "Log cleanup has not succeeded recently"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:137
+#: includes/Admin/AdminSiteHealth.php:149
 msgid "Run cleanup manually and verify that WP-Cron is invoked by the server."
 msgstr ""
 
 #. translators: %s: UTC date and time of the next scheduled log cleanup.
-#: includes/Admin/AdminSiteHealth.php:140
+#: includes/Admin/AdminSiteHealth.php:152
 #, php-format
 msgid "The daily cleanup is scheduled for %s. No successful run has been recorded yet."
 msgstr ""
 
 #. translators: 1: UTC date and time of the next cleanup, 2: UTC date and time of the last successful cleanup.
-#: includes/Admin/AdminSiteHealth.php:143
+#: includes/Admin/AdminSiteHealth.php:155
 #, php-format
 msgid "The next daily cleanup is scheduled for %1$s and the last successful run was at %2$s."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:145
+#: includes/Admin/AdminSiteHealth.php:157
 msgid "Log retention is scheduled"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:151
+#: includes/Admin/AdminSiteHealth.php:163
 msgid "Update delivery PHP extensions are missing"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:151
+#: includes/Admin/AdminSiteHealth.php:163
 msgid "Enable both Sodium and Zip before publishing or serving releases."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:155
+#: includes/Admin/AdminSiteHealth.php:167
 msgid "Release storage is not writable"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:155
+#: includes/Admin/AdminSiteHealth.php:167
 msgid "Configure a writable private release storage directory. The actual path is intentionally omitted."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:161
+#: includes/Admin/AdminSiteHealth.php:173
 msgid "A published release package is missing"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:161
+#: includes/Admin/AdminSiteHealth.php:173
 msgid "Withdraw the affected release, confirm private storage availability, and publish a newly verified build."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:164
+#: includes/Admin/AdminSiteHealth.php:176
 msgid "A published release failed integrity verification"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:164
+#: includes/Admin/AdminSiteHealth.php:176
 msgid "Withdraw the affected release, isolate its package, and publish a newly verified build."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:168
+#: includes/Admin/AdminSiteHealth.php:180
 msgid "Move release storage outside the Web root"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:168
+#: includes/Admin/AdminSiteHealth.php:180
 msgid "The storage is writable, but production releases should use ODPH_RELEASE_STORAGE_PATH outside the Web root."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:170
+#: includes/Admin/AdminSiteHealth.php:182
 msgid "Update delivery dependencies are ready"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:170
+#: includes/Admin/AdminSiteHealth.php:182
 msgid "Sodium, Zip, private storage, and published release signatures passed validation."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSiteHealth.php:202
 msgid "Checkout result pages are incomplete"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:190
+#: includes/Admin/AdminSiteHealth.php:202
 msgid "Use published pages for the success and cancel URLs and place the corresponding OD Product Hub shortcode on each page."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:195
+#: includes/Admin/AdminSiteHealth.php:207
 msgid "The account page is incomplete"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:197
+#: includes/Admin/AdminSiteHealth.php:209
 msgid "Checkout and account pages are ready"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:197
+#: includes/Admin/AdminSiteHealth.php:209
 msgid "The configured pages are published and contain the required shortcodes."
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:219
+#: includes/Admin/AdminSiteHealth.php:231
 msgid "Not recorded"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:223
+#: includes/Admin/AdminSiteHealth.php:235
 msgid "Not scheduled"
 msgstr ""
 
-#: includes/Admin/AdminSiteHealth.php:228
+#: includes/Admin/AdminSiteHealth.php:241
 msgid "Open the relevant OD Product Hub screen"
 msgstr ""
 
@@ -619,14 +648,14 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:46
 #: includes/Admin/LicensePage.php:37
 #: includes/Admin/LogsPage.php:71
-#: includes/Admin/ProductPage.php:34
+#: includes/Admin/ProductPage.php:41
 msgid "Actions"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:56
 #: includes/Admin/CustomerPage.php:83
 #: includes/Admin/CustomerPage.php:105
-#: includes/Admin/ProductPage.php:56
+#: includes/Admin/ProductPage.php:65
 msgid "(opens in a new tab)"
 msgstr ""
 
@@ -645,8 +674,8 @@ msgstr ""
 #: includes/Admin/LicensePage.php:31
 #: includes/Admin/LicensePage.php:37
 #: includes/Admin/LicensePage.php:63
-#: includes/Admin/ProductPage.php:28
-#: includes/Admin/ProductPage.php:34
+#: includes/Admin/ProductPage.php:33
+#: includes/Admin/ProductPage.php:41
 #: includes/Privacy/PrivacyService.php:229
 msgid "Status"
 msgstr ""
@@ -665,7 +694,7 @@ msgstr ""
 #: includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:128
 #: includes/Admin/LogsPage.php:145
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:28
 msgid "Filter"
 msgstr ""
 
@@ -674,7 +703,7 @@ msgstr ""
 #: includes/Admin/CustomerPage.php:110
 #: includes/Admin/LicensePage.php:37
 #: includes/Admin/LicensePage.php:63
-#: includes/Admin/ProductPage.php:34
+#: includes/Admin/ProductPage.php:41
 #: includes/Privacy/PrivacyService.php:217
 #: includes/Privacy/PrivacyService.php:227
 msgid "Product"
@@ -740,13 +769,13 @@ msgid "Last verified"
 msgstr ""
 
 #: includes/Admin/CustomerPage.php:114
-#: includes/Admin/DashboardPage.php:50
+#: includes/Admin/DashboardPage.php:126
 msgid "Recent API logs"
 msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114
-#: includes/Admin/DashboardPage.php:50
+#: includes/Admin/DashboardPage.php:126
 #: includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:123
 #: includes/Admin/LogsPage.php:128
@@ -757,8 +786,8 @@ msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114
-#: includes/Admin/DashboardPage.php:38
-#: includes/Admin/DashboardPage.php:50
+#: includes/Admin/DashboardPage.php:114
+#: includes/Admin/DashboardPage.php:126
 #: includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:66
 #: includes/Admin/LogsPage.php:71
@@ -790,8 +819,8 @@ msgstr ""
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:114
-#: includes/Admin/DashboardPage.php:38
-#: includes/Admin/DashboardPage.php:50
+#: includes/Admin/DashboardPage.php:114
+#: includes/Admin/DashboardPage.php:126
 #: includes/Admin/LicensePage.php:77
 #: includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:128
@@ -800,64 +829,117 @@ msgid "Date"
 msgstr ""
 
 #: includes/Admin/DashboardPage.php:20
+msgid "Review items that need attention, key metrics, and recent operational activity."
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:30
+msgid "Needs attention"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:30
+msgid "Resolve critical items first. Open Site Health for complete diagnostics."
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:35
+msgid "Operational checks could not be loaded. Open Site Health and try again."
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:40
+msgid "No items currently need attention."
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:47
+msgid "Critical"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:47
+msgid "Recommended"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:50
+msgid "Open the relevant screen"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:52
+msgid "Open Site Health"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:63
+msgid "Quick actions"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:67
+#: includes/Admin/ProductPage.php:30
+msgid "Add product"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:80
+msgid "Dashboard actions"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:89
 msgid "Active licenses"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:21
+#: includes/Admin/DashboardPage.php:90
 msgid "Suspended licenses"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:22
+#: includes/Admin/DashboardPage.php:91
 msgid "Payment failures"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:23
+#: includes/Admin/DashboardPage.php:92
 msgid "New subscriptions this month"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:24
+#: includes/Admin/DashboardPage.php:93
 msgid "Webhook errors"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:26
-msgid "Review the operational status of subscriptions, licenses, webhooks, and the API."
+#: includes/Admin/DashboardPage.php:95
+msgid "Key metrics"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:28
+#: includes/Admin/DashboardPage.php:98
 msgid "View details"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:38
+#: includes/Admin/DashboardPage.php:105
+msgid "Recent activity"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:114
 msgid "Recent webhook logs"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:38
+#: includes/Admin/DashboardPage.php:114
 msgid "Event"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/DashboardPage.php:38
+#: includes/Admin/DashboardPage.php:114
 #: includes/Admin/LogsPage.php:71
 #: includes/Admin/LogsPage.php:94
 msgid "Type"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:43
-#: includes/Admin/DashboardPage.php:55
+#: includes/Admin/DashboardPage.php:119
+#: includes/Admin/DashboardPage.php:131
 msgid "No logs are available yet."
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:45
+#: includes/Admin/DashboardPage.php:121
 msgid "View all webhook logs"
 msgstr ""
 
 #. translators: %d: total number of results.
-#: includes/Admin/DashboardPage.php:50
+#: includes/Admin/DashboardPage.php:126
 #: includes/Admin/LogsPage.php:128
 msgid "Site"
 msgstr ""
 
-#: includes/Admin/DashboardPage.php:57
+#: includes/Admin/DashboardPage.php:133
 msgid "View all API logs"
 msgstr ""
 
@@ -1101,88 +1183,85 @@ msgstr ""
 msgid "The product license operation is invalid."
 msgstr ""
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:27
+#: includes/Admin/ProductPage.php:28
 msgid "Search products"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:28
 msgid "Product name or slug"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:25
+#: includes/Admin/ProductPage.php:28
 msgid "All statuses"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:26
+#: includes/Admin/ProductPage.php:30
 msgid "Edit product"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:26
-msgid "Add product"
-msgstr ""
-
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Product name"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Description"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Price description"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Example: $19.80 per month, including tax"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Subscription description"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:28
+#: includes/Admin/ProductPage.php:33
 msgid "Example: Renews monthly until canceled."
 msgstr ""
 
-#: includes/Admin/ProductPage.php:28
-#: includes/Admin/ProductPage.php:34
+#: includes/Admin/ProductPage.php:33
+#: includes/Admin/ProductPage.php:41
 msgid "Slug"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:29
+#: includes/Admin/ProductPage.php:34
 msgid "License key prefix"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:29
+#: includes/Admin/ProductPage.php:34
 msgid "Optional. Leave blank for ABCD-EFGH-JKLM-NPQR, or enter 3-12 letters and numbers for MYAPP-ABCD-EFGH-JKLM-NPQR."
 msgstr ""
 
-#: includes/Admin/ProductPage.php:31
+#: includes/Admin/ProductPage.php:36
 msgid "This prefix is locked because licenses have already been issued for this product."
 msgstr ""
 
-#: includes/Admin/ProductPage.php:33
+#: includes/Admin/ProductPage.php:38
 msgid "Update"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:33
+#: includes/Admin/ProductPage.php:38
 msgid "Add"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:34
+#: includes/Admin/ProductPage.php:41
 msgid "License key format"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:56
+#: includes/Admin/ProductPage.php:65
 msgid "Deactivate"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:56
+#: includes/Admin/ProductPage.php:65
 msgid "Reactivate"
 msgstr ""
 
-#: includes/Admin/ProductPage.php:56
+#: includes/Admin/ProductPage.php:65
 msgid "Edit"
 msgstr ""
 

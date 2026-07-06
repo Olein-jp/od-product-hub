@@ -101,7 +101,7 @@ final class Plugin {
 					$webhook_logs  = new WebhookLogRepository();
 					$licenses      = new LicenseRepository();
 					$api_logs      = new ApiLogRepository();
-					return new DashboardPage( new DashboardService( $subscriptions, $webhook_logs, $licenses, $api_logs ) );
+					return new DashboardPage( new DashboardService( $subscriptions, $webhook_logs, $licenses, $api_logs ), new AdminSiteHealth() );
 				},
 				'products'       => static fn (): ProductPage => new ProductPage( new ProductRepository() ),
 				'licenses'       => static fn (): LicensePage => new LicensePage( new LicenseRepository(), new ApiLogRepository() ),
