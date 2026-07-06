@@ -24,6 +24,7 @@ final class AdminMenu {
 		add_action( 'admin_post_odph_product_status', array( $this, 'change_product_status' ) );
 		add_action( 'admin_post_odph_license_action', array( $this, 'license_action' ) );
 		add_action( 'admin_post_odph_test_stripe', array( $this, 'test_stripe_connection' ) );
+		add_action( 'admin_post_odph_vendor_license', array( $this, 'vendor_license' ) );
 		add_action( 'admin_post_odph_cleanup_logs', array( $this, 'cleanup_logs' ) );
 		add_action( 'admin_post_odph_retry_webhook', array( $this, 'retry_webhook' ) );
 		add_action( 'admin_notices', array( $this, 'configuration_notice' ) );
@@ -89,6 +90,10 @@ final class AdminMenu {
 
 	public function test_stripe_connection(): void {
 		$this->service( 'actions', AdminActionHandler::class )->test_stripe_connection();
+	}
+
+	public function vendor_license(): void {
+		$this->service( 'vendor_license', ProductLicenseController::class )->handle();
 	}
 
 	public function cleanup_logs(): void {

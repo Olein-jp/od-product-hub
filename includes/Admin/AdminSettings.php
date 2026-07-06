@@ -10,8 +10,11 @@ namespace OD_Product_Hub\Admin;
 use OD_Product_Hub\API\ClientIpResolver;
 use OD_Product_Hub\Database\Installer;
 use OD_Product_Hub\Email\Templates;
+use OD_Product_Hub\VendorLicense\ProductLicenseService;
 
 final class AdminSettings {
+	public function __construct( private readonly ?ProductLicenseService $product_license = null ) {}
+
 	public function register(): void {
 		register_setting(
 			'odph_settings_group',
@@ -98,6 +101,7 @@ final class AdminSettings {
 		$s = get_option( 'odph_settings', Installer::defaults() );
 		echo '<div class="wrap"><h1>' . esc_html__( 'OD Product Hub Settings', 'od-product-hub' ) . '</h1>';
 		settings_errors( 'odph_settings' );
+		$this->render_product_license();
 		if ( isset( $_GET['stripe_test'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag after a nonce-protected action.
 			$success = 'success' === sanitize_key( wp_unslash( $_GET['stripe_test'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag after a nonce-protected action.
 			echo '<div class="notice notice-' . ( $success ? 'success' : 'error' ) . ' is-dismissible"><p>' . esc_html( $success ? __( 'Connected to Stripe successfully.', 'od-product-hub' ) : __( 'Could not connect to Stripe. Check the keys and network connection.', 'od-product-hub' ) ) . '</p></div>';
@@ -158,5 +162,62 @@ final class AdminSettings {
 		wp_nonce_field( 'odph_test_stripe' );
 		submit_button( __( 'Test Stripe connection', 'od-product-hub' ), 'secondary', 'submit', false );
 		echo '</form></div>';
+	}
+
+	private function render_product_license(): void {
+		$license = $this->product_license ?? new ProductLicenseService();
+		$current = $license->current();
+		$status  = $current->status;
+		$labels  = array(
+			'active'      => __( 'Active', 'od-product-hub' ),
+			'grace'       => __( 'Grace period (vendor Hub unavailable)', 'od-product-hub' ),
+			'inactive'    => __( 'Inactive', 'od-product-hub' ),
+			'expired'     => __( 'Expired', 'od-product-hub' ),
+			'cancelled'   => __( 'Cancelled', 'od-product-hub' ),
+			'suspended'   => __( 'Suspended', 'od-product-hub' ),
+			'unavailable' => __( 'Vendor Hub unavailable or misconfigured', 'od-product-hub' ),
+			'unverified'  => __( 'Not activated', 'od-product-hub' ),
+			'deactivated' => __( 'Deactivated', 'od-product-hub' ),
+		);
+		if ( 'payment_failed' === $current->error_code ) {
+			$labels['inactive'] = __( 'Payment failed', 'od-product-hub' );
+		} elseif ( 'invalid_license' === $current->error_code ) {
+			$labels['inactive'] = __( 'Invalid license key', 'od-product-hub' );
+		}
+		echo '<h2>' . esc_html__( 'OD Product Hub product license', 'od-product-hub' ) . '</h2>';
+		echo '<p>' . esc_html__( 'This license controls only vendor updates and support. Local features and existing data remain available regardless of contract status.', 'od-product-hub' ) . '</p>';
+		if ( $license->is_self_reference() ) {
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'The vendor Hub points to this site. License requests are disabled to prevent a request loop.', 'od-product-hub' ) . '</p></div>';
+		} elseif ( '' === $license->hub_url() ) {
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'The vendor Hub URL is not configured in this distribution.', 'od-product-hub' ) . '</p></div>';
+		} elseif ( 'unverified' === $status ) {
+			echo '<div class="notice notice-info inline"><p>' . esc_html__( 'The product license has not been activated.', 'od-product-hub' ) . '</p></div>';
+		} elseif ( 'grace' === $status ) {
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'The vendor Hub is unavailable. The last active verification is temporarily accepted during the grace period.', 'od-product-hub' ) . '</p></div>';
+		} elseif ( 'unavailable' === $status ) {
+			echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'The vendor Hub could not be reached. An existing active contract may remain in its grace period.', 'od-product-hub' ) . '</p></div>';
+		} elseif ( in_array( $status, array( 'inactive', 'expired', 'cancelled', 'suspended' ), true ) ) {
+			echo '<div class="notice notice-error inline"><p>' . esc_html__( 'The product contract is not active. New vendor updates are unavailable, but OD Product Hub continues to run.', 'od-product-hub' ) . '</p></div>';
+		}
+		$hub_display = '' !== $license->hub_url() ? $license->hub_url() : '—';
+		echo '<table class="form-table"><tr><th>' . esc_html__( 'Contract status', 'od-product-hub' ) . '</th><td>' . esc_html( $labels[ $status ] ?? $status ) . '</td></tr><tr><th>' . esc_html__( 'Last checked', 'od-product-hub' ) . '</th><td>' . esc_html( 0 < $current->checked_at ? wp_date( 'Y-m-d H:i:s', $current->checked_at ) : __( 'Never', 'od-product-hub' ) ) . '</td></tr><tr><th>' . esc_html__( 'Vendor Hub', 'od-product-hub' ) . '</th><td><code>' . esc_html( $hub_display ) . '</code></td></tr></table>';
+		if ( '' === $license->license_key() ) {
+			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_vendor_license"><input type="hidden" name="license_operation" value="activate"><p><label for="odph_vendor_license_key">' . esc_html__( 'Product license key', 'od-product-hub' ) . '</label><br><input class="regular-text" type="password" autocomplete="off" id="odph_vendor_license_key" name="license_key" required></p>';
+			wp_nonce_field( 'odph_vendor_license_activate' );
+			submit_button( __( 'Activate product license', 'od-product-hub' ), 'secondary', 'submit', false );
+			echo '</form>';
+			return;
+		}
+		foreach (
+			array(
+				'verify'     => __( 'Recheck contract status', 'od-product-hub' ),
+				'deactivate' => __( 'Deactivate product license', 'od-product-hub' ),
+			) as $operation => $label
+		) {
+			echo '<form class="odph-inline-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="odph_vendor_license"><input type="hidden" name="license_operation" value="' . esc_attr( $operation ) . '">';
+			wp_nonce_field( 'odph_vendor_license_' . $operation );
+			submit_button( $label, 'secondary', 'submit', false );
+			echo '</form> ';
+		}
 	}
 }

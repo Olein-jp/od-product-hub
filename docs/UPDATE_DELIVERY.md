@@ -1,5 +1,7 @@
 # 契約者向け自動アップデート配布
 
+OD Product Hub自身を上位Hubから更新する構成は [製品ライセンス運用](VENDOR_LICENSE.md) を参照してください。購入者側では固定したEd25519公開鍵を使い、上位Hubがレスポンスで提示する鍵だけを信頼しません。
+
 この文書はHub運用者向けの正本です。クライアントプラグインへの導入コードは [SDK README](../packages/client-sdk/README.md)、更新確認・ダウンロードのREST契約は [API.md](API.md)、Hub全体の依存境界は [ARCHITECTURE.md](ARCHITECTURE.md) を参照してください。
 
 ## 構成と信頼境界

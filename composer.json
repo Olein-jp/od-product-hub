@@ -16,7 +16,10 @@
     "yoast/phpunit-polyfills": "^4.0"
   },
   "autoload": {
-    "psr-4": {"OD_Product_Hub\\": "includes/"}
+    "psr-4": {
+      "OD_Product_Hub\\": "includes/",
+      "OD_Product_Hub_Client\\": "packages/client-sdk/src/"
+    }
   },
   "autoload-dev": {
     "psr-4": {"OD_Product_Hub\\Tests\\": "tests/"}

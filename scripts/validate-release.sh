@@ -19,6 +19,8 @@ for required in \
 	"od-product-hub/languages/od-product-hub.pot" \
 	"od-product-hub/languages/od-product-hub-ja.po" \
 	"od-product-hub/languages/od-product-hub-ja.mo" \
+	"od-product-hub/packages/client-sdk/src/Client.php" \
+	"od-product-hub/packages/client-sdk/src/WordPress/Updater.php" \
 	"od-product-hub/vendor/autoload.php" \
 	"od-product-hub/vendor/stripe/stripe-php/init.php"; do
 	if ! grep -Fxq "$required" <<<"$CONTENTS"; then
@@ -27,8 +29,14 @@ for required in \
 	fi
 done
 
-if grep -Eq '^od-product-hub/(\.git|\.github|\.gitignore|\.env($|\.)|node_modules|packages|examples|tests|scripts|build|dist|\.phpunit\.cache)(/|$)|^od-product-hub/(composer\.(json|lock)|package(-lock)?\.json|phpcs\.xml\.dist|phpstan\.neon\.dist|phpunit\.xml\.dist)$' <<<"$CONTENTS"; then
+if grep -Eq '^od-product-hub/(\.git|\.github|\.gitignore|\.env($|\.)|node_modules|examples|tests|scripts|build|dist|\.phpunit\.cache)(/|$)|^od-product-hub/(composer\.(json|lock)|package(-lock)?\.json|phpcs\.xml\.dist|phpstan\.neon\.dist|phpunit\.xml\.dist)$' <<<"$CONTENTS"; then
 	echo "Development-only content was found in the release ZIP." >&2
+	exit 1
+fi
+
+PACKAGE_CONTENTS="$(grep -E '^od-product-hub/packages/' <<<"$CONTENTS" || true)"
+if [[ -n "$PACKAGE_CONTENTS" ]] && grep -Evq '^od-product-hub/packages/client-sdk/src/.+\.php$' <<<"$PACKAGE_CONTENTS"; then
+	echo "Only the client SDK runtime source may be included under packages/." >&2
 	exit 1
 fi
 

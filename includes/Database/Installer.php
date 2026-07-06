@@ -11,6 +11,7 @@ final class Installer {
 	private const LOG_CLEANUP_HOOK          = 'odph_cleanup_logs';
 	private const LOG_CLEANUP_RECURRENCE    = 'daily';
 	private const LOG_CLEANUP_INITIAL_DELAY = HOUR_IN_SECONDS;
+	private const VENDOR_LICENSE_HOOK       = 'odph_verify_vendor_license';
 
 	public static function activate(): void {
 		self::migrate();
@@ -27,6 +28,7 @@ final class Installer {
 
 	public static function ensure_scheduled_events(): void {
 		if ( false !== wp_next_scheduled( self::LOG_CLEANUP_HOOK ) ) {
+			self::ensure_vendor_license_event();
 			return;
 		}
 
@@ -41,10 +43,21 @@ final class Installer {
 			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are not HTML output; retain the WP-Cron diagnostic.
 			throw new \RuntimeException( 'Failed to schedule log cleanup: ' . $result->get_error_message() );
 		}
+		self::ensure_vendor_license_event();
+	}
+
+	private static function ensure_vendor_license_event(): void {
+		if ( false === wp_next_scheduled( self::VENDOR_LICENSE_HOOK ) ) {
+			$result = wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::VENDOR_LICENSE_HOOK, array(), true );
+			if ( is_wp_error( $result ) ) {
+				throw new \RuntimeException( 'Failed to schedule vendor license verification: ' . esc_html( $result->get_error_message() ) );
+			}
+		}
 	}
 
 	public static function deactivate(): void {
 		wp_clear_scheduled_hook( self::LOG_CLEANUP_HOOK );
+		wp_clear_scheduled_hook( self::VENDOR_LICENSE_HOOK );
 	}
 
 	public static function migrate(): void {
@@ -76,6 +89,8 @@ final class Installer {
 		delete_option( 'odph_settings' );
 		delete_option( 'odph_schema_version' );
 		delete_option( 'odph_operational_state' );
+		delete_option( 'odph_vendor_license_key' );
+		delete_option( 'odph_vendor_license_state' );
 	}
 
 	/** @return array<string, callable(): void> */

@@ -7,7 +7,16 @@
 /skills-lock.json
 /.wp-env.json
 /node_modules
-/packages
+/packages/client-sdk/tests
+/packages/client-sdk/vendor
+/packages/client-sdk/.gitignore
+/packages/client-sdk/.phpunit.cache
+/packages/client-sdk/README.md
+/packages/client-sdk/composer.json
+/packages/client-sdk/composer.lock
+/packages/client-sdk/phpcs.xml.dist
+/packages/client-sdk/phpstan.neon.dist
+/packages/client-sdk/phpunit.xml.dist
 /examples
 /tests
 /scripts

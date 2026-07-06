@@ -1,5 +1,11 @@
 # アーキテクチャ
 
+## 販売元Hubと購入者Hub
+
+OD Product Hub自身の有償契約は、購入者サイト内で自己検証しません。販売元が別サイトで運用する上位OD Product Hubが、`od-product-hub` 商品の契約・ライセンス・署名済みリリースを管理します。購入者サイトのOD Product Hubは同梱したclient-sdkを利用し、上位Hubの `activate` / `verify` / `deactivate` / `updates/check` を呼び出します。
+
+購入者Hubが管理する商品、顧客、契約、ライセンス、API、ログ、リリースは、この製品ライセンスから独立しています。販売元契約が失効してもローカル機能や既存データは停止・削除されず、制限されるのはOD Product Hub自身の新規更新と販売元サービスだけです。接続先が自身のサイトと一致する場合は、循環リクエストを避けるため通信前に設定エラーとします。
+
 WordPress Options APIは秘密設定、`wp_odph_*` 独自テーブルは検索・同期対象データに使います。Stripe Webhookを契約状態の正とし、イベントIDの一意制約で冪等性を確保します。REST APIは保存済み状態だけを参照して高速応答し、Stripeへ同期問い合わせしません。
 
 Webhookの状態は `processing` → `success` / `unsupported` / `error` → `exhausted` と遷移します。`success` と `unsupported` だけを処理済みの重複としてHTTP 200で応答します。`error` または5分以上更新されていない `processing` は、条件付きUPDATEで排他的に再claimします。処理中の並行配送はHTTP 409、5回失敗した終端状態はHTTP 503とし、Stripeへ未完了を伝えます。管理者が終端状態を再開した場合も、保存済みのマスク済みpayloadは再生せず、Stripeからの新しい署名付き配送だけを受け付けます。

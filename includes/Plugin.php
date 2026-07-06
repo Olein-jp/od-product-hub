@@ -17,6 +17,7 @@ use OD_Product_Hub\Admin\DashboardService;
 use OD_Product_Hub\Admin\LicensePage;
 use OD_Product_Hub\Admin\LogsPage;
 use OD_Product_Hub\Admin\ProductPage;
+use OD_Product_Hub\Admin\ProductLicenseController;
 use OD_Product_Hub\API\RestController;
 use OD_Product_Hub\CLI\ReleaseCommand;
 use OD_Product_Hub\Customer\CustomerRepository;
@@ -35,6 +36,7 @@ use OD_Product_Hub\Subscription\SubscriptionRepository;
 use OD_Product_Hub\Webhook\PayloadRedactor;
 use OD_Product_Hub\Webhook\WebhookController;
 use OD_Product_Hub\Webhook\WebhookNotificationSubscriber;
+use OD_Product_Hub\VendorLicense\ProductLicenseService;
 
 final class Plugin {
 	private static ?self $instance = null;
@@ -59,6 +61,9 @@ final class Plugin {
 		load_plugin_textdomain( 'od-product-hub', false, dirname( plugin_basename( OD_PRODUCT_HUB_FILE ) ) . '/languages' );
 		( new WebhookNotificationSubscriber() )->register();
 		add_action( 'odph_cleanup_logs', array( new LogCleanupService(), 'run_scheduled' ) );
+		$product_license = new ProductLicenseService();
+		add_action( 'odph_verify_vendor_license', array( $product_license, 'run_scheduled' ) );
+		$product_license->register_updater();
 	}
 
 	private function register_frontend(): void {
@@ -91,18 +96,18 @@ final class Plugin {
 	private function admin_menu(): AdminMenu {
 		return new AdminMenu(
 			array(
-				'dashboard'   => static function (): DashboardPage {
+				'dashboard'      => static function (): DashboardPage {
 					$subscriptions = new SubscriptionRepository();
 					$webhook_logs  = new WebhookLogRepository();
 					$licenses      = new LicenseRepository();
 					$api_logs      = new ApiLogRepository();
 					return new DashboardPage( new DashboardService( $subscriptions, $webhook_logs, $licenses, $api_logs ) );
 				},
-				'products'    => static fn (): ProductPage => new ProductPage( new ProductRepository() ),
-				'licenses'    => static fn (): LicensePage => new LicensePage( new LicenseRepository(), new ApiLogRepository() ),
-				'customers'   => static fn (): CustomerPage => new CustomerPage( new CustomerRepository(), new SubscriptionRepository(), new LicenseRepository(), new ApiLogRepository() ),
-				'logs'        => static fn (): LogsPage => new LogsPage( new WebhookLogRepository(), new ApiLogRepository(), new AdminLogRepository(), new PayloadRedactor() ),
-				'actions'     => static fn (): AdminActionHandler => new AdminActionHandler(
+				'products'       => static fn (): ProductPage => new ProductPage( new ProductRepository() ),
+				'licenses'       => static fn (): LicensePage => new LicensePage( new LicenseRepository(), new ApiLogRepository() ),
+				'customers'      => static fn (): CustomerPage => new CustomerPage( new CustomerRepository(), new SubscriptionRepository(), new LicenseRepository(), new ApiLogRepository() ),
+				'logs'           => static fn (): LogsPage => new LogsPage( new WebhookLogRepository(), new ApiLogRepository(), new AdminLogRepository(), new PayloadRedactor() ),
+				'actions'        => static fn (): AdminActionHandler => new AdminActionHandler(
 					new ProductRepository(),
 					new AdminLogRepository(),
 					new LicenseManager(),
@@ -118,8 +123,9 @@ final class Plugin {
 						}
 					}
 				),
-				'settings'    => static fn (): AdminSettings => new AdminSettings(),
-				'site_health' => static fn (): AdminSiteHealth => new AdminSiteHealth(),
+				'settings'       => static fn (): AdminSettings => new AdminSettings( new ProductLicenseService() ),
+				'vendor_license' => static fn (): ProductLicenseController => new ProductLicenseController( new ProductLicenseService() ),
+				'site_health'    => static fn (): AdminSiteHealth => new AdminSiteHealth(),
 			)
 		);
 	}
