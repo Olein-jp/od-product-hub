@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-06T10:10:02+00:00\n"
+"POT-Creation-Date: 2026-07-07T00:07:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -100,7 +100,7 @@ msgid "No %s have been added yet."
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:66
-#: includes/Admin/AdminSettings.php:172
+#: includes/Admin/AdminSettings.php:271
 #: includes/Admin/ProductPage.php:28
 #: includes/Frontend/Shortcodes.php:205
 #: includes/Frontend/Shortcodes.php:216
@@ -108,26 +108,26 @@ msgid "Active"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:67
-#: includes/Admin/AdminSettings.php:174
+#: includes/Admin/AdminSettings.php:273
 #: includes/Admin/ProductPage.php:28
 #: includes/Frontend/Shortcodes.php:206
 msgid "Inactive"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:68
-#: includes/Admin/AdminSettings.php:177
+#: includes/Admin/AdminSettings.php:276
 #: includes/Frontend/Shortcodes.php:209
 msgid "Suspended"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:69
-#: includes/Admin/AdminSettings.php:175
+#: includes/Admin/AdminSettings.php:274
 #: includes/Frontend/Shortcodes.php:207
 msgid "Expired"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:70
-#: includes/Admin/AdminSettings.php:176
+#: includes/Admin/AdminSettings.php:275
 msgid "Cancelled"
 msgstr ""
 
@@ -187,256 +187,404 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:45
+#: includes/Admin/AdminMenu.php:46
+msgid "Webhook URL copied."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:47
+msgid "Could not copy the URL. Select and copy it manually."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:56
 #: includes/Admin/DashboardPage.php:20
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:47
+#: includes/Admin/AdminMenu.php:58
 #: includes/Admin/ProductPage.php:26
 #: includes/Admin/ProductPage.php:40
 msgid "Products"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:48
+#: includes/Admin/AdminMenu.php:59
 #: includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:49
+#: includes/Admin/AdminMenu.php:60
 #: includes/Admin/CustomerPage.php:120
 #: includes/Admin/LicensePage.php:32
 msgid "Licenses"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:50
+#: includes/Admin/AdminMenu.php:61
 msgid "Logs"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:55
+#: includes/Admin/AdminMenu.php:66
 #: includes/Admin/DashboardPage.php:72
 msgid "Settings"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:63
+#: includes/Admin/AdminMenu.php:74
 msgid "Items per page"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:83
+#: includes/Admin/AdminMenu.php:94
 msgid "Dashboard overview"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:84
+#: includes/Admin/AdminMenu.php:95
 msgid "Start with items that need attention, then use the metrics and recent activity to investigate details."
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:90
+#: includes/Admin/AdminMenu.php:101
 #: includes/Admin/DashboardPage.php:76
 msgid "Site Health"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:91
+#: includes/Admin/AdminMenu.php:102
 msgid "The dashboard summarizes operational checks. Open Site Health for complete diagnostics and remediation guidance."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:46
+#: includes/Admin/AdminSettings.php:52
 msgid "The sender email address is invalid. The previous value was preserved."
 msgstr ""
 
 #. translators: %s: email template label.
-#: includes/Admin/AdminSettings.php:69
+#: includes/Admin/AdminSettings.php:86
 #, php-format
 msgid "%s was invalid and has been reset to its default."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:83
+#: includes/Admin/AdminSettings.php:99
 msgid "The URL is invalid. The previous value was preserved."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:93
+#: includes/Admin/AdminSettings.php:109
 msgid "The number is outside the allowed range. The previous value was preserved."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:102
-msgid "OD Product Hub Settings"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:107
-msgid "Connected to Stripe successfully."
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:107
-msgid "Could not connect to Stripe. Check the keys and network connection."
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:115
-msgid "Purchase success URL"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:116
-msgid "Checkout cancel URL"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:117
-msgid "Sender name"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:118
-msgid "Sender email"
-msgstr ""
-
 #: includes/Admin/AdminSettings.php:119
-msgid "Log retention days"
+msgid "Product license"
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:120
-msgid "API requests per minute"
+#: includes/Admin/AdminSettings.php:174
+msgid "Payments"
 msgstr ""
 
-#. translators: %s: last four characters of the stored secret.
-#: includes/Admin/AdminSettings.php:129
-#, php-format
-msgid "Configured; enter a value only to change it. Ends in %s"
+#: includes/Admin/AdminSettings.php:121
+#: includes/Admin/AdminSettings.php:188
+msgid "Pages"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:133
-msgid "Account page"
+#. translators: %d: total number of results.
+#: includes/Admin/AdminSettings.php:122
+#: includes/Admin/AdminSettings.php:205
+#: includes/Admin/CustomerPage.php:47
+#: includes/Admin/CustomerPage.php:109
+msgid "Email"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:139
-msgid "Select a page"
+#: includes/Admin/AdminSettings.php:123
+#: includes/Admin/AdminSettings.php:226
+msgid "API / Network"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:143
-#: includes/Admin/AdminSiteHealth.php:207
-msgid "Select a published page containing the odph_my_account shortcode."
+#: includes/Admin/AdminSettings.php:124
+msgid "Data retention"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:144
-msgid "Trusted proxies"
+#: includes/Admin/AdminSettings.php:128
+msgid "OD Product Hub Settings"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:144
-msgid "Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this field is empty."
+#: includes/Admin/AdminSettings.php:128
+msgid "Settings sections"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:145
-msgid "Enable"
+#: includes/Admin/AdminSettings.php:155
+msgid "Connected to Stripe successfully."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:146
-msgid "Email templates"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:146
-msgid "Emails are sent as plain text. Templates containing unsupported placeholders are reset to their defaults."
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:151
-msgid "Subject"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:152
-msgid "Body"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:153
-msgid "Available placeholders:"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:159
-msgid "Delete all data when uninstalling"
+#: includes/Admin/AdminSettings.php:155
+msgid "Could not connect to Stripe. Check the keys and network connection, then try again."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:163
+msgid "Stripe connection test"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:163
+msgid "Save any key changes before testing. The test checks connectivity without displaying or logging secret values."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:165
 msgid "Test Stripe connection"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:173
-msgid "Grace period (vendor Hub unavailable)"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:178
-msgid "Vendor Hub unavailable or misconfigured"
+#: includes/Admin/AdminSettings.php:174
+msgid "Configure Stripe credentials, checkout destinations, Customer Portal, and the webhook endpoint."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:179
-msgid "Not activated"
+msgid "Purchase success URL"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:179
+msgid "Required. Use an HTTPS page customers see after a successful purchase."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:180
-msgid "Deactivated"
+msgid "Checkout cancel URL"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:180
+msgid "Required. Use an HTTPS page customers see after canceling checkout."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:181
+msgid "Allow customers to open Stripe Customer Portal"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:181
+msgid "Optional. Customers can manage payment methods and subscriptions from their account page."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:183
-msgid "Payment failed"
+msgid "Copy URL"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:185
-msgid "Invalid license key"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:187
-msgid "OD Product Hub product license"
+#: includes/Admin/AdminSettings.php:183
+msgid "Add this endpoint to the Stripe webhook settings."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:188
-msgid "This license controls only vendor updates and support. Local features and existing data remain available regardless of contract status."
+msgid "Choose the customer account page used for licenses, downloads, and billing actions."
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:190
-msgid "The vendor Hub points to this site. License requests are disabled to prevent a request loop."
+#: includes/Admin/AdminSettings.php:189
+msgid "Account page"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:192
-msgid "The vendor Hub URL is not configured in this distribution."
+#: includes/Admin/AdminSettings.php:195
+msgid "Select a page"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:194
-msgid "The product license has not been activated."
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:196
-msgid "The vendor Hub is unavailable. The last active verification is temporarily accepted during the grace period."
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:198
-msgid "The vendor Hub could not be reached. An existing active contract may remain in its grace period."
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:200
-msgid "The product contract is not active. New vendor updates are unavailable, but OD Product Hub continues to run."
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:203
-msgid "Contract status"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:203
-msgid "Last checked"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:203
-msgid "Never"
-msgstr ""
-
-#: includes/Admin/AdminSettings.php:203
-msgid "Vendor Hub"
+#: includes/Admin/AdminSettings.php:199
+msgid "Required. Select a published page containing the odph_my_account shortcode."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:205
-msgid "Product license key"
+msgid "Configure the sender and plain-text messages sent for customer and license events."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:207
-msgid "Activate product license"
+msgid "Sender name"
 msgstr ""
 
-#: includes/Admin/AdminSettings.php:213
-msgid "Recheck contract status"
+#: includes/Admin/AdminSettings.php:207
+msgid "Optional. Defaults to the WordPress site name when empty."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:208
+msgid "Sender email"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:208
+msgid "Optional. Enter a valid address authorized by your mail provider."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:209
+msgid "Email templates"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:209
+msgid "Unsupported placeholders reset that template to its default when saved."
 msgstr ""
 
 #: includes/Admin/AdminSettings.php:214
+msgid "Subject"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:215
+msgid "Body"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:216
+msgid "Available placeholders:"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:226
+msgid "Control request throttling and which proxies may supply forwarded client addresses."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:228
+msgid "API requests per minute"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:228
+msgid "Required. Enter a whole number from 1 to 1000."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:229
+msgid "Trusted proxies"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:229
+msgid "Optional. Enter one CIDR or IP address per line. Forwarded addresses are ignored when empty."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:233
+msgid "Data retention and Danger Zone"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:233
+msgid "Control operational log retention and irreversible cleanup performed when the plugin is uninstalled."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:234
+msgid "Log retention days"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:234
+msgid "Required. Logs older than this value are removed by the scheduled cleanup. Enter 1 to 3650."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:235
+msgid "Delete data on uninstall"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:235
+msgid "Permanently delete OD Product Hub data when uninstalling"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:235
+msgid "Danger: products, customers, subscriptions, licenses, releases, logs, settings, and scheduled data will be deleted. Deactivating the plugin does not trigger this deletion."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:239
+msgid "Saved"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:239
+msgid "Not configured"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:241
+msgid "Leave blank to keep the saved value, or enter a new value to replace it."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:241
+msgid "Required. Enter the value supplied by Stripe."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:252
+msgid "No account page is selected."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:258
+msgid "The selected page is published and contains the account shortcode."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:261
+msgid "The selected account page is not published."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:261
+msgid "The selected page does not contain the odph_my_account shortcode."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:263
+msgid "Edit account page"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:272
+msgid "Grace period (vendor Hub unavailable)"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:277
+msgid "Vendor Hub unavailable or misconfigured"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:278
+msgid "Not activated"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:279
+msgid "Deactivated"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:282
+msgid "Payment failed"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:284
+msgid "Invalid license key"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:286
+msgid "OD Product Hub product license"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:287
+msgid "This license controls only vendor updates and support. Local features and existing data remain available regardless of contract status."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:289
+msgid "The vendor Hub points to this site. License requests are disabled to prevent a request loop."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:291
+msgid "The vendor Hub URL is not configured in this distribution."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:293
+msgid "The product license has not been activated."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:295
+msgid "The vendor Hub is unavailable. The last active verification is temporarily accepted during the grace period."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:297
+msgid "The vendor Hub could not be reached. An existing active contract may remain in its grace period."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:299
+msgid "The product contract is not active. New vendor updates are unavailable, but OD Product Hub continues to run."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:302
+msgid "Contract status"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:302
+msgid "Last checked"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:302
+msgid "Never"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:302
+msgid "Vendor Hub"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:304
+msgid "Product license key"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:306
+msgid "Activate product license"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:312
+msgid "Recheck contract status"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:313
 msgid "Deactivate product license"
 msgstr ""
 
@@ -658,6 +806,10 @@ msgstr ""
 msgid "The account page is incomplete"
 msgstr ""
 
+#: includes/Admin/AdminSiteHealth.php:207
+msgid "Select a published page containing the odph_my_account shortcode."
+msgstr ""
+
 #: includes/Admin/AdminSiteHealth.php:209
 msgid "Checkout and account pages are ready"
 msgstr ""
@@ -719,12 +871,6 @@ msgstr ""
 #: includes/Admin/LicensePage.php:38
 #: includes/Admin/LicensePage.php:68
 msgid "Customer"
-msgstr ""
-
-#. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:47
-#: includes/Admin/CustomerPage.php:109
-msgid "Email"
 msgstr ""
 
 #. translators: %d: total number of results.

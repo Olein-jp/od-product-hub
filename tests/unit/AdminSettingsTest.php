@@ -58,4 +58,18 @@ final class AdminSettingsTest extends TestCase {
 		self::assertSame( 365, $result['log_retention_days'] );
 		self::assertSame( 60, $result['api_rate_limit'] );
 	}
+
+	public function test_section_save_preserves_settings_from_other_sections(): void {
+		$result = ( new AdminSettings() )->sanitize(
+			array(
+				'_section'            => 'api',
+				'api_rate_limit'      => '75',
+				'api_trusted_proxies' => '',
+			)
+		);
+
+		self::assertSame( 'sk_existing', $result['stripe_secret_key'] );
+		self::assertSame( 90, $result['log_retention_days'] );
+		self::assertSame( 75, $result['api_rate_limit'] );
+	}
 }

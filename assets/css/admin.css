@@ -74,6 +74,13 @@
 .odph-list-table + .tablenav .page-numbers { display: flex; gap: var(--odph-space-1); margin: 0; }
 .odph-log-payload { max-height: 560px; overflow: auto; padding: var(--odph-space-4); color: #f0f0f1; background: #1d2327; white-space: pre-wrap; overflow-wrap: anywhere; }
 .nav-tab-wrapper + form, .nav-tab-wrapper + h2 { margin-top: 20px; }
+.odph-settings .nav-tab-wrapper { max-width: 72rem; }
+.odph-settings form > .odph-section { margin-top: var(--odph-space-4); }
+.odph-secondary-action { padding-top: var(--odph-space-4); border-top: 1px solid var(--odph-color-border); }
+.odph-copy-field { display: flex; flex-wrap: wrap; gap: var(--odph-space-2); align-items: center; }
+.odph-copy-field code { overflow-wrap: anywhere; }
+.odph-danger-zone { box-sizing: border-box; padding: var(--odph-space-4); background: #fff; border: 1px solid var(--odph-color-error); border-inline-start-width: 4px; }
+.odph-danger-zone .form-table { margin-bottom: 0; }
 
 @media (forced-colors: active) {
 	.odph-card-link:focus-visible { outline: 2px solid CanvasText; box-shadow: none; }
@@ -95,4 +102,7 @@
 	.odph-list-table .wp-list-table td { display: none; padding-inline: 10px; }
 	.odph-list-table .wp-list-table td.column-primary, .odph-list-table .wp-list-table .no-items td { display: block; }
 	.odph-list-table .wp-list-table .toggle-row:focus::before { box-shadow: var(--odph-focus); }
+	.odph-settings .nav-tab-wrapper { display: flex; overflow-x: auto; }
+	.odph-settings .nav-tab { flex: 0 0 auto; }
+	.odph-settings .form-table th, .odph-settings .form-table td { display: block; width: auto; padding-inline: 0; }
 }

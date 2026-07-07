@@ -8,6 +8,7 @@
 use OD_Product_Hub\Admin\AdminMenu;
 use OD_Product_Hub\Admin\AdminListUi;
 use OD_Product_Hub\Admin\AdminSiteHealth;
+use OD_Product_Hub\Admin\AdminSettings;
 use OD_Product_Hub\Admin\DashboardPage;
 use OD_Product_Hub\Admin\DashboardService;
 use OD_Product_Hub\Admin\ProductPage;
@@ -74,5 +75,15 @@ $empty_html = AdminListUi::empty_row( 3, true, 'items' );
 odph_admin_ui_assert( str_contains( $empty_html, 'No matching items' ), 'Filtered zero-result states must be distinct from an empty collection.' );
 odph_admin_ui_assert( 100 === ( new AdminMenu( array() ) )->save_screen_option( false, 'odph_products_per_page', 999 ), 'List screen page-size preferences must be allow-listed and bounded.' );
 odph_admin_ui_assert( false === ( new AdminMenu( array() ) )->save_screen_option( false, 'unrelated_option', 50 ), 'Unrelated screen options must be left untouched.' );
+
+$_GET = array( 'tab' => 'payment' );
+ob_start();
+( new AdminSettings() )->render();
+$settings_html = (string) ob_get_clean();
+odph_admin_ui_assert( 6 === substr_count( $settings_html, 'class="nav-tab ' ), 'The settings screen must expose all task-oriented sections.' );
+odph_admin_ui_assert( str_contains( $settings_html, 'odph_settings[_section]' ), 'Settings submissions must identify their section to preserve unrelated values.' );
+odph_admin_ui_assert( str_contains( $settings_html, 'type="password"' ) && ! str_contains( $settings_html, 'sk_existing' ), 'Stored secrets must never be rendered into the settings HTML.' );
+odph_admin_ui_assert( str_contains( $settings_html, 'aria-live="polite"' ), 'The webhook copy action must announce its result.' );
+odph_admin_ui_assert( str_contains( $settings_html, 'odph_test_stripe' ), 'The Stripe connection test must remain separate from the settings save form.' );
 
 WP_CLI::success( 'Shared administration UI integration checks passed.' );

@@ -37,6 +37,17 @@ final class AdminMenu {
 		$screen = get_current_screen();
 		if ( $screen && ( str_contains( $screen->id, 'odph' ) || str_contains( $screen->id, 'od-product-hub' ) ) ) {
 			wp_enqueue_style( 'odph-admin', OD_PRODUCT_HUB_URL . 'assets/css/admin.css', array(), OD_PRODUCT_HUB_VERSION );
+			if ( str_contains( $screen->id, 'odph-settings' ) ) {
+				wp_enqueue_script( 'odph-admin-settings', OD_PRODUCT_HUB_URL . 'assets/js/admin-settings.js', array(), OD_PRODUCT_HUB_VERSION, true );
+				wp_localize_script(
+					'odph-admin-settings',
+					'odphSettingsCopy',
+					array(
+						'success' => __( 'Webhook URL copied.', 'od-product-hub' ),
+						'error'   => __( 'Could not copy the URL. Select and copy it manually.', 'od-product-hub' ),
+					)
+				);
+			}
 		}
 	}
 

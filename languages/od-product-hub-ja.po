@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-06T10:10:02+00:00\n"
+"POT-Creation-Date: 2026-07-07T00:07:31+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -104,28 +104,28 @@ msgstr ""
 msgid "No %s have been added yet."
 msgstr ""
 
-#: includes/Admin/AdminListUi.php:66 includes/Admin/AdminSettings.php:172
+#: includes/Admin/AdminListUi.php:66 includes/Admin/AdminSettings.php:271
 #: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:205
 #: includes/Frontend/Shortcodes.php:216
 msgid "Active"
 msgstr "有効"
 
-#: includes/Admin/AdminListUi.php:67 includes/Admin/AdminSettings.php:174
+#: includes/Admin/AdminListUi.php:67 includes/Admin/AdminSettings.php:273
 #: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:206
 msgid "Inactive"
 msgstr "無効"
 
-#: includes/Admin/AdminListUi.php:68 includes/Admin/AdminSettings.php:177
+#: includes/Admin/AdminListUi.php:68 includes/Admin/AdminSettings.php:276
 #: includes/Frontend/Shortcodes.php:209
 msgid "Suspended"
 msgstr "停止中"
 
-#: includes/Admin/AdminListUi.php:69 includes/Admin/AdminSettings.php:175
+#: includes/Admin/AdminListUi.php:69 includes/Admin/AdminSettings.php:274
 #: includes/Frontend/Shortcodes.php:207
 msgid "Expired"
 msgstr "期限切れ"
 
-#: includes/Admin/AdminListUi.php:70 includes/Admin/AdminSettings.php:176
+#: includes/Admin/AdminListUi.php:70 includes/Admin/AdminSettings.php:275
 msgid "Cancelled"
 msgstr "解約済み"
 
@@ -178,41 +178,50 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:45 includes/Admin/DashboardPage.php:20
+#: includes/Admin/AdminMenu.php:46
+msgid "Webhook URL copied."
+msgstr ""
+
+#: includes/Admin/AdminMenu.php:47
+#, fuzzy
+msgid "Could not copy the URL. Select and copy it manually."
+msgstr "コピーできませんでした。ライセンスキーを選択してコピーしてください。"
+
+#: includes/Admin/AdminMenu.php:56 includes/Admin/DashboardPage.php:20
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
-#: includes/Admin/AdminMenu.php:47 includes/Admin/ProductPage.php:26
+#: includes/Admin/AdminMenu.php:58 includes/Admin/ProductPage.php:26
 #: includes/Admin/ProductPage.php:40
 msgid "Products"
 msgstr "商品"
 
-#: includes/Admin/AdminMenu.php:48 includes/Admin/CustomerPage.php:28
+#: includes/Admin/AdminMenu.php:59 includes/Admin/CustomerPage.php:28
 msgid "Customers and subscriptions"
 msgstr "顧客・契約"
 
-#: includes/Admin/AdminMenu.php:49 includes/Admin/CustomerPage.php:120
+#: includes/Admin/AdminMenu.php:60 includes/Admin/CustomerPage.php:120
 #: includes/Admin/LicensePage.php:32
 msgid "Licenses"
 msgstr "ライセンス"
 
-#: includes/Admin/AdminMenu.php:50
+#: includes/Admin/AdminMenu.php:61
 msgid "Logs"
 msgstr "ログ"
 
-#: includes/Admin/AdminMenu.php:55 includes/Admin/DashboardPage.php:72
+#: includes/Admin/AdminMenu.php:66 includes/Admin/DashboardPage.php:72
 msgid "Settings"
 msgstr "設定"
 
-#: includes/Admin/AdminMenu.php:63
+#: includes/Admin/AdminMenu.php:74
 msgid "Items per page"
 msgstr ""
 
-#: includes/Admin/AdminMenu.php:83
+#: includes/Admin/AdminMenu.php:94
 msgid "Dashboard overview"
 msgstr "ダッシュボードの概要"
 
-#: includes/Admin/AdminMenu.php:84
+#: includes/Admin/AdminMenu.php:95
 msgid ""
 "Start with items that need attention, then use the metrics and recent "
 "activity to investigate details."
@@ -220,11 +229,11 @@ msgstr ""
 "最初に要対応項目を確認し、次に主要指標と最近のアクティビティから詳細を調査し"
 "てください。"
 
-#: includes/Admin/AdminMenu.php:90 includes/Admin/DashboardPage.php:76
+#: includes/Admin/AdminMenu.php:101 includes/Admin/DashboardPage.php:76
 msgid "Site Health"
 msgstr "サイトヘルス"
 
-#: includes/Admin/AdminMenu.php:91
+#: includes/Admin/AdminMenu.php:102
 msgid ""
 "The dashboard summarizes operational checks. Open Site Health for complete "
 "diagnostics and remediation guidance."
@@ -232,157 +241,333 @@ msgstr ""
 "ダッシュボードには運用チェックの概要が表示されます。完全な診断と復旧手順はサ"
 "イトヘルスで確認してください。"
 
-#: includes/Admin/AdminSettings.php:46
+#: includes/Admin/AdminSettings.php:52
 msgid "The sender email address is invalid. The previous value was preserved."
 msgstr "送信元メールアドレスが不正です。以前の値を維持しました。"
 
 #. translators: %s: email template label.
-#: includes/Admin/AdminSettings.php:69
+#: includes/Admin/AdminSettings.php:86
 #, php-format
 msgid "%s was invalid and has been reset to its default."
 msgstr "%sが不正なため既定値へ戻しました。"
 
-#: includes/Admin/AdminSettings.php:83
+#: includes/Admin/AdminSettings.php:99
 msgid "The URL is invalid. The previous value was preserved."
 msgstr "URLが不正です。以前の値を維持しました。"
 
-#: includes/Admin/AdminSettings.php:93
+#: includes/Admin/AdminSettings.php:109
 msgid ""
 "The number is outside the allowed range. The previous value was preserved."
 msgstr "数値が許容範囲外です。以前の値を維持しました。"
 
-#: includes/Admin/AdminSettings.php:102
+#: includes/Admin/AdminSettings.php:119
+#, fuzzy
+msgid "Product license"
+msgstr "製品ライセンスキー"
+
+#: includes/Admin/AdminSettings.php:120 includes/Admin/AdminSettings.php:174
+#, fuzzy
+msgid "Payments"
+msgstr "支払い失敗"
+
+#: includes/Admin/AdminSettings.php:121 includes/Admin/AdminSettings.php:188
+msgid "Pages"
+msgstr ""
+
+#. translators: %d: total number of results.
+#: includes/Admin/AdminSettings.php:122 includes/Admin/AdminSettings.php:205
+#: includes/Admin/CustomerPage.php:47 includes/Admin/CustomerPage.php:109
+msgid "Email"
+msgstr "メール"
+
+#: includes/Admin/AdminSettings.php:123 includes/Admin/AdminSettings.php:226
+msgid "API / Network"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:124
+#, fuzzy
+msgid "Data retention"
+msgstr "ログ保持日数"
+
+#: includes/Admin/AdminSettings.php:128
 msgid "OD Product Hub Settings"
 msgstr "OD Product Hub 設定"
 
-#: includes/Admin/AdminSettings.php:107
+#: includes/Admin/AdminSettings.php:128
+#, fuzzy
+msgid "Settings sections"
+msgstr "設定"
+
+#: includes/Admin/AdminSettings.php:155
 msgid "Connected to Stripe successfully."
 msgstr "Stripeへ正常に接続できました。"
 
-#: includes/Admin/AdminSettings.php:107
-msgid "Could not connect to Stripe. Check the keys and network connection."
+#: includes/Admin/AdminSettings.php:155
+#, fuzzy
+msgid ""
+"Could not connect to Stripe. Check the keys and network connection, then try "
+"again."
 msgstr "Stripeへ接続できませんでした。キーまたは通信環境を確認してください。"
 
-#: includes/Admin/AdminSettings.php:115
+#: includes/Admin/AdminSettings.php:163
+#, fuzzy
+msgid "Stripe connection test"
+msgstr "Stripe接続試験を実行してください"
+
+#: includes/Admin/AdminSettings.php:163
+msgid ""
+"Save any key changes before testing. The test checks connectivity without "
+"displaying or logging secret values."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:165
+msgid "Test Stripe connection"
+msgstr "Stripe接続をテスト"
+
+#: includes/Admin/AdminSettings.php:174
+msgid ""
+"Configure Stripe credentials, checkout destinations, Customer Portal, and "
+"the webhook endpoint."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:179
 msgid "Purchase success URL"
 msgstr "購入完了URL"
 
-#: includes/Admin/AdminSettings.php:116
+#: includes/Admin/AdminSettings.php:179
+msgid "Required. Use an HTTPS page customers see after a successful purchase."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:180
 msgid "Checkout cancel URL"
 msgstr "キャンセルURL"
 
-#: includes/Admin/AdminSettings.php:117
-msgid "Sender name"
-msgstr "送信元名"
+#: includes/Admin/AdminSettings.php:180
+msgid "Required. Use an HTTPS page customers see after canceling checkout."
+msgstr ""
 
-#: includes/Admin/AdminSettings.php:118
-msgid "Sender email"
-msgstr "送信元メール"
+#: includes/Admin/AdminSettings.php:181
+msgid "Allow customers to open Stripe Customer Portal"
+msgstr ""
 
-#: includes/Admin/AdminSettings.php:119
-msgid "Log retention days"
-msgstr "ログ保持日数"
+#: includes/Admin/AdminSettings.php:181
+msgid ""
+"Optional. Customers can manage payment methods and subscriptions from their "
+"account page."
+msgstr ""
 
-#: includes/Admin/AdminSettings.php:120
-msgid "API requests per minute"
-msgstr "APIレート/分"
+#: includes/Admin/AdminSettings.php:183
+#, fuzzy
+msgid "Copy URL"
+msgstr "コピー"
 
-#. translators: %s: last four characters of the stored secret.
-#: includes/Admin/AdminSettings.php:129
-#, php-format
-msgid "Configured; enter a value only to change it. Ends in %s"
-msgstr "設定済み（変更時のみ入力）。末尾 %s"
+#: includes/Admin/AdminSettings.php:183
+msgid "Add this endpoint to the Stripe webhook settings."
+msgstr ""
 
-#: includes/Admin/AdminSettings.php:133
+#: includes/Admin/AdminSettings.php:188
+msgid ""
+"Choose the customer account page used for licenses, downloads, and billing "
+"actions."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:189
 msgid "Account page"
 msgstr "マイページ"
 
-#: includes/Admin/AdminSettings.php:139
+#: includes/Admin/AdminSettings.php:195
 msgid "Select a page"
 msgstr "固定ページを選択"
 
-#: includes/Admin/AdminSettings.php:143 includes/Admin/AdminSiteHealth.php:207
-msgid "Select a published page containing the odph_my_account shortcode."
+#: includes/Admin/AdminSettings.php:199
+#, fuzzy
+msgid ""
+"Required. Select a published page containing the odph_my_account shortcode."
 msgstr ""
 "要対応項目、主要指標、最近の運用アクティビティを確認します。odph_my_account "
 "ショートコードを含む公開済み固定ページを選択してください。"
 
-#: includes/Admin/AdminSettings.php:144
-msgid "Trusted proxies"
-msgstr "信頼するプロキシ"
-
-#: includes/Admin/AdminSettings.php:144
+#: includes/Admin/AdminSettings.php:205
 msgid ""
-"Enter one CIDR or IP address per line. X-Forwarded-For is ignored when this "
-"field is empty."
+"Configure the sender and plain-text messages sent for customer and license "
+"events."
 msgstr ""
-"CIDRまたはIPを1行ずつ指定します。未設定時はX-Forwarded-Forを使用しません。"
 
-#: includes/Admin/AdminSettings.php:145
-msgid "Enable"
-msgstr "有効化"
+#: includes/Admin/AdminSettings.php:207
+msgid "Sender name"
+msgstr "送信元名"
 
-#: includes/Admin/AdminSettings.php:146
+#: includes/Admin/AdminSettings.php:207
+msgid "Optional. Defaults to the WordPress site name when empty."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:208
+msgid "Sender email"
+msgstr "送信元メール"
+
+#: includes/Admin/AdminSettings.php:208
+msgid "Optional. Enter a valid address authorized by your mail provider."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:209
 msgid "Email templates"
 msgstr "メールテンプレート"
 
-#: includes/Admin/AdminSettings.php:146
-msgid ""
-"Emails are sent as plain text. Templates containing unsupported placeholders "
-"are reset to their defaults."
+#: includes/Admin/AdminSettings.php:209
+msgid "Unsupported placeholders reset that template to its default when saved."
 msgstr ""
-"メールはプレーンテキストで送信されます。未対応のプレースホルダーを含むテンプ"
-"レートは既定値へ戻ります。"
 
-#: includes/Admin/AdminSettings.php:151
+#: includes/Admin/AdminSettings.php:214
 msgid "Subject"
 msgstr "件名"
 
-#: includes/Admin/AdminSettings.php:152
+#: includes/Admin/AdminSettings.php:215
 msgid "Body"
 msgstr "本文"
 
-#: includes/Admin/AdminSettings.php:153
+#: includes/Admin/AdminSettings.php:216
 msgid "Available placeholders:"
 msgstr "使用可能なプレースホルダー:"
 
-#: includes/Admin/AdminSettings.php:159
-msgid "Delete all data when uninstalling"
+#: includes/Admin/AdminSettings.php:226
+msgid ""
+"Control request throttling and which proxies may supply forwarded client "
+"addresses."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:228
+msgid "API requests per minute"
+msgstr "APIレート/分"
+
+#: includes/Admin/AdminSettings.php:228
+msgid "Required. Enter a whole number from 1 to 1000."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:229
+msgid "Trusted proxies"
+msgstr "信頼するプロキシ"
+
+#: includes/Admin/AdminSettings.php:229
+#, fuzzy
+msgid ""
+"Optional. Enter one CIDR or IP address per line. Forwarded addresses are "
+"ignored when empty."
+msgstr ""
+"CIDRまたはIPを1行ずつ指定します。未設定時はX-Forwarded-Forを使用しません。"
+
+#: includes/Admin/AdminSettings.php:233
+msgid "Data retention and Danger Zone"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:233
+msgid ""
+"Control operational log retention and irreversible cleanup performed when "
+"the plugin is uninstalled."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:234
+msgid "Log retention days"
+msgstr "ログ保持日数"
+
+#: includes/Admin/AdminSettings.php:234
+msgid ""
+"Required. Logs older than this value are removed by the scheduled cleanup. "
+"Enter 1 to 3650."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:235
+#, fuzzy
+msgid "Delete data on uninstall"
 msgstr "アンインストール時に全データを削除する"
 
-#: includes/Admin/AdminSettings.php:163
-msgid "Test Stripe connection"
-msgstr "Stripe接続をテスト"
+#: includes/Admin/AdminSettings.php:235
+#, fuzzy
+msgid "Permanently delete OD Product Hub data when uninstalling"
+msgstr "アンインストール時に全データを削除する"
 
-#: includes/Admin/AdminSettings.php:173
+#: includes/Admin/AdminSettings.php:235
+msgid ""
+"Danger: products, customers, subscriptions, licenses, releases, logs, "
+"settings, and scheduled data will be deleted. Deactivating the plugin does "
+"not trigger this deletion."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:239
+msgid "Saved"
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:239
+#, fuzzy
+msgid "Not configured"
+msgstr "Stripe設定済み"
+
+#: includes/Admin/AdminSettings.php:241
+msgid ""
+"Leave blank to keep the saved value, or enter a new value to replace it."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:241
+msgid "Required. Enter the value supplied by Stripe."
+msgstr ""
+
+#: includes/Admin/AdminSettings.php:252
+#, fuzzy
+msgid "No account page is selected."
+msgstr "マイページの設定が不完全です"
+
+#: includes/Admin/AdminSettings.php:258
+#, fuzzy
+msgid "The selected page is published and contains the account shortcode."
+msgstr ""
+"要対応項目、主要指標、最近の運用アクティビティを確認します。odph_my_account "
+"ショートコードを含む公開済み固定ページを選択してください。"
+
+#: includes/Admin/AdminSettings.php:261
+#, fuzzy
+msgid "The selected account page is not published."
+msgstr "マイページの設定が不完全です"
+
+#: includes/Admin/AdminSettings.php:261
+#, fuzzy
+msgid "The selected page does not contain the odph_my_account shortcode."
+msgstr ""
+"要対応項目、主要指標、最近の運用アクティビティを確認します。odph_my_account "
+"ショートコードを含む公開済み固定ページを選択してください。"
+
+#: includes/Admin/AdminSettings.php:263
+#, fuzzy
+msgid "Edit account page"
+msgstr "マイページ"
+
+#: includes/Admin/AdminSettings.php:272
 msgid "Grace period (vendor Hub unavailable)"
 msgstr "猶予期間（販売元Hubへ接続できません）"
 
-#: includes/Admin/AdminSettings.php:178
+#: includes/Admin/AdminSettings.php:277
 msgid "Vendor Hub unavailable or misconfigured"
 msgstr "販売元Hubへ接続できないか、設定が不正です"
 
-#: includes/Admin/AdminSettings.php:179
+#: includes/Admin/AdminSettings.php:278
 msgid "Not activated"
 msgstr "未認証"
 
-#: includes/Admin/AdminSettings.php:180
+#: includes/Admin/AdminSettings.php:279
 msgid "Deactivated"
 msgstr "認証解除済み"
 
-#: includes/Admin/AdminSettings.php:183
+#: includes/Admin/AdminSettings.php:282
 msgid "Payment failed"
 msgstr "支払い失敗"
 
-#: includes/Admin/AdminSettings.php:185
+#: includes/Admin/AdminSettings.php:284
 msgid "Invalid license key"
 msgstr "無効なライセンスキー"
 
-#: includes/Admin/AdminSettings.php:187
+#: includes/Admin/AdminSettings.php:286
 msgid "OD Product Hub product license"
 msgstr "OD Product Hub製品ライセンス"
 
-#: includes/Admin/AdminSettings.php:188
+#: includes/Admin/AdminSettings.php:287
 msgid ""
 "This license controls only vendor updates and support. Local features and "
 "existing data remain available regardless of contract status."
@@ -390,7 +575,7 @@ msgstr ""
 "このライセンスが制御するのは販売元からの更新とサポートだけです。契約状態にか"
 "かわらず、ローカル機能と既存データは引き続き利用できます。"
 
-#: includes/Admin/AdminSettings.php:190
+#: includes/Admin/AdminSettings.php:289
 msgid ""
 "The vendor Hub points to this site. License requests are disabled to prevent "
 "a request loop."
@@ -398,15 +583,15 @@ msgstr ""
 "販売元Hubがこのサイト自身を指しています。リクエストの循環を防ぐため、ライセン"
 "ス通信を無効にしました。"
 
-#: includes/Admin/AdminSettings.php:192
+#: includes/Admin/AdminSettings.php:291
 msgid "The vendor Hub URL is not configured in this distribution."
 msgstr "この配布物には販売元Hub URLが設定されていません。"
 
-#: includes/Admin/AdminSettings.php:194
+#: includes/Admin/AdminSettings.php:293
 msgid "The product license has not been activated."
 msgstr "製品ライセンスはまだ認証されていません。"
 
-#: includes/Admin/AdminSettings.php:196
+#: includes/Admin/AdminSettings.php:295
 msgid ""
 "The vendor Hub is unavailable. The last active verification is temporarily "
 "accepted during the grace period."
@@ -414,7 +599,7 @@ msgstr ""
 "販売元Hubへ接続できません。最後の有効な確認結果を猶予期間中のみ一時的に受け入"
 "れています。"
 
-#: includes/Admin/AdminSettings.php:198
+#: includes/Admin/AdminSettings.php:297
 msgid ""
 "The vendor Hub could not be reached. An existing active contract may remain "
 "in its grace period."
@@ -422,7 +607,7 @@ msgstr ""
 "販売元Hubへ接続できませんでした。既存の有効な契約は猶予期間として継続される場"
 "合があります。"
 
-#: includes/Admin/AdminSettings.php:200
+#: includes/Admin/AdminSettings.php:299
 msgid ""
 "The product contract is not active. New vendor updates are unavailable, but "
 "OD Product Hub continues to run."
@@ -430,35 +615,35 @@ msgstr ""
 "製品契約は有効ではありません。販売元からの新しい更新は利用できませんが、OD "
 "Product Hubは引き続き動作します。"
 
-#: includes/Admin/AdminSettings.php:203
+#: includes/Admin/AdminSettings.php:302
 msgid "Contract status"
 msgstr "契約状態"
 
-#: includes/Admin/AdminSettings.php:203
+#: includes/Admin/AdminSettings.php:302
 msgid "Last checked"
 msgstr "最終確認日時"
 
-#: includes/Admin/AdminSettings.php:203
+#: includes/Admin/AdminSettings.php:302
 msgid "Never"
 msgstr "未確認"
 
-#: includes/Admin/AdminSettings.php:203
+#: includes/Admin/AdminSettings.php:302
 msgid "Vendor Hub"
 msgstr "販売元Hub"
 
-#: includes/Admin/AdminSettings.php:205
+#: includes/Admin/AdminSettings.php:304
 msgid "Product license key"
 msgstr "製品ライセンスキー"
 
-#: includes/Admin/AdminSettings.php:207
+#: includes/Admin/AdminSettings.php:306
 msgid "Activate product license"
 msgstr "製品ライセンスを認証"
 
-#: includes/Admin/AdminSettings.php:213
+#: includes/Admin/AdminSettings.php:312
 msgid "Recheck contract status"
 msgstr "契約状態を再確認"
 
-#: includes/Admin/AdminSettings.php:214
+#: includes/Admin/AdminSettings.php:313
 msgid "Deactivate product license"
 msgstr "製品ライセンスの認証を解除"
 
@@ -719,6 +904,12 @@ msgstr ""
 msgid "The account page is incomplete"
 msgstr "マイページの設定が不完全です"
 
+#: includes/Admin/AdminSiteHealth.php:207
+msgid "Select a published page containing the odph_my_account shortcode."
+msgstr ""
+"要対応項目、主要指標、最近の運用アクティビティを確認します。odph_my_account "
+"ショートコードを含む公開済み固定ページを選択してください。"
+
 #: includes/Admin/AdminSiteHealth.php:209
 msgid "Checkout and account pages are ready"
 msgstr "購入・マイページは正常です"
@@ -774,11 +965,6 @@ msgstr "全 %d 件"
 #: includes/Admin/LicensePage.php:38 includes/Admin/LicensePage.php:68
 msgid "Customer"
 msgstr "顧客"
-
-#. translators: %d: total number of results.
-#: includes/Admin/CustomerPage.php:47 includes/Admin/CustomerPage.php:109
-msgid "Email"
-msgstr "メール"
 
 #. translators: %d: total number of results.
 #: includes/Admin/CustomerPage.php:47 includes/Admin/CustomerPage.php:109
@@ -1830,6 +2016,20 @@ msgstr "利用日時"
 #: includes/Privacy/PrivacyService.php:255
 msgid "Email type"
 msgstr "メール種別"
+
+#, php-format
+#~ msgid "Configured; enter a value only to change it. Ends in %s"
+#~ msgstr "設定済み（変更時のみ入力）。末尾 %s"
+
+#~ msgid "Enable"
+#~ msgstr "有効化"
+
+#~ msgid ""
+#~ "Emails are sent as plain text. Templates containing unsupported "
+#~ "placeholders are reset to their defaults."
+#~ msgstr ""
+#~ "メールはプレーンテキストで送信されます。未対応のプレースホルダーを含むテン"
+#~ "プレートは既定値へ戻ります。"
 
 #~ msgid "No matching logs found."
 #~ msgstr "該当するログはありません。"

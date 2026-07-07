@@ -30,6 +30,7 @@ final class ProductLicenseController {
 			add_query_arg(
 				array(
 					'page'                  => 'odph-settings',
+					'tab'                   => 'license',
 					'vendor_license_result' => sanitize_key( $result->status ),
 				),
 				admin_url( 'admin.php' )
