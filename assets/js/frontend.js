@@ -3,11 +3,12 @@ document.addEventListener('click', (event) => {
 	if (!button) return;
 	const messages = window.odphFrontend || {};
 	const status = button.parentElement.querySelector('.odph-copy-status');
-	if (!navigator.clipboard || !navigator.clipboard.writeText) {
+	const source = document.getElementById(button.dataset.copyTarget || '');
+	if (!source || !navigator.clipboard || !navigator.clipboard.writeText) {
 		status.textContent = messages.copyError || 'Could not copy the license key.';
 		return;
 	}
-	navigator.clipboard.writeText(button.dataset.license).then(() => {
+	navigator.clipboard.writeText(source.textContent).then(() => {
 		status.textContent = messages.copySuccess || 'License key copied.';
 		button.textContent = messages.copied || 'Copied';
 		setTimeout(() => {
@@ -17,6 +18,11 @@ document.addEventListener('click', (event) => {
 	}).catch(() => {
 		status.textContent = messages.copyError || 'Could not copy the license key.';
 	});
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+	const alert = document.querySelector('.odph-surface .odph-alert[tabindex="-1"]');
+	if (alert) alert.focus();
 });
 
 document.addEventListener('submit', (event) => {

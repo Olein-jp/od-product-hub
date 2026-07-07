@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-07T00:07:31+00:00\n"
+"POT-Creation-Date: 2026-07-07T00:15:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: od-product-hub\n"
@@ -102,27 +102,27 @@ msgstr ""
 #: includes/Admin/AdminListUi.php:66
 #: includes/Admin/AdminSettings.php:271
 #: includes/Admin/ProductPage.php:28
-#: includes/Frontend/Shortcodes.php:205
-#: includes/Frontend/Shortcodes.php:216
+#: includes/Frontend/Shortcodes.php:208
+#: includes/Frontend/Shortcodes.php:230
 msgid "Active"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:67
 #: includes/Admin/AdminSettings.php:273
 #: includes/Admin/ProductPage.php:28
-#: includes/Frontend/Shortcodes.php:206
+#: includes/Frontend/Shortcodes.php:209
 msgid "Inactive"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:68
 #: includes/Admin/AdminSettings.php:276
-#: includes/Frontend/Shortcodes.php:209
+#: includes/Frontend/Shortcodes.php:212
 msgid "Suspended"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:69
 #: includes/Admin/AdminSettings.php:274
-#: includes/Frontend/Shortcodes.php:207
+#: includes/Frontend/Shortcodes.php:210
 msgid "Expired"
 msgstr ""
 
@@ -132,38 +132,38 @@ msgid "Cancelled"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:71
-#: includes/Frontend/Shortcodes.php:208
-#: includes/Frontend/Shortcodes.php:220
+#: includes/Frontend/Shortcodes.php:211
+#: includes/Frontend/Shortcodes.php:234
 msgid "Canceled"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:72
-#: includes/Frontend/Shortcodes.php:217
+#: includes/Frontend/Shortcodes.php:231
 msgid "Trialing"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:73
-#: includes/Frontend/Shortcodes.php:218
+#: includes/Frontend/Shortcodes.php:232
 msgid "Past due"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:74
-#: includes/Frontend/Shortcodes.php:219
+#: includes/Frontend/Shortcodes.php:233
 msgid "Unpaid"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:75
-#: includes/Frontend/Shortcodes.php:221
+#: includes/Frontend/Shortcodes.php:235
 msgid "Incomplete"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:76
-#: includes/Frontend/Shortcodes.php:222
+#: includes/Frontend/Shortcodes.php:236
 msgid "Incomplete expired"
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:77
-#: includes/Frontend/Shortcodes.php:223
+#: includes/Frontend/Shortcodes.php:237
 msgid "Paused"
 msgstr ""
 
@@ -1216,7 +1216,7 @@ msgstr ""
 
 #: includes/Admin/LicensePage.php:38
 #: includes/Admin/LicensePage.php:68
-#: includes/Frontend/Shortcodes.php:133
+#: includes/Frontend/Shortcodes.php:136
 msgid "License key"
 msgstr ""
 
@@ -1623,7 +1623,7 @@ msgid ""
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:37
-#: includes/Frontend/Shortcodes.php:133
+#: includes/Frontend/Shortcodes.php:136
 msgid "Copy"
 msgstr ""
 
@@ -1669,7 +1669,11 @@ msgid "Checkout is temporarily unavailable. Please try again later."
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:71
-msgid "Purchase with Stripe Checkout"
+msgid "Continue to Stripe Checkout"
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:71
+msgid "Review the details below. You will continue to Stripe to complete your purchase."
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:94
@@ -1697,101 +1701,182 @@ msgid "Return to product"
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:110
+#: includes/Frontend/Shortcodes.php:123
+msgid "My account"
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:111
 msgid "To view your subscription, "
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:112
+#: includes/Frontend/Shortcodes.php:113
 msgid "log in"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:113
+#: includes/Frontend/Shortcodes.php:114
 msgid "."
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:122
-msgid "Subscribed products"
+#: includes/Frontend/Shortcodes.php:123
+msgid "View your licenses and manage your subscription and account."
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:125
-msgid "No subscription information is available yet. If you just purchased, wait a moment for synchronization to complete."
+msgid "Subscribed products"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:134
+#: includes/Frontend/Shortcodes.php:127
+msgid "No subscriptions found"
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:127
+msgid "No subscription information is available yet. If you just purchased, wait a moment for synchronization to complete, then reload this page."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:137
 msgid "License status"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:135
+#: includes/Frontend/Shortcodes.php:138
 msgid "Stripe subscription status"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:136
+#: includes/Frontend/Shortcodes.php:139
 msgid "Next renewal or end date"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:137
+#: includes/Frontend/Shortcodes.php:140
 msgid "Subscription schedule"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:137
+#: includes/Frontend/Shortcodes.php:140
 msgid "Scheduled to cancel at period end"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:137
+#: includes/Frontend/Shortcodes.php:140
 msgid "Scheduled to renew automatically"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:143
+#: includes/Frontend/Shortcodes.php:145
+msgid "Billing and subscription management"
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:145
+msgid "Update your payment method, invoices, and subscription in the secure Stripe portal."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:146
 msgid "Account actions"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:143
+#: includes/Frontend/Shortcodes.php:146
 msgid "Change password"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:143
-msgid "Log out"
-msgstr ""
-
-#: includes/Frontend/Shortcodes.php:164
-#: includes/Frontend/Shortcodes.php:181
-msgid "Stripe billing and subscription management is currently unavailable."
+#: includes/Frontend/Shortcodes.php:146
+msgid "Log out and return to the site"
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:167
-msgid "Your Stripe customer information is being synchronized. Billing and subscription management will be available when it completes."
+#: includes/Frontend/Shortcodes.php:184
+msgid "Stripe billing and subscription management is currently unavailable."
 msgstr ""
 
 #: includes/Frontend/Shortcodes.php:170
+msgid "Your Stripe customer information is being synchronized. Billing and subscription management will be available when it completes."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:173
 msgid "Stripe billing and subscription management is being configured."
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:172
+#: includes/Frontend/Shortcodes.php:175
 msgid "Manage billing and subscription in Stripe"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:182
+#: includes/Frontend/Shortcodes.php:185
 msgid "Your Stripe customer information has not finished synchronizing. Please try again later."
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:183
+#: includes/Frontend/Shortcodes.php:186
 msgid "The billing and subscription management page is not configured."
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:184
+#: includes/Frontend/Shortcodes.php:187
 msgid "Stripe billing and subscription management is temporarily unavailable. Please try again later."
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:197
 #: includes/Frontend/Shortcodes.php:200
+#: includes/Frontend/Shortcodes.php:203
 msgid "Not set"
 msgstr ""
 
-#: includes/Frontend/Shortcodes.php:211
+#: includes/Frontend/Shortcodes.php:214
 msgid "Unknown status"
 msgstr ""
 
+#: includes/Frontend/Shortcodes.php:219
+msgid "This license can be used."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:220
+msgid "This license is not currently available for use."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:221
+msgid "This license has expired. Review your billing status below."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:222
+msgid "This license has been canceled."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:223
+msgid "This license is suspended. Review your billing status below."
+msgstr ""
+
 #: includes/Frontend/Shortcodes.php:225
+msgid "The current license state could not be determined."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:239
 msgid "Synchronizing"
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:244
+msgid "Your subscription is active."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:245
+msgid "Your trial is active."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:246
+msgid "Payment requires attention. Open billing management to update your payment method."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:247
+msgid "Payment is unpaid. Open billing management to review your payment method."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:248
+msgid "This subscription will not renew."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:249
+msgid "Payment setup is incomplete. Open billing management to finish setup."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:250
+msgid "Payment setup expired before completion."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:251
+msgid "This subscription is paused."
+msgstr ""
+
+#: includes/Frontend/Shortcodes.php:253
+msgid "Subscription details are synchronizing. Reload this page in a moment."
 msgstr ""
 
 #: includes/License/LicenseManager.php:39

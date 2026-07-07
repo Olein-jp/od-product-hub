@@ -96,6 +96,7 @@ odph_checkout_assert( str_contains( $shortcode, 'Checkout Product' ), 'Checkout 
 odph_checkout_assert( str_contains( $shortcode, 'Product description' ) && str_contains( $shortcode, 'Monthly 1,980 JPY' ), 'Checkout shortcode must display product and price descriptions' );
 odph_checkout_assert( str_contains( $shortcode, 'Renews monthly until cancelled.' ), 'Checkout shortcode must explain subscription billing' );
 odph_checkout_assert( str_contains( $shortcode, 'odph-checkout-form' ) && str_contains( $shortcode, 'aria-live' ), 'Checkout form must expose accessible submission feedback' );
+odph_checkout_assert( str_contains( $shortcode, 'odph-surface' ) && str_contains( $shortcode, 'continue to Stripe' ), 'Checkout must use the shared public surface and explain the external transition' );
 
 $products->update( $product_id, array( 'status' => 'inactive' ) );
 $inactive_rejected = false;
@@ -138,6 +139,7 @@ $success_html = ( new Shortcodes() )->checkout_success();
 $cancel_html  = ( new Shortcodes() )->checkout_cancel( array( 'return_url' => $purchase_url ) );
 odph_checkout_assert( str_contains( $success_html, 'View account' ) && str_contains( $success_html, 'email' ), 'Success view must explain email and account follow-up' );
 odph_checkout_assert( str_contains( $cancel_html, 'Return to product' ) && str_contains( $cancel_html, $purchase_url ), 'Cancel view must return the purchaser to the same-site purchase page' );
+odph_checkout_assert( str_contains( $success_html, 'odph-surface' ) && str_contains( $cancel_html, 'odph-surface' ), 'Checkout result views must use the same public surface structure' );
 
 ( new CustomerRepository() )->delete( $customer_id );
 wp_delete_user( (int) $user_id );

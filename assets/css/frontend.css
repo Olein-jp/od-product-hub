@@ -1,3 +1,202 @@
-.odph-account{max-width:960px}.odph-contract{border:1px solid #dcdcde;border-radius:4px;margin:1rem 0;padding:1rem}.odph-contract dl{display:grid;grid-template-columns:minmax(9rem,auto) 1fr;gap:.5rem 1rem}.odph-contract dt{font-weight:600}.odph-contract dd{margin:0;overflow-wrap:anywhere}.odph-button,.odph-copy{cursor:pointer;padding:.65em 1em}.odph-button:focus,.odph-copy:focus{outline:2px solid currentColor;outline-offset:2px}@media(max-width:600px){.odph-contract dl{display:block}.odph-contract dd{margin:0 0 .8rem}}
-.odph-checkout,.odph-result{border:1px solid #dcdcde;border-radius:6px;max-width:680px;padding:clamp(1rem,4vw,2rem)}.odph-checkout h2,.odph-result h2{margin-top:0}.odph-price{font-size:1.35rem;font-weight:700}.odph-billing-description{color:#50575e}.odph-alert{border-left:4px solid #d63638;background:#fcf0f1;padding:.75rem 1rem}.odph-checkout-form{margin-top:1.5rem}.odph-button{display:inline-block}.odph-button:disabled{cursor:wait;opacity:.7}.odph-result-success{border-color:#00a32a}.odph-result-cancel{border-color:#dba617}@media(max-width:600px){.odph-checkout,.odph-result{padding:1rem}.odph-checkout .odph-button{width:100%}}
-.odph-contract-list{display:grid;gap:1rem}.odph-status{font-weight:600}.odph-notice{border-left:4px solid #646970;background:#f6f7f7;padding:.75rem 1rem}.odph-portal-form{margin:1.5rem 0}.odph-account-links{margin-top:1.5rem}@media(max-width:600px){.odph-portal-form .odph-button{width:100%}}
+.odph-surface {
+	--odph-border: color-mix(in srgb, currentColor 24%, transparent);
+	--odph-muted: color-mix(in srgb, currentColor 72%, transparent);
+	box-sizing: border-box;
+	color: inherit;
+	font: inherit;
+	inline-size: 100%;
+	max-inline-size: 60rem;
+}
+
+.odph-surface *,
+.odph-surface *::before,
+.odph-surface *::after {
+	box-sizing: inherit;
+}
+
+.odph-surface-header {
+	margin-block-end: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.odph-surface-header > :first-child,
+.odph-account-section > :first-child,
+.odph-contract > :first-child,
+.odph-result > :first-child {
+	margin-block-start: 0;
+}
+
+.odph-surface-header > :last-child {
+	color: var(--odph-muted, currentColor);
+	margin-block-end: 0;
+}
+
+.odph-checkout,
+.odph-result,
+.odph-account-login {
+	border: 1px solid var(--odph-border, currentColor);
+	border-radius: 0.375rem;
+	max-inline-size: 42.5rem;
+	padding: clamp(1rem, 4vw, 2rem);
+}
+
+.odph-account-section + .odph-account-section {
+	border-block-start: 1px solid var(--odph-border, currentColor);
+	margin-block-start: clamp(2rem, 5vw, 3rem);
+	padding-block-start: clamp(1.5rem, 4vw, 2rem);
+}
+
+.odph-contract-list {
+	display: grid;
+	gap: 1rem;
+}
+
+.odph-contract {
+	border: 1px solid var(--odph-border, currentColor);
+	border-radius: 0.25rem;
+	padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.odph-contract dl {
+	display: grid;
+	gap: 0.625rem 1.25rem;
+	grid-template-columns: minmax(10rem, 0.5fr) minmax(0, 1fr);
+}
+
+.odph-contract dt {
+	font-weight: 600;
+}
+
+.odph-contract dd {
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+
+.odph-license-key-row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.odph-key {
+	max-inline-size: 100%;
+	overflow-wrap: anywhere;
+}
+
+.odph-status {
+	border: 1px solid currentColor;
+	border-radius: 999px;
+	display: inline-block;
+	font-size: 0.875em;
+	font-weight: 600;
+	line-height: 1.4;
+	padding: 0.125em 0.625em;
+}
+
+.odph-status-description {
+	display: block;
+	margin-block-start: 0.35rem;
+}
+
+.odph-price {
+	font-size: 1.35em;
+	font-weight: 700;
+}
+
+.odph-billing-description {
+	color: var(--odph-muted, currentColor);
+}
+
+.odph-alert,
+.odph-notice,
+.odph-empty-state {
+	background: color-mix(in srgb, currentColor 5%, transparent);
+	border: 1px solid var(--odph-border, currentColor);
+	border-inline-start: 0.25rem solid currentColor;
+	padding: 0.75rem 1rem;
+}
+
+.odph-empty-state > :first-child {
+	margin-block-start: 0;
+}
+
+.odph-empty-state > :last-child {
+	margin-block-end: 0;
+}
+
+.odph-checkout-form,
+.odph-portal-form {
+	margin-block: 1.5rem;
+}
+
+.odph-button,
+.odph-copy {
+	align-items: center;
+	background: transparent;
+	border: 1px solid currentColor;
+	border-radius: 0.1875rem;
+	color: inherit;
+	cursor: pointer;
+	display: inline-flex;
+	font: inherit;
+	justify-content: center;
+	line-height: 1.25;
+	min-block-size: 2.75rem;
+	padding: 0.65em 1em;
+	text-align: center;
+	text-decoration: none;
+}
+
+.odph-button:hover,
+.odph-copy:hover {
+	text-decoration: underline;
+}
+
+.odph-button:focus-visible,
+.odph-copy:focus-visible,
+.odph-surface a:focus-visible,
+.odph-alert:focus {
+	outline: 0.1875rem solid currentColor;
+	outline-offset: 0.1875rem;
+}
+
+.odph-button:disabled {
+	cursor: wait;
+	opacity: 0.65;
+}
+
+.odph-account-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem 1.5rem;
+}
+
+@media (max-width: 37.5rem) {
+	.odph-contract dl {
+		display: block;
+	}
+
+	.odph-contract dd {
+		margin-block-end: 1rem;
+	}
+
+	.odph-checkout,
+	.odph-result,
+	.odph-account-login {
+		padding: 1rem;
+	}
+
+	.odph-checkout-form .odph-button,
+	.odph-portal-form .odph-button {
+		inline-size: 100%;
+	}
+}
+
+@media (forced-colors: active) {
+	.odph-status,
+	.odph-alert,
+	.odph-notice,
+	.odph-empty-state {
+		forced-color-adjust: auto;
+	}
+}

@@ -65,10 +65,10 @@ final class Shortcodes {
 				'checkout_not_configured'          => __( 'Checkout is not configured. Contact the site administrator.', 'od-product-hub' ),
 				'checkout_temporarily_unavailable' => __( 'Checkout is temporarily unavailable. Please try again later.', 'od-product-hub' ),
 			);
-			$error    = isset( $messages[ $code ] ) ? '<p class="odph-alert" role="alert">' . esc_html( $messages[ $code ] ) . '</p>' : '';
+			$error    = isset( $messages[ $code ] ) ? '<p class="odph-alert" role="alert" tabindex="-1">' . esc_html( $messages[ $code ] ) . '</p>' : '';
 		}
 		$return_url = get_permalink();
-		return sprintf( '<article class="odph-checkout"><h2>%1$s</h2>%2$s%3$s%4$s%5$s<form class="odph-checkout-form" method="post" action="%6$s"><input type="hidden" name="action" value="odph_checkout"><input type="hidden" name="product_slug" value="%7$s"><input type="hidden" name="return_url" value="%8$s">%9$s<button class="odph-button" type="submit"><span class="odph-button-label">%10$s</span></button><span class="odph-submit-status screen-reader-text" aria-live="polite"></span></form></article>', esc_html( (string) $product->name ), $error, '' !== (string) $product->description ? '<p class="odph-product-description">' . nl2br( esc_html( (string) $product->description ) ) . '</p>' : '', '' !== (string) $product->price_description ? '<p class="odph-price">' . esc_html( (string) $product->price_description ) . '</p>' : '', '' !== (string) $product->billing_description ? '<p class="odph-billing-description">' . nl2br( esc_html( (string) $product->billing_description ) ) . '</p>' : '', esc_url( admin_url( 'admin-post.php' ) ), esc_attr( $slug ), esc_url( $return_url ? $return_url : home_url( '/' ) ), wp_nonce_field( 'odph_checkout_' . $slug, '_wpnonce', true, false ), esc_html__( 'Purchase with Stripe Checkout', 'od-product-hub' ) );
+		return sprintf( '<article class="odph-surface odph-checkout"><header class="odph-surface-header"><h2>%1$s</h2><p>%11$s</p></header>%2$s%3$s%4$s%5$s<form class="odph-checkout-form" method="post" action="%6$s"><input type="hidden" name="action" value="odph_checkout"><input type="hidden" name="product_slug" value="%7$s"><input type="hidden" name="return_url" value="%8$s">%9$s<button class="odph-button" type="submit"><span class="odph-button-label">%10$s</span></button><span class="odph-submit-status screen-reader-text" aria-live="polite"></span></form></article>', esc_html( (string) $product->name ), $error, '' !== (string) $product->description ? '<p class="odph-product-description">' . nl2br( esc_html( (string) $product->description ) ) . '</p>' : '', '' !== (string) $product->price_description ? '<p class="odph-price">' . esc_html( (string) $product->price_description ) . '</p>' : '', '' !== (string) $product->billing_description ? '<p class="odph-billing-description">' . nl2br( esc_html( (string) $product->billing_description ) ) . '</p>' : '', esc_url( admin_url( 'admin-post.php' ) ), esc_attr( $slug ), esc_url( $return_url ? $return_url : home_url( '/' ) ), wp_nonce_field( 'odph_checkout_' . $slug, '_wpnonce', true, false ), esc_html__( 'Continue to Stripe Checkout', 'od-product-hub' ), esc_html__( 'Review the details below. You will continue to Stripe to complete your purchase.', 'od-product-hub' ) );
 	}
 
 	public function start_checkout(): void {
@@ -91,7 +91,7 @@ final class Shortcodes {
 		$page_id  = absint( $settings['account_page_id'] ?? 0 );
 		$url      = $page_id ? get_permalink( $page_id ) : home_url( '/' );
 		wp_enqueue_style( 'odph-frontend' );
-		return '<section class="odph-result odph-result-success" role="status"><h2>' . esc_html__( 'Thank you for your purchase', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'Your subscription is being processed. You can find your license information in your email and account page.', 'od-product-hub' ) . '</p><p><a class="odph-button" href="' . esc_url( $url ) . '">' . esc_html__( 'View account', 'od-product-hub' ) . '</a></p></section>';
+		return '<section class="odph-surface odph-result odph-result-success" role="status"><h2>' . esc_html__( 'Thank you for your purchase', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'Your subscription is being processed. You can find your license information in your email and account page.', 'od-product-hub' ) . '</p><p><a class="odph-button" href="' . esc_url( $url ) . '">' . esc_html__( 'View account', 'od-product-hub' ) . '</a></p></section>';
 	}
 
 	/** @param array<string, mixed> $atts */
@@ -99,14 +99,17 @@ final class Shortcodes {
 		$atts       = shortcode_atts( array( 'return_url' => home_url( '/' ) ), $atts, 'odph_checkout_cancel' );
 		$return_url = wp_validate_redirect( esc_url_raw( (string) $atts['return_url'] ), home_url( '/' ) );
 		wp_enqueue_style( 'odph-frontend' );
-		return '<section class="odph-result odph-result-cancel"><h2>' . esc_html__( 'Checkout was canceled', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'You have not been charged. You can review the product and restart checkout at any time.', 'od-product-hub' ) . '</p><p><a class="odph-button" href="' . esc_url( $return_url ) . '">' . esc_html__( 'Return to product', 'od-product-hub' ) . '</a></p></section>';
+		return '<section class="odph-surface odph-result odph-result-cancel"><h2>' . esc_html__( 'Checkout was canceled', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'You have not been charged. You can review the product and restart checkout at any time.', 'od-product-hub' ) . '</p><p><a class="odph-button" href="' . esc_url( $return_url ) . '">' . esc_html__( 'Return to product', 'od-product-hub' ) . '</a></p></section>';
 	}
 
 	public function account(): string {
+		wp_enqueue_style( 'odph-frontend' );
+		wp_enqueue_script( 'odph-frontend' );
 		if ( ! is_user_logged_in() ) {
 			$return_url = get_permalink();
 			return sprintf(
-				'<p class="odph-account-login">%1$s<a href="%2$s">%3$s</a>%4$s</p>',
+				'<section class="odph-surface odph-account-login"><h2>%1$s</h2><p>%2$s<a href="%3$s">%4$s</a>%5$s</p></section>',
+				esc_html__( 'My account', 'od-product-hub' ),
 				esc_html__( 'To view your subscription, ', 'od-product-hub' ),
 				esc_url( wp_login_url( $return_url ? $return_url : home_url( '/' ) ) ),
 				esc_html__( 'log in', 'od-product-hub' ),
@@ -117,30 +120,30 @@ final class Shortcodes {
 		$rows     = ( new LicenseRepository() )->find_for_user( $user_id );
 		$customer = ( new CustomerRepository() )->find_by_user_id( $user_id );
 		$settings = (array) get_option( 'odph_settings', array() );
-		wp_enqueue_style( 'odph-frontend' );
-		wp_enqueue_script( 'odph-frontend' );
-		$html  = '<div class="odph-account"><h2>' . esc_html__( 'Subscribed products', 'od-product-hub' ) . '</h2>';
-		$html .= $this->portal_error_notice();
+		$html     = '<div class="odph-surface odph-account"><header class="odph-surface-header"><h2>' . esc_html__( 'My account', 'od-product-hub' ) . '</h2><p>' . esc_html__( 'View your licenses and manage your subscription and account.', 'od-product-hub' ) . '</p></header>';
+		$html    .= $this->portal_error_notice();
+		$html    .= '<section class="odph-account-section" aria-labelledby="odph-contracts-heading"><h3 id="odph-contracts-heading">' . esc_html__( 'Subscribed products', 'od-product-hub' ) . '</h3>';
 		if ( ! $rows ) {
-			$html .= '<p class="odph-notice" role="status">' . esc_html__( 'No subscription information is available yet. If you just purchased, wait a moment for synchronization to complete.', 'od-product-hub' ) . '</p>';
+			$html .= '<div class="odph-empty-state" role="status"><h4>' . esc_html__( 'No subscriptions found', 'od-product-hub' ) . '</h4><p>' . esc_html__( 'No subscription information is available yet. If you just purchased, wait a moment for synchronization to complete, then reload this page.', 'od-product-hub' ) . '</p></div>';
 		} else {
 			$html .= '<div class="odph-contract-list" role="list">';
 		}
 		foreach ( $rows as $row ) {
 			$status_id  = 'odph-copy-status-' . absint( $row->license_id );
+			$key_id     = 'odph-license-key-' . absint( $row->license_id );
 			$period_end = $this->format_account_date( $row->current_period_end ?? null );
 			$html      .= '<article class="odph-contract" role="listitem"><h3>' . esc_html( (string) $row->product_name ) . '</h3><dl>';
-			$html      .= '<dt>' . esc_html__( 'License key', 'od-product-hub' ) . '</dt><dd><code class="odph-key">' . esc_html( (string) $row->license_key ) . '</code> <button type="button" class="odph-copy" data-license="' . esc_attr( (string) $row->license_key ) . '" aria-describedby="' . esc_attr( $status_id ) . '">' . esc_html__( 'Copy', 'od-product-hub' ) . '</button><span id="' . esc_attr( $status_id ) . '" class="screen-reader-text odph-copy-status" aria-live="polite"></span></dd>';
-			$html      .= '<dt>' . esc_html__( 'License status', 'od-product-hub' ) . '</dt><dd><span class="odph-status odph-status-license-' . esc_attr( sanitize_html_class( (string) $row->license_status ) ) . '">' . esc_html( $this->license_status_label( (string) $row->license_status ) ) . '</span></dd>';
-			$html      .= '<dt>' . esc_html__( 'Stripe subscription status', 'od-product-hub' ) . '</dt><dd><span class="odph-status odph-status-stripe-' . esc_attr( sanitize_html_class( (string) ( $row->stripe_status ?? 'syncing' ) ) ) . '">' . esc_html( $this->stripe_status_label( (string) ( $row->stripe_status ?? '' ) ) ) . '</span></dd>';
+			$html      .= '<dt>' . esc_html__( 'License key', 'od-product-hub' ) . '</dt><dd class="odph-license-key-row"><code id="' . esc_attr( $key_id ) . '" class="odph-key">' . esc_html( (string) $row->license_key ) . '</code> <button type="button" class="odph-copy" data-copy-target="' . esc_attr( $key_id ) . '" aria-describedby="' . esc_attr( $status_id ) . '">' . esc_html__( 'Copy', 'od-product-hub' ) . '</button><span id="' . esc_attr( $status_id ) . '" class="screen-reader-text odph-copy-status" aria-live="polite"></span></dd>';
+			$html      .= '<dt>' . esc_html__( 'License status', 'od-product-hub' ) . '</dt><dd><span class="odph-status odph-status-license-' . esc_attr( sanitize_html_class( (string) $row->license_status ) ) . '">' . esc_html( $this->license_status_label( (string) $row->license_status ) ) . '</span><span class="odph-status-description">' . esc_html( $this->license_status_description( (string) $row->license_status ) ) . '</span></dd>';
+			$html      .= '<dt>' . esc_html__( 'Stripe subscription status', 'od-product-hub' ) . '</dt><dd><span class="odph-status odph-status-stripe-' . esc_attr( sanitize_html_class( (string) ( $row->stripe_status ?? 'syncing' ) ) ) . '">' . esc_html( $this->stripe_status_label( (string) ( $row->stripe_status ?? '' ) ) ) . '</span><span class="odph-status-description">' . esc_html( $this->stripe_status_description( (string) ( $row->stripe_status ?? '' ) ) ) . '</span></dd>';
 			$html      .= '<dt>' . esc_html__( 'Next renewal or end date', 'od-product-hub' ) . '</dt><dd><time>' . esc_html( $period_end ) . '</time></dd>';
 			$html      .= '<dt>' . esc_html__( 'Subscription schedule', 'od-product-hub' ) . '</dt><dd>' . ( ! empty( $row->cancel_at_period_end ) ? esc_html__( 'Scheduled to cancel at period end', 'od-product-hub' ) : esc_html__( 'Scheduled to renew automatically', 'od-product-hub' ) ) . '</dd></dl></article>';
 		}
 		if ( $rows ) {
 			$html .= '</div>';
 		}
-		$html .= $this->portal_controls( $settings, $customer );
-		$html .= '<nav class="odph-account-links" aria-label="' . esc_attr__( 'Account actions', 'od-product-hub' ) . '"><a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Change password', 'od-product-hub' ) . '</a><span aria-hidden="true"> · </span><a href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Log out', 'od-product-hub' ) . '</a></nav></div>';
+		$html .= '</section><section class="odph-account-section" aria-labelledby="odph-billing-heading"><h3 id="odph-billing-heading">' . esc_html__( 'Billing and subscription management', 'od-product-hub' ) . '</h3><p>' . esc_html__( 'Update your payment method, invoices, and subscription in the secure Stripe portal.', 'od-product-hub' ) . '</p>' . $this->portal_controls( $settings, $customer ) . '</section>';
+		$html .= '<section class="odph-account-section" aria-labelledby="odph-actions-heading"><h3 id="odph-actions-heading">' . esc_html__( 'Account actions', 'od-product-hub' ) . '</h3><nav class="odph-account-links" aria-label="' . esc_attr__( 'Account actions', 'od-product-hub' ) . '"><a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Change password', 'od-product-hub' ) . '</a><a href="' . esc_url( wp_logout_url( home_url( '/' ) ) ) . '">' . esc_html__( 'Log out and return to the site', 'od-product-hub' ) . '</a></nav></section></div>';
 		return $html;
 	}
 
@@ -183,7 +186,7 @@ final class Shortcodes {
 			'portal_not_configured'          => __( 'The billing and subscription management page is not configured.', 'od-product-hub' ),
 			'portal_temporarily_unavailable' => __( 'Stripe billing and subscription management is temporarily unavailable. Please try again later.', 'od-product-hub' ),
 		);
-		return isset( $messages[ $code ] ) ? '<p class="odph-alert" role="alert">' . esc_html( $messages[ $code ] ) . '</p>' : '';
+		return isset( $messages[ $code ] ) ? '<p class="odph-alert" role="alert" tabindex="-1">' . esc_html( $messages[ $code ] ) . '</p>' : '';
 	}
 
 	private function account_url(): string {
@@ -211,6 +214,17 @@ final class Shortcodes {
 		return $labels[ $status ] ?? __( 'Unknown status', 'od-product-hub' );
 	}
 
+	private function license_status_description( string $status ): string {
+		$descriptions = array(
+			'active'    => __( 'This license can be used.', 'od-product-hub' ),
+			'inactive'  => __( 'This license is not currently available for use.', 'od-product-hub' ),
+			'expired'   => __( 'This license has expired. Review your billing status below.', 'od-product-hub' ),
+			'cancelled' => __( 'This license has been canceled.', 'od-product-hub' ),
+			'suspended' => __( 'This license is suspended. Review your billing status below.', 'od-product-hub' ),
+		);
+		return $descriptions[ $status ] ?? __( 'The current license state could not be determined.', 'od-product-hub' );
+	}
+
 	private function stripe_status_label( string $status ): string {
 		$labels = array(
 			'active'             => __( 'Active', 'od-product-hub' ),
@@ -223,5 +237,19 @@ final class Shortcodes {
 			'paused'             => __( 'Paused', 'od-product-hub' ),
 		);
 		return $labels[ $status ] ?? __( 'Synchronizing', 'od-product-hub' );
+	}
+
+	private function stripe_status_description( string $status ): string {
+		$descriptions = array(
+			'active'             => __( 'Your subscription is active.', 'od-product-hub' ),
+			'trialing'           => __( 'Your trial is active.', 'od-product-hub' ),
+			'past_due'           => __( 'Payment requires attention. Open billing management to update your payment method.', 'od-product-hub' ),
+			'unpaid'             => __( 'Payment is unpaid. Open billing management to review your payment method.', 'od-product-hub' ),
+			'canceled'           => __( 'This subscription will not renew.', 'od-product-hub' ),
+			'incomplete'         => __( 'Payment setup is incomplete. Open billing management to finish setup.', 'od-product-hub' ),
+			'incomplete_expired' => __( 'Payment setup expired before completion.', 'od-product-hub' ),
+			'paused'             => __( 'This subscription is paused.', 'od-product-hub' ),
+		);
+		return $descriptions[ $status ] ?? __( 'Subscription details are synchronizing. Reload this page in a moment.', 'od-product-hub' );
 	}
 }

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OD Product Hub 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/od-product-hub\n"
-"POT-Creation-Date: 2026-07-07T00:07:31+00:00\n"
+"POT-Creation-Date: 2026-07-07T00:15:18+00:00\n"
 "PO-Revision-Date: 2026-07-02T00:35:15+00:00\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -105,23 +105,23 @@ msgid "No %s have been added yet."
 msgstr ""
 
 #: includes/Admin/AdminListUi.php:66 includes/Admin/AdminSettings.php:271
-#: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:205
-#: includes/Frontend/Shortcodes.php:216
+#: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:208
+#: includes/Frontend/Shortcodes.php:230
 msgid "Active"
 msgstr "有効"
 
 #: includes/Admin/AdminListUi.php:67 includes/Admin/AdminSettings.php:273
-#: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:206
+#: includes/Admin/ProductPage.php:28 includes/Frontend/Shortcodes.php:209
 msgid "Inactive"
 msgstr "無効"
 
 #: includes/Admin/AdminListUi.php:68 includes/Admin/AdminSettings.php:276
-#: includes/Frontend/Shortcodes.php:209
+#: includes/Frontend/Shortcodes.php:212
 msgid "Suspended"
 msgstr "停止中"
 
 #: includes/Admin/AdminListUi.php:69 includes/Admin/AdminSettings.php:274
-#: includes/Frontend/Shortcodes.php:207
+#: includes/Frontend/Shortcodes.php:210
 msgid "Expired"
 msgstr "期限切れ"
 
@@ -129,32 +129,32 @@ msgstr "期限切れ"
 msgid "Cancelled"
 msgstr "解約済み"
 
-#: includes/Admin/AdminListUi.php:71 includes/Frontend/Shortcodes.php:208
-#: includes/Frontend/Shortcodes.php:220
+#: includes/Admin/AdminListUi.php:71 includes/Frontend/Shortcodes.php:211
+#: includes/Frontend/Shortcodes.php:234
 msgid "Canceled"
 msgstr "解約済み"
 
-#: includes/Admin/AdminListUi.php:72 includes/Frontend/Shortcodes.php:217
+#: includes/Admin/AdminListUi.php:72 includes/Frontend/Shortcodes.php:231
 msgid "Trialing"
 msgstr "試用中"
 
-#: includes/Admin/AdminListUi.php:73 includes/Frontend/Shortcodes.php:218
+#: includes/Admin/AdminListUi.php:73 includes/Frontend/Shortcodes.php:232
 msgid "Past due"
 msgstr "支払い遅延"
 
-#: includes/Admin/AdminListUi.php:74 includes/Frontend/Shortcodes.php:219
+#: includes/Admin/AdminListUi.php:74 includes/Frontend/Shortcodes.php:233
 msgid "Unpaid"
 msgstr "未払い"
 
-#: includes/Admin/AdminListUi.php:75 includes/Frontend/Shortcodes.php:221
+#: includes/Admin/AdminListUi.php:75 includes/Frontend/Shortcodes.php:235
 msgid "Incomplete"
 msgstr "手続き未完了"
 
-#: includes/Admin/AdminListUi.php:76 includes/Frontend/Shortcodes.php:222
+#: includes/Admin/AdminListUi.php:76 includes/Frontend/Shortcodes.php:236
 msgid "Incomplete expired"
 msgstr "手続き期限切れ"
 
-#: includes/Admin/AdminListUi.php:77 includes/Frontend/Shortcodes.php:223
+#: includes/Admin/AdminListUi.php:77 includes/Frontend/Shortcodes.php:237
 msgid "Paused"
 msgstr "一時停止中"
 
@@ -1272,7 +1272,7 @@ msgid ""
 msgstr "検索はキーのハッシュを用い、平文の部分一致検索は行いません。"
 
 #: includes/Admin/LicensePage.php:38 includes/Admin/LicensePage.php:68
-#: includes/Frontend/Shortcodes.php:133
+#: includes/Frontend/Shortcodes.php:136
 msgid "License key"
 msgstr "ライセンスキー"
 
@@ -1708,7 +1708,7 @@ msgstr ""
 "イベント: {event_type}\n"
 "エラーコード: {error_code}"
 
-#: includes/Frontend/Shortcodes.php:37 includes/Frontend/Shortcodes.php:133
+#: includes/Frontend/Shortcodes.php:37 includes/Frontend/Shortcodes.php:136
 msgid "Copy"
 msgstr "コピー"
 
@@ -1753,8 +1753,14 @@ msgid "Checkout is temporarily unavailable. Please try again later."
 msgstr "現在購入手続きを開始できません。時間をおいて再度お試しください。"
 
 #: includes/Frontend/Shortcodes.php:71
-msgid "Purchase with Stripe Checkout"
-msgstr "Stripe Checkout で購入する"
+msgid "Continue to Stripe Checkout"
+msgstr "Stripe Checkout へ進む"
+
+#: includes/Frontend/Shortcodes.php:71
+msgid ""
+"Review the details below. You will continue to Stripe to complete your "
+"purchase."
+msgstr "以下の内容をご確認ください。購入手続きを完了するため Stripe へ移動します。"
 
 #: includes/Frontend/Shortcodes.php:94
 msgid "Thank you for your purchase"
@@ -1788,97 +1794,119 @@ msgstr ""
 msgid "Return to product"
 msgstr "購入ページへ戻る"
 
-#: includes/Frontend/Shortcodes.php:110
+#: includes/Frontend/Shortcodes.php:110 includes/Frontend/Shortcodes.php:123
+msgid "My account"
+msgstr "マイページ"
+
+#: includes/Frontend/Shortcodes.php:111
 msgid "To view your subscription, "
 msgstr "契約情報を確認するには"
 
-#: includes/Frontend/Shortcodes.php:112
+#: includes/Frontend/Shortcodes.php:113
 msgid "log in"
 msgstr "ログイン"
 
-#: includes/Frontend/Shortcodes.php:113
+#: includes/Frontend/Shortcodes.php:114
 msgid "."
 msgstr "してください。"
 
-#: includes/Frontend/Shortcodes.php:122
+#: includes/Frontend/Shortcodes.php:123
+msgid "View your licenses and manage your subscription and account."
+msgstr "ライセンスの確認、契約やアカウントの管理ができます。"
+
+#: includes/Frontend/Shortcodes.php:125
 msgid "Subscribed products"
 msgstr "契約中の商品"
 
-#: includes/Frontend/Shortcodes.php:125
+#: includes/Frontend/Shortcodes.php:127
+msgid "No subscriptions found"
+msgstr "契約が見つかりません"
+
+#: includes/Frontend/Shortcodes.php:127
 msgid ""
 "No subscription information is available yet. If you just purchased, wait a "
-"moment for synchronization to complete."
+"moment for synchronization to complete, then reload this page."
 msgstr ""
 "契約情報はまだありません。購入直後の場合は、同期が完了するまで少しお待ちくだ"
-"さい。"
+"さい。その後、このページを再読み込みしてください。"
 
-#: includes/Frontend/Shortcodes.php:134
+#: includes/Frontend/Shortcodes.php:137
 msgid "License status"
 msgstr "ライセンス状態"
 
-#: includes/Frontend/Shortcodes.php:135
+#: includes/Frontend/Shortcodes.php:138
 msgid "Stripe subscription status"
 msgstr "Stripe契約状態"
 
-#: includes/Frontend/Shortcodes.php:136
+#: includes/Frontend/Shortcodes.php:139
 msgid "Next renewal or end date"
 msgstr "次回更新・期間終了日"
 
-#: includes/Frontend/Shortcodes.php:137
+#: includes/Frontend/Shortcodes.php:140
 msgid "Subscription schedule"
 msgstr "契約の予定"
 
-#: includes/Frontend/Shortcodes.php:137
+#: includes/Frontend/Shortcodes.php:140
 msgid "Scheduled to cancel at period end"
 msgstr "期間終了時に解約予定"
 
-#: includes/Frontend/Shortcodes.php:137
+#: includes/Frontend/Shortcodes.php:140
 msgid "Scheduled to renew automatically"
 msgstr "自動更新予定"
 
-#: includes/Frontend/Shortcodes.php:143
+#: includes/Frontend/Shortcodes.php:145
+msgid "Billing and subscription management"
+msgstr "支払い・契約管理"
+
+#: includes/Frontend/Shortcodes.php:145
+msgid ""
+"Update your payment method, invoices, and subscription in the secure Stripe "
+"portal."
+msgstr "安全な Stripe ポータルで、支払い方法、請求書、契約を管理できます。"
+
+#: includes/Frontend/Shortcodes.php:146
 msgid "Account actions"
 msgstr "アカウント操作"
 
-#: includes/Frontend/Shortcodes.php:143
+#: includes/Frontend/Shortcodes.php:146
 msgid "Change password"
 msgstr "パスワードを変更"
 
-#: includes/Frontend/Shortcodes.php:143
-msgid "Log out"
-msgstr "ログアウト"
+#: includes/Frontend/Shortcodes.php:146
+msgid "Log out and return to the site"
+msgstr "ログアウトしてサイトへ戻る"
 
-#: includes/Frontend/Shortcodes.php:164 includes/Frontend/Shortcodes.php:181
+#: includes/Frontend/Shortcodes.php:167 includes/Frontend/Shortcodes.php:184
 msgid "Stripe billing and subscription management is currently unavailable."
 msgstr "Stripeでの支払い・契約管理は現在利用できません。"
 
-#: includes/Frontend/Shortcodes.php:167
+#: includes/Frontend/Shortcodes.php:170
 msgid ""
 "Your Stripe customer information is being synchronized. Billing and "
 "subscription management will be available when it completes."
 msgstr ""
 "Stripe顧客情報を同期しています。完了後に支払い・契約管理を利用できます。"
 
-#: includes/Frontend/Shortcodes.php:170
+#: includes/Frontend/Shortcodes.php:173
 msgid "Stripe billing and subscription management is being configured."
 msgstr "Stripeでの支払い・契約管理は準備中です。"
 
-#: includes/Frontend/Shortcodes.php:172
+#: includes/Frontend/Shortcodes.php:175
 msgid "Manage billing and subscription in Stripe"
 msgstr "支払い・契約を Stripe で管理"
 
-#: includes/Frontend/Shortcodes.php:182
+#: includes/Frontend/Shortcodes.php:185
 msgid ""
 "Your Stripe customer information has not finished synchronizing. Please try "
 "again later."
 msgstr ""
 "Stripe顧客情報の同期が完了していません。時間をおいて再度お試しください。"
 
-#: includes/Frontend/Shortcodes.php:183
+#: includes/Frontend/Shortcodes.php:186
 msgid "The billing and subscription management page is not configured."
 msgstr "支払い・契約管理ページの準備が完了していません。"
 
-#: includes/Frontend/Shortcodes.php:184
+#: includes/Frontend/Shortcodes.php:187
 msgid ""
 "Stripe billing and subscription management is temporarily unavailable. "
 "Please try again later."
@@ -1886,17 +1914,80 @@ msgstr ""
 "現在Stripeの支払い・契約管理を開始できません。時間をおいて再度お試しくださ"
 "い。"
 
-#: includes/Frontend/Shortcodes.php:197 includes/Frontend/Shortcodes.php:200
+#: includes/Frontend/Shortcodes.php:200 includes/Frontend/Shortcodes.php:203
 msgid "Not set"
 msgstr "未設定"
 
-#: includes/Frontend/Shortcodes.php:211
+#: includes/Frontend/Shortcodes.php:214
 msgid "Unknown status"
 msgstr "状態不明"
 
+#: includes/Frontend/Shortcodes.php:219
+msgid "This license can be used."
+msgstr "このライセンスは使用できます。"
+
+#: includes/Frontend/Shortcodes.php:220
+msgid "This license is not currently available for use."
+msgstr "このライセンスは現在使用できません。"
+
+#: includes/Frontend/Shortcodes.php:221
+msgid "This license has expired. Review your billing status below."
+msgstr "このライセンスは期限切れです。以下の支払い状況をご確認ください。"
+
+#: includes/Frontend/Shortcodes.php:222
+msgid "This license has been canceled."
+msgstr "このライセンスは解約済みです。"
+
+#: includes/Frontend/Shortcodes.php:223
+msgid "This license is suspended. Review your billing status below."
+msgstr "このライセンスは停止中です。以下の支払い状況をご確認ください。"
+
 #: includes/Frontend/Shortcodes.php:225
+msgid "The current license state could not be determined."
+msgstr "現在のライセンス状態を確認できませんでした。"
+
+#: includes/Frontend/Shortcodes.php:239
 msgid "Synchronizing"
 msgstr "同期中"
+
+#: includes/Frontend/Shortcodes.php:244
+msgid "Your subscription is active."
+msgstr "契約は有効です。"
+
+#: includes/Frontend/Shortcodes.php:245
+msgid "Your trial is active."
+msgstr "試用期間は有効です。"
+
+#: includes/Frontend/Shortcodes.php:246
+msgid ""
+"Payment requires attention. Open billing management to update your payment "
+"method."
+msgstr "支払いの確認が必要です。支払い・契約管理を開いて支払い方法を更新してください。"
+
+#: includes/Frontend/Shortcodes.php:247
+msgid ""
+"Payment is unpaid. Open billing management to review your payment method."
+msgstr "支払いが未払いです。支払い・契約管理を開いて支払い方法をご確認ください。"
+
+#: includes/Frontend/Shortcodes.php:248
+msgid "This subscription will not renew."
+msgstr "この契約は更新されません。"
+
+#: includes/Frontend/Shortcodes.php:249
+msgid "Payment setup is incomplete. Open billing management to finish setup."
+msgstr "支払い設定が完了していません。支払い・契約管理を開いて設定を完了してください。"
+
+#: includes/Frontend/Shortcodes.php:250
+msgid "Payment setup expired before completion."
+msgstr "支払い設定が完了する前に期限切れになりました。"
+
+#: includes/Frontend/Shortcodes.php:251
+msgid "This subscription is paused."
+msgstr "この契約は一時停止中です。"
+
+#: includes/Frontend/Shortcodes.php:253
+msgid "Subscription details are synchronizing. Reload this page in a moment."
+msgstr "契約情報を同期しています。少し待ってからこのページを再読み込みしてください。"
 
 #: includes/License/LicenseManager.php:39
 msgid "Only suspended licenses can be resumed."
@@ -2016,6 +2107,9 @@ msgstr "利用日時"
 #: includes/Privacy/PrivacyService.php:255
 msgid "Email type"
 msgstr "メール種別"
+
+#~ msgid "Log out"
+#~ msgstr "ログアウト"
 
 #, php-format
 #~ msgid "Configured; enter a value only to change it. Ends in %s"

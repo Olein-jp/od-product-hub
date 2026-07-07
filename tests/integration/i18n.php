@@ -19,7 +19,8 @@ if ( ! load_textdomain( 'od-product-hub', $mo, 'ja' ) ) {
 
 if ( '商品' !== __( 'Products', 'od-product-hub' )
 	|| '顧客・契約' !== __( 'Customers and subscriptions', 'od-product-hub' )
-	|| 'Stripe Checkout で購入する' !== __( 'Purchase with Stripe Checkout', 'od-product-hub' )
+	|| 'Stripe Checkout へ進む' !== __( 'Continue to Stripe Checkout', 'od-product-hub' )
+	|| 'マイページ' !== __( 'My account', 'od-product-hub' )
 	|| 'パスワードを変更' !== __( 'Change password', 'od-product-hub' )
 	|| '購入完了メール' !== __( 'Purchase completed email', 'od-product-hub' )
 	|| 'Stripeでの支払い・契約管理は現在利用できません。' !== __( 'Stripe billing and subscription management is currently unavailable.', 'od-product-hub' )

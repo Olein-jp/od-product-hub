@@ -187,9 +187,12 @@ odph_account_assert( str_contains( $account_a_html, 'ODPH-AAAA-BBBB-CCCC-DDDD' )
 odph_account_assert( ! str_contains( $account_a_html, 'Foreign Account Product' ) && ! str_contains( $account_a_html, 'ODPH-JJJJ-KKKK-LLLL-MMMM' ), 'A user must never see another user contract or key' );
 odph_account_assert( str_contains( $account_a_html, '2026年2月1日' ), 'UTC period end must use the site timezone and configured date format' );
 odph_account_assert( str_contains( $account_a_html, 'Past due' ) && str_contains( $account_a_html, 'Scheduled to cancel at period end' ), 'Account states must be communicated with text rather than color alone' );
+odph_account_assert( str_contains( $account_a_html, 'Payment requires attention' ) && str_contains( $account_a_html, 'This license is suspended' ), 'Problem states must explain the next action in text' );
 odph_account_assert( str_contains( $account_a_html, 'aria-live="polite"' ) && str_contains( $account_a_html, 'aria-describedby=' ), 'License copy controls must expose screen reader feedback' );
+odph_account_assert( str_contains( $account_a_html, 'data-copy-target=' ) && ! str_contains( $account_a_html, 'data-license=' ), 'License keys must not be duplicated in DOM data attributes' );
 odph_account_assert( str_contains( $account_a_html, 'odph-portal-form' ) && str_contains( $account_a_html, '_wpnonce' ), 'Synced users must receive a nonce-protected Portal form' );
 odph_account_assert( str_contains( $account_a_html, 'Change password' ) && str_contains( $account_a_html, 'Log out' ), 'Account navigation must include password and logout routes' );
+odph_account_assert( str_contains( $account_a_html, 'Subscribed products' ) && str_contains( $account_a_html, 'Billing and subscription management' ) && str_contains( $account_a_html, 'Account actions' ), 'Account content must be grouped into understandable sections' );
 
 wp_set_current_user( $user_b );
 $account_b_html = $shortcodes->account();
