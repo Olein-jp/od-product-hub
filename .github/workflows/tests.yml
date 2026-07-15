@@ -20,7 +20,7 @@ jobs:
       - run: composer lint
       - run: composer phpstan
       - run: composer test
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: matrix.php == '8.3'
         with: {node-version: '20', cache: npm}
       - if: matrix.php == '8.3'

@@ -18,7 +18,7 @@ jobs:
       WP_ENV_PHP_VERSION: ${{ matrix.php }}
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with: {node-version: '20', cache: npm}
       - uses: shivammathur/setup-php@v2
         with: {php-version: '${{ matrix.php }}', coverage: none, tools: composer}
