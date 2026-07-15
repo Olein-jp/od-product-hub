@@ -37,6 +37,6 @@
     "test": "npm run lint:php"
   },
   "devDependencies": {
-    "@wordpress/env": "^11.9.0"
+    "@wordpress/env": "^11.11.0"
   }
 }
